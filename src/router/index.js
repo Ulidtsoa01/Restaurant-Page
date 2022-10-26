@@ -15,22 +15,22 @@ const routes = [
     component: LandingView
   },
   {
-    path: '/',
+    path: '/client',
     name: 'client',
     component: ClientView
   },
   {
-    path: '/',
+    path: '/server',
     name: 'server',
     component: ServerView
   },
   {
-    path: '/',
+    path: '/manager',
     name: 'manager',
     component: ManagerView
   },
   {
-    path: '/',
+    path: '/login',
     name: 'login',
     component: LoginView
   },

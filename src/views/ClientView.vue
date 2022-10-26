@@ -1,6 +1,9 @@
 <template>
     <div>
         <h1>Welcome Client</h1>
+        <v-btn block>
+            Block Button
+        </v-btn>
     </div>
 </template>
 

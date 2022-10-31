@@ -3,6 +3,8 @@
 ## Project setup
 ```
 npm install
+npm install pg --save
+npm install dotenv --save
 ```
 
 ### Compiles and hot-reloads for development

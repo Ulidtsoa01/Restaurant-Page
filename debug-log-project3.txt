@@ -1,0 +1,2 @@
+When adding an entree, calculating a tip, then adding extra protein, the tip isn't recalculated automatically.
+Calculate button may be unecessary.

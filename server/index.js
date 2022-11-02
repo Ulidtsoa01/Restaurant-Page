@@ -26,20 +26,21 @@ app.get('/', (req, res) => {
     res.send('Hello World!');
 });
 
-// app.get('/user', (req, res) => {
-//     teammembers = []
-//     pool
-//         .query('SELECT * FROM teammembers;')
-//         .then(query_res => {
-//             for (let i = 0; i < query_res.rowCount; i++){
-//                 teammembers.push(query_res.rows[i]);
-//             }
-//             const data = {teammembers: teammembers};
-//             console.log(teammembers);
-//             res.render('user', data);
-//         });
-// });
+app.get('/items', (req, res) => {
+    items = []
+    pool
+     .query('SELECT * FROM items;')
+     .then(query_res => {
+         for (let i = 0; i < query_res.rowCount; i++){
+             items.push(query_res.rows[i]);
+         }
+         const data = {items: items};
+         console.log(items);
+         res.send(data);
+         return;
+     });
+ });
 
 app.listen(port, () => {
-console.log(`Example app listening at http://localhost:${port}`); 
+    console.log(`Example app listening at http://localhost:${port}`); 
 });

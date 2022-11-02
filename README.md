@@ -1,11 +1,26 @@
-# project3
+# Project 3
 
 ## Project setup
 ```
 npm install
 npm install pg --save
 npm install dotenv --save
+npm install express --save
 ```
+
+## Back End
+
+### Runs Server
+```
+node index.js
+```
+
+### Test Server API
+```
+curl -X GET http://localhost:3000/<some path>
+```
+
+## Front End 
 
 ### Compiles and hot-reloads for development
 ```

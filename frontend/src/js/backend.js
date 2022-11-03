@@ -5,71 +5,232 @@ const instance = axios.create({
     timeout: 1000,
 });
 
-async function getItems() {
+// SERVER
+
+// Get orderid, route: '/orderid'
+export async function getLatestOrderId() {
+    let result = await instance.get('/orderid');
+    return result.data;
+}
+
+// Get topping uuid, route: '/toppinguuid'
+export async function getLatestToppingUUID() {
+    let result = await instance.get('/toppinguuid');
+    return result.data;
+}
+
+// Get item uuid, route: '/itemuuid'
+export async function getLatestItemUUID() {
+    let result = await instance.get('/itemuuid');
+    return result.data;
+}
+
+// Get item quantity: route'/quantity:id'
+export async function getQuantityById(itemid) {
+    let result = await instance.get('/quantity',{id: itemid});
+    return result.data;
+}
+
+// Get id from name: route'/itemid:name'
+export async function getIdFromName(name) {
+    let result = await instance.get('/itemid',{name: name});
+    return result.data;
+}
+
+// Insert order table, route'/createorder:orderID/:calories/:total/:tip_double/:total_after_tip/:date
+export async function insertOrder(orderid, cals, total, tip, totalTip, date) {
+    let result = await instance.get('/createOrder',{
+        orderID: orderid,
+        calories: cals,
+        total: total,
+        tip_double: tip,
+        total_after_tip: totalTip,
+        date: date,
+    });
+    return result.data;
+}
+
+// Update inventory after order, route: '/updateinventoryserver:itemid'
+export async function incrementInventory(itemid) {
+    let result = await instance.get('/updateinventoryserver',{itemid: itemid});
+    return result.data;
+}
+
+// Insert into order items, route: '/insertitem:uuid/:orderid/:subitem/:id/:name'
+export async function insertOrderItems(uuid, orderid, subitem, id, name) {
+    let result = await instance.get('/insertitem',{
+        uuid: uuid,
+        orderid: orderid,
+        subitem: subitem,
+        id: id,
+        name: name,
+    });
+    return result.data;
+}
+
+// Insert into order toppings, route: '/inserttopping:uuid/:orderid/:subitem/:id/:name'
+export async function insertOrderToppings(uuid, orderid, subitem, id, name) {
+    let result = await instance.get('/inserttopping',{
+        uuid: uuid,
+        orderid: orderid,
+        subitem: subitem,
+        id: id,
+        name: name,
+    });
+    return result.data;
+}
+
+// MANAGER
+
+// Get inventory, '/inventory'
+export async function getInventory() {
+    let result = await instance.get('/inventory');
+    return result.data;
+}
+
+// Update inventory, '/updateinventory/:name/:itemid'
+export async function updateItemInventory(name, itemid) {
+    let result = await instance.get('/updateinventory',{
+        name: name,
+        itemid: itemid,
+    });
+    return result.data;
+}
+
+// Update items, '/updateitem/:name/:price/itemid'
+export async function updateItemItems(name, price, itemid) {
+    let result = await instance.get('/updateitem',{
+        name: name,
+        price: price,
+        itemid: itemid,
+    });
+    return result.data;
+}
+
+// Add items, '/additem/:itemid/:name/:category/:price/:calories'
+export async function addItem(itemid, name, category, price, calories) {
+    let result = await instance.get('/additem',{
+        itemid: itemid,
+        name: name,
+        category: category,
+        price: price,
+        calories: calories,
+    });
+    return result.data;
+}
+
+// Add inventory, '/addinventory/:itemid/:name/:quantity:/num_sold/:vendor/:purcahse_price/:batch_quantity'
+export async function addInventory(itemid, name, quantity, num_sold, vendor, purchase_price) {
+    let result = await instance.get('/addinventory',{
+        itemid: itemid,
+        name: name,
+        quantity: quantity,
+        num_sold: num_sold,
+        vendor: vendor,
+        purchase_price: purchase_price,
+    });
+    return result.data;
+}
+
+// Delete item  '/deleteitem/:itemid'
+export async function deleteItem(itemid) {
+    let result = await instance.get('/deleteitem',{
+        itemid: itemid,
+    });
+    return result.data;
+}
+
+// Delete inventory '/deleteinventory/:itemid'
+export async function deleteItemInventory(itemid) {
+    let result = await instance.get('/deleteinventory',{
+        itemid: itemid,
+    });
+    return result.data;
+}
+
+// RESTOCK/EXCESS
+
+// Count item, '/countitem/:itemuuid'
+export async function countItem(itemuuid) {
+    let result = await instance.get('/countitem',{
+        itemuuid: itemuuid,
+    });
+    return result.data;
+}
+
+// Count topping, '/counttopping/:topping'
+export async function countTopping(topping) {
+    let result = await instance.get('/counttopping',{
+        topping: topping,
+    });
+    return result.data;
+}
+
+// SALES/SALES TOGETHER
+
+// Get all items, '/items'
+export async function getItems() {
     let items = await instance.get('/items');
     return items.data.items;
 }
 
-// SERVER
-//
-// Get orderid, route: '/orderid'
-//
-// Get topping uuid, route: '/toppinguuid'
-//
-// Get item uuid, route: '/itemuuid'
-//
-// Get item quantity: route'/quantity:id'
-//
-// Get id from name: route'/itemid:name'
-//
-// Insert order table, route'/createorder:orderID/:calories/:total/:tip_double/:total_after_tip/:after_tip/:date
-//
-// Update inventory after order, route: '/updateinventoryserver:itemid'
-//
-// Insert into order items, route: '/insertitem:uuid/:orderid/:subitem/:id/:name'
-//
-// Insert into order toppings, route: '/inserttopping:uuid/:orderid/:subitem/:id/:name'
-//
-// MANAGER
-//
-// Get inventory, '/inventory'
-//
-// Update inventory, '/updateinventory/:name/:itemid'
-//
-// Update items, '/updateitem/:name/:price/itemid'
-//
-// Add items, '/additem/:itemid/:name/:category/:price/:calories'
-//
-// Add inventory, '/addinventory/:itemid/:name/:quantity:/num_sold/:vendor/:purcahse_price/:batch_quantity'
-//
-// Delete item  '/deleteitem/:itemid'
-//
-// Delete inventory '/deleteinventory/:itemid'
-//
-// RESTOCK/EXCESS
-//
-// Count item, '/countttem/:itemuuid'
-//
-// Count topping, '/counttopping/:topping'
-//
-// SALES/SALES TOGETHER
-//
-// Get allItems, '/getitems'
-//
 // Get mainEntrees, '/getmainentrees'
-//
-// Get order item between dates, '/getorderitemdate/:from/:to'
-//
-// Get order topping between dats, '/getordertoppingdate/:from/:to'
-//
-// Get bigboy count, '/bigboycount/:from/:to/:entreename/:toppingname'
-//
-// Get bigboy, '/bigboy/:from/:to'
-//
-// CONNECTOR
-//
-// Get item from category, '/getitems/:category'
-//
-// Get prices, '/getprice'
+export async function getMainEntrees() {
+    let result = await instance.get('/getmainentrees');
+    return result.data;
+}
 
-export { getItems };
+// Get order item between dates, '/getorderitemdate/:from/:to'
+export async function getOrderItemDate(from, to) {
+    let result = await instance.get('/getorderitemdate',{
+        from: from,
+        to: to,
+    });
+    return result.data;
+}
+
+// Get order topping between dats, '/getordertoppingdate/:from/:to'
+export async function getOrderToppingDate(from, to) {
+    let result = await instance.get('/getordertoppingdate',{
+        from: from,
+        to: to,
+    });
+    return result.data;
+}
+
+// Get bigboy count, '/bigboycount/:from/:to/:entreename/:toppingname'
+export async function getBigBoyCount(from, to, entreename, toppingname) {
+    let result = await instance.get('/bigboycount',{
+        from: from,
+        to: to,
+        entreename: entreename,
+        toppingname: toppingname,
+    });
+    return result.data;
+}
+
+// Get bigboy, '/bigboy/:from/:to'
+export async function getBigBoy(from, to) {
+    let result = await instance.get('/bigboy',{
+        from: from,
+        to: to,
+    });
+    return result.data;
+}
+
+// CONNECTOR
+
+// Get item from category, '/getcategory/:category'
+export async function getItemsFromCategory(category) {
+    let result = await instance.get('/getcategory',{
+        category: category,
+    });
+    return result.data;
+}
+
+// Get prices, '/getprice'
+export async function getPrices() {
+    let result = await instance.get('/getprice');
+    return result.data;
+}
+

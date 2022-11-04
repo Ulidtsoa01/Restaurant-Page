@@ -19,7 +19,7 @@
 "SELECT id FROM items WHERE name='%s'"
 
 // Insert order table
-'/createorder/:orderID/:calories/:total/:tip_double/:total_after_tip/:after_tip/:date'
+'/createorder:orderID/:calories/:total/:tip/:total_after_tip/:date'
 "INSERT INTO orders VALUES (%d,%d,%f,%f,%f,'%s');", orderID, calories, total, tip_double, total_after_tip, dtf.format(now))
 
 // Update inventory after order
@@ -27,14 +27,13 @@
 "UPDATE inventory SET item_quantity=GREATEST(item_quantity-1,0) WHERE item_id=(%s);UPDATE inventory SET num_sold=num_sold+1 WHERE item_id=(%s);", idQuery,idQuery);"
 
 // Insert into order items
-'/insertitem:uuid/:orderid/:subitem/:id/:name'
+'/insertitem/:uuid/:orderid/:subitem/:id/:name'
 "INSERT INTO order_items VALUES (%d,%d,%d,(%s),'%s');"
 // Insert into order toppings
-'/inserttopping:uuid/:orderid/:subitem/:id/:name'
+'/inserttopping/:uuid/:orderid/:subitem/:id/:name'
 "INSERT INTO order_toppings VALUES (%d,%d,%d,(%s),'%s');"
 
 //MANAGER GUI//
-//Manager.java
 
 // Get inventory
 '/inventory'
@@ -51,7 +50,7 @@
 '/additem/:itemid/:name/:category/:price/:calories'
 "INSERT INTO items (id,name,category,price,calories) VALUES (%s,'%s','%s',%s,%s)"
 // Add inventory
-'/addinventory/:itemid/:name/:quantity:/num_sold/:vendor/:purcahse_price/:batch_quantity'
+'/addinventory/:id/:itemid/:name/:quantity:/num_sold/:vendor/:purchase_price/:batch_quantity'
 "INSERT INTO inventory (id,item_id,name,item_quantity,num_sold,vendor,purchase_price,batch_quantity) VALUES (%s,%s,'%s',%s,%s,'%s',%s,%s)"
 
 // Delete item
@@ -61,26 +60,27 @@
 '/deleteinventory/:itemid'
 "DELETE FROM items where id = %s"
 
-// Restock/Excess
+// RESTOCK/EXCESS
 
 // Count item
-'/countttem/:itemuuid'
+'/countitem/:from/:to/:itemuuid'
 "SELECT COUNT(order_items.uuid) from orders INNER JOIN order_items on orders.order_id = "
                                     +"order_items.order_id WHERE datetime BETWEEN '%s' and '%s' AND order_items.item_id = '%s';"
-Count topping
-'/counttopping/:topping'
+//Count topping
+'/counttopping/:from/:to/:topping'
 "SELECT COUNT(order_toppings.uuid) from orders INNER JOIN order_toppings on orders.order_id = "
                                     +"order_toppings.order_id WHERE datetime BETWEEN '%s' and '%s' AND order_toppings.item_id = '%s';"
 
 // SALES/SALES TOGETHER
 
-// Get allItems
-'/getitems'
-"SELECT * FROM items WHERE category='mainEntree' ORDER BY id ;"
 // Get mainEntrees
 '/getmainentrees'
+"SELECT * FROM items WHERE category='mainEntree' ORDER BY id ;"
+// Get allItems
+'/getitems'
 "SELECT * FROM items WHERE category='mainEntree' or category='subEntree' ORDER BY id;"
-//???
+// Get toppings
+'/toppings'
 "SELECT * FROM items WHERE category='topping' or category='mainProtein' or category='subProtein' ORDER BY id;"
 
 // Get order item between dates
@@ -97,7 +97,7 @@ Count topping
 '/bigboy/:from/:to'
 "SELECT * from orders INNER JOIN order_items ON orders.order_id = order_items.order_id INNER JOIN order_toppings ON orders.order_id = order_toppings.order_id AND order_items.order_subitem = order_toppings.order_subitem WHERE datetime BETWEEN '%s' AND '%s';"
 
-// Connector
+// CONNECTOR
 
 // Get item from category
 '/getitems/:category'

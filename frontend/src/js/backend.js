@@ -37,14 +37,14 @@ export async function getIdFromName(name) {
     return result.data;
 }
 
-// Insert order table, route'/createorder:orderID/:calories/:total/:tip_double/:total_after_tip/:date
-export async function insertOrder(orderid, cals, total, tip, totalTip, date) {
+// Insert order table, route'/createorder:orderID/:calories/:total/:tip/:total_after_tip/:date'
+export async function insertOrder(orderid, cals, total, tip, total_after_tip, date) {
     let result = await instance.get('/createOrder',{
         orderID: orderid,
         calories: cals,
         total: total,
-        tip_double: tip,
-        total_after_tip: totalTip,
+        tip: tip,
+        total_after_tip: total_after_tip,
         date: date,
     });
     return result.data;
@@ -119,15 +119,17 @@ export async function addItem(itemid, name, category, price, calories) {
     return result.data;
 }
 
-// Add inventory, '/addinventory/:itemid/:name/:quantity:/num_sold/:vendor/:purcahse_price/:batch_quantity'
-export async function addInventory(itemid, name, quantity, num_sold, vendor, purchase_price) {
+// Add inventory, '/addinventory/:id/:itemid/:name/:quantity:/num_sold/:vendor/:purchase_price/:batch_quantity'
+export async function addInventory(id, itemid, name, quantity, num_sold, vendor, purchase_price, batch_quantity) {
     let result = await instance.get('/addinventory',{
+        id: id,
         itemid: itemid,
         name: name,
         quantity: quantity,
         num_sold: num_sold,
         vendor: vendor,
         purchase_price: purchase_price,
+        batch_quantity: batch_quantity,
     });
     return result.data;
 }
@@ -150,17 +152,21 @@ export async function deleteItemInventory(itemid) {
 
 // RESTOCK/EXCESS
 
-// Count item, '/countitem/:itemuuid'
+// Count item, '/countitem/:from/:to/:itemuuid'
 export async function countItem(itemuuid) {
     let result = await instance.get('/countitem',{
+        from: from,
+        to: to,
         itemuuid: itemuuid,
     });
     return result.data;
 }
 
-// Count topping, '/counttopping/:topping'
+// Count topping, '/counttopping/:from/:to/:topping'
 export async function countTopping(topping) {
     let result = await instance.get('/counttopping',{
+        from: from,
+        to: to,
         topping: topping,
     });
     return result.data;
@@ -168,15 +174,21 @@ export async function countTopping(topping) {
 
 // SALES/SALES TOGETHER
 
-// Get all items, '/items'
-export async function getItems() {
-    let items = await instance.get('/items');
-    return items.data.items;
-}
-
 // Get mainEntrees, '/getmainentrees'
 export async function getMainEntrees() {
     let result = await instance.get('/getmainentrees');
+    return result.data;
+}
+
+// Get all items, '/getitems'
+export async function getItems() {
+    let result = await instance.get('/getitems');
+    return result.data;
+}
+
+// Get toppings
+export async function getToppings() {
+    let result = await instance.get('/toppings');
     return result.data;
 }
 

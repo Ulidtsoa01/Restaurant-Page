@@ -1,0 +1,107 @@
+//SERVER GUI//
+
+// Get orderid
+'/orderid'
+"SELECT order_id from orders ORDER BY order_id DESC LIMIT 1"
+// Get item uuid
+'/itemuuid'
+"SELECT uuid from order_items ORDER BY uuid DESC LIMIT 1"
+// Get topping uuid
+'/toppinguuid'
+"SELECT uuid from order_toppings ORDER BY uuid DESC LIMIT 1"
+
+// Get item quantity
+'/quantity/:id'
+"SELECT item_quantity from inventory WHERE item_id=%s"
+
+// Get id from name
+'/itemid/:name'
+"SELECT id FROM items WHERE name='%s'"
+
+// Insert order table
+'/createorder/:orderID/:calories/:total/:tip_double/:total_after_tip/:after_tip/:date'
+"INSERT INTO orders VALUES (%d,%d,%f,%f,%f,'%s');", orderID, calories, total, tip_double, total_after_tip, dtf.format(now))
+
+// Update inventory after order
+'/updateinventoryserver/:itemid'
+"UPDATE inventory SET item_quantity=GREATEST(item_quantity-1,0) WHERE item_id=(%s);UPDATE inventory SET num_sold=num_sold+1 WHERE item_id=(%s);", idQuery,idQuery);"
+
+// Insert into order items
+'/insertitem:uuid/:orderid/:subitem/:id/:name'
+"INSERT INTO order_items VALUES (%d,%d,%d,(%s),'%s');"
+// Insert into order toppings
+'/inserttopping:uuid/:orderid/:subitem/:id/:name'
+"INSERT INTO order_toppings VALUES (%d,%d,%d,(%s),'%s');"
+
+//MANAGER GUI//
+//Manager.java
+
+// Get inventory
+'/inventory'
+"SELECT inventory.id, inventory.item_id, inventory.name, items.category, items.price, inventory.item_quantity, inventory.num_sold, inventory.vendor, inventory.purchase_price, inventory.batch_quantity FROM inventory JOIN items on items.id = inventory.item_id order by inventory.item_id;"
+
+// Update inventory
+'/updateinventory/:name/:itemid'
+"UPDATE inventory SET name = '%s' WHERE item_id = %s"
+// Update items
+'/updateitem/:name/:price/itemid'
+"UPDATE items SET name = '%s', price = %s WHERE id = %s"
+
+// Add items
+'/additem/:itemid/:name/:category/:price/:calories'
+"INSERT INTO items (id,name,category,price,calories) VALUES (%s,'%s','%s',%s,%s)"
+// Add inventory
+'/addinventory/:itemid/:name/:quantity:/num_sold/:vendor/:purcahse_price/:batch_quantity'
+"INSERT INTO inventory (id,item_id,name,item_quantity,num_sold,vendor,purchase_price,batch_quantity) VALUES (%s,%s,'%s',%s,%s,'%s',%s,%s)"
+
+// Delete item
+'/deleteitem/:itemid'
+"DELETE FROM inventory where item_id = %s"
+// Delete inventory
+'/deleteinventory/:itemid'
+"DELETE FROM items where id = %s"
+
+// Restock/Excess
+
+// Count item
+'/countttem/:itemuuid'
+"SELECT COUNT(order_items.uuid) from orders INNER JOIN order_items on orders.order_id = "
+                                    +"order_items.order_id WHERE datetime BETWEEN '%s' and '%s' AND order_items.item_id = '%s';"
+Count topping
+'/counttopping/:topping'
+"SELECT COUNT(order_toppings.uuid) from orders INNER JOIN order_toppings on orders.order_id = "
+                                    +"order_toppings.order_id WHERE datetime BETWEEN '%s' and '%s' AND order_toppings.item_id = '%s';"
+
+// SALES/SALES TOGETHER
+
+// Get allItems
+'/getitems'
+"SELECT * FROM items WHERE category='mainEntree' ORDER BY id ;"
+// Get mainEntrees
+'/getmainentrees'
+"SELECT * FROM items WHERE category='mainEntree' or category='subEntree' ORDER BY id;"
+//???
+"SELECT * FROM items WHERE category='topping' or category='mainProtein' or category='subProtein' ORDER BY id;"
+
+// Get order item between dates
+'/getorderitemdate/:from/:to'
+"SELECT COUNT(order_items.uuid) from orders INNER JOIN order_items on orders.order_id = order_items.order_id WHERE datetime BETWEEN '%s' and '%s' AND order_items.entree_name = '%s';"
+// Get order topping between dats
+'/getordertoppingdate/:from/:to'
+"SELECT COUNT(order_toppings.uuid) from orders INNER JOIN order_items ON orders.order_id = order_items.order_id INNER JOIN order_toppings ON orders.order_id = order_toppings.order_id AND order_items.order_subitem = order_toppings.order_subitem WHERE datetime BETWEEN '%s' and '%s' AND order_toppings.topping_name = '%s';"
+// Get bigboy count
+'/bigboycount/:from/:to/:entreename/:toppingname'
+"SELECT COUNT(order_toppings.uuid) from orders INNER JOIN order_items ON orders.order_id = order_items.order_id INNER JOIN order_toppings ON orders.order_id = order_toppings.order_id AND order_items.order_subitem = order_toppings.order_subitem WHERE datetime BETWEEN '%s' and '%s' AND order_items.entree_name = '%s' AND order_toppings.topping_name = '%s';"
+
+// Get bigboy
+'/bigboy/:from/:to'
+"SELECT * from orders INNER JOIN order_items ON orders.order_id = order_items.order_id INNER JOIN order_toppings ON orders.order_id = order_toppings.order_id AND order_items.order_subitem = order_toppings.order_subitem WHERE datetime BETWEEN '%s' AND '%s';"
+
+// Connector
+
+// Get item from category
+'/getitems/:category'
+"SELECT * FROM items WHERE category='%s' ORDER BY id", cat
+// Get prices
+'/getprice'
+"SELECT name, price FROM items"

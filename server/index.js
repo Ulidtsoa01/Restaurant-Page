@@ -92,10 +92,10 @@ app.get('/toppinguuid', (req, res) => {
 });
 
 // Get item quantity
-app.get('/quantity/:id', (req, res) => {
+app.get('/quantity', (req, res) => {
     items = []
     pool
-    .query(`SELECT item_quantity from inventory WHERE item_id=${req.params.id}`.replace(/:/g, ""))
+    .query(`SELECT item_quantity from inventory WHERE item_id=${req.query.id}`.replace(/:/g, ""))
     .then(query_res => {
         for (let i = 0; i < query_res.rowCount; i++){
             items.push(query_res.rows[i]);
@@ -108,10 +108,10 @@ app.get('/quantity/:id', (req, res) => {
 });
 
 // Get id from name
-app.get('/itemid/:name', (req, res) => {
+app.get('/itemid', (req, res) => {
     items = []
     pool
-    .query(`SELECT id FROM items WHERE name=${req.params.name}`.replace(/:/g, ""))
+    .query(`SELECT id FROM items WHERE name='${req.query.name}'`.replace(/:/g, ""))
     .then(query_res => {
         for (let i = 0; i < query_res.rowCount; i++){
             items.push(query_res.rows[i]);
@@ -124,10 +124,10 @@ app.get('/itemid/:name', (req, res) => {
 });
 
 // Insert order table
-app.get('/createorder:orderID/:calories/:total/:tip/:total_after_tip/:date', (req, res) => {
+app.get('/createorder', (req, res) => {
     items = []
     pool
-    .query(`INSERT INTO orders VALUES (${req.params.orderID},${req.params.calories},${req.params.total},${req.params.tip},${req.params.total_after_tip},${req.params.date});`.replace(/:/g, ""))
+    .query(`INSERT INTO orders VALUES (${req.query.orderID},${req.query.calories},${req.query.total},${req.query.tip},${req.query.total_after_tip},'${req.query.date}');`.replace(/:/g, ""))
     .then(query_res => {
         for (let i = 0; i < query_res.rowCount; i++){
             items.push(query_res.rows[i]);
@@ -140,10 +140,10 @@ app.get('/createorder:orderID/:calories/:total/:tip/:total_after_tip/:date', (re
 });
 
 // Update inventory after order
-app.get('/updateinventoryserver/:itemid', (req, res) => {
+app.get('/updateinventoryserver', (req, res) => {
     items = []
     pool
-    .query(`UPDATE inventory SET item_quantity=GREATEST(item_quantity-1,0) WHERE item_id=(${req.params.itemid});UPDATE inventory SET num_sold=num_sold+1 WHERE item_id=(${req.params.itemid});`.replace(/:/g, ""))
+    .query(`UPDATE inventory SET item_quantity=GREATEST(item_quantity-1,0) WHERE item_id=(${req.query.itemid});UPDATE inventory SET num_sold=num_sold+1 WHERE item_id=(${req.query.itemid});`.replace(/:/g, ""))
     .then(query_res => {
         for (let i = 0; i < query_res.rowCount; i++){
             items.push(query_res.rows[i]);
@@ -156,10 +156,10 @@ app.get('/updateinventoryserver/:itemid', (req, res) => {
 });
 
 // Insert into order items
-app.get('/insertitem/:uuid/:orderid/:subitem/:id/:name', (req, res) => {
+app.get('/insertitem', (req, res) => {
     items = []
     pool
-    .query(`INSERT INTO order_items VALUES (${req.params.uuid},${req.params.orderid},${req.params.subitem},${req.params.id},${req.params.name});`.replace(/:/g, ""))
+    .query(`INSERT INTO order_items VALUES (${req.query.uuid},${req.query.orderid},${req.query.subitem},${req.query.id},'${req.query.name}');`.replace(/:/g, ""))
     .then(query_res => {
         for (let i = 0; i < query_res.rowCount; i++){
             items.push(query_res.rows[i]);
@@ -172,10 +172,10 @@ app.get('/insertitem/:uuid/:orderid/:subitem/:id/:name', (req, res) => {
 });
 
 // Insert into order toppings
-app.get('/inserttopping:uuid/:orderid/:subitem/:id/:name', (req, res) => {
+app.get('/inserttopping', (req, res) => {
     items = []
     pool
-    .query(`INSERT INTO order_toppings VALUES (${req.params.uuid},${req.params.orderid},${req.params.subitem},${req.params.id},${req.params.name});`.replace(/:/g, ""))
+    .query(`INSERT INTO order_toppings VALUES (${req.query.uuid},${req.query.orderid},${req.query.subitem},${req.query.id},'${req.query.name}');`.replace(/:/g, ""))
     .then(query_res => {
         for (let i = 0; i < query_res.rowCount; i++){
             items.push(query_res.rows[i]);
@@ -206,10 +206,10 @@ pool
 });
 
 // Update inventory
-app.get('/updateinventory/:name/:itemid', (req, res) => {
+app.get('/updateinventory', (req, res) => {
     items = []
     pool
-    .query(`UPDATE inventory SET name = ${req.params.name} WHERE item_id = ${req.params.itemid}`.replace(/:/g, ""))
+    .query(`UPDATE inventory SET name = '${req.query.name}' WHERE item_id = ${req.query.itemid}`.replace(/:/g, ""))
     .then(query_res => {
         for (let i = 0; i < query_res.rowCount; i++){
             items.push(query_res.rows[i]);
@@ -222,10 +222,10 @@ app.get('/updateinventory/:name/:itemid', (req, res) => {
 });
 
 // Update items
-app.get('/updateitem/:name/:price/itemid', (req, res) => {
+app.get('/updateitem', (req, res) => {
     items = []
     pool
-    .query(`UPDATE items SET name = ${req.params.name}, price = ${req.params.price} WHERE id = ${req.params.itemid}`.replace(/:/g, ""))
+    .query(`UPDATE items SET name = '${req.query.name}', price = ${req.query.price} WHERE id = ${req.query.itemid}`.replace(/:/g, ""))
     .then(query_res => {
         for (let i = 0; i < query_res.rowCount; i++){
             items.push(query_res.rows[i]);
@@ -238,10 +238,10 @@ app.get('/updateitem/:name/:price/itemid', (req, res) => {
 });
 
 // Add items
-app.get('/additem/:itemid/:name/:category/:price/:calories', (req, res) => {
+app.get('/additem', (req, res) => {
     items = []
     pool
-    .query(`INSERT INTO items (id,name,category,price,calories) VALUES (${req.params.itemid},${req.params.name},${req.params.category},${req.params.price},${req.params.calories})`.replace(/:/g, ""))
+    .query(`INSERT INTO items (id,name,category,price,calories) VALUES (${req.query.itemid},'${req.query.name}','${req.query.category}',${req.query.price},${req.query.calories})`.replace(/:/g, ""))
     .then(query_res => {
         for (let i = 0; i < query_res.rowCount; i++){
             items.push(query_res.rows[i]);
@@ -254,10 +254,10 @@ app.get('/additem/:itemid/:name/:category/:price/:calories', (req, res) => {
 });
 
 // Add inventory
-app.get('/addinventory/:id/:itemid/:name/:quantity:/num_sold/:vendor/:purchase_price/:batch_quantity', (req, res) => {
+app.get('/addinventory', (req, res) => {
     items = []
     pool
-    .query(`INSERT INTO inventory (id,item_id,name,item_quantity,num_sold,vendor,purchase_price,batch_quantity) VALUES (${req.params.id},${req.params.itemid},${req.params.name},${req.params.quantity},${req.params.num_sold},${req.params.vendor},${req.params.purcahse_price},${req.params.batch_quantity})`.replace(/:/g, ""))
+    .query(`INSERT INTO inventory (id,item_id,name,item_quantity,num_sold,vendor,purchase_price,batch_quantity) VALUES (${req.query.id},${req.query.itemid},'${req.query.name}',${req.query.quantity},${req.query.num_sold},'${req.query.vendor}',${req.query.purcahse_price},${req.query.batch_quantity})`.replace(/:/g, ""))
     .then(query_res => {
         for (let i = 0; i < query_res.rowCount; i++){
             items.push(query_res.rows[i]);
@@ -270,10 +270,10 @@ app.get('/addinventory/:id/:itemid/:name/:quantity:/num_sold/:vendor/:purchase_p
 });
 
 // Delete item
-app.get('/deleteitem/:itemid', (req, res) => {
+app.get('/deleteitem', (req, res) => {
     items = []
     pool
-    .query(`DELETE FROM inventory where item_id = ${req.params.itemid}`.replace(/:/g, ""))
+    .query(`DELETE FROM inventory where item_id = ${req.query.itemid}`.replace(/:/g, ""))
     .then(query_res => {
         for (let i = 0; i < query_res.rowCount; i++){
             items.push(query_res.rows[i]);
@@ -286,10 +286,10 @@ app.get('/deleteitem/:itemid', (req, res) => {
 });
 
 // Delete inventory
-app.get('/deleteinventory/:itemid', (req, res) => {
+app.get('/deleteinventory', (req, res) => {
     items = []
     pool
-    .query(`DELETE FROM items where id = ${req.params.itemid}`.replace(/:/g, ""))
+    .query(`DELETE FROM items where id = ${req.query.itemid}`.replace(/:/g, ""))
     .then(query_res => {
         for (let i = 0; i < query_res.rowCount; i++){
             items.push(query_res.rows[i]);
@@ -304,10 +304,10 @@ app.get('/deleteinventory/:itemid', (req, res) => {
 // RESTOCK/EXCESS
 
 // Count item
-app.get('/countitem/:from/:to/:itemuuid', (req, res) => {
+app.get('/countitem', (req, res) => {
     items = []
     pool
-    .query(`SELECT COUNT(order_items.uuid) from orders INNER JOIN order_items on orders.order_id = order_items.order_id WHERE datetime BETWEEN ${req.params.from} and ${req.params.to} AND order_items.item_id = ${req.params.itemuuid};`.replace(/:/g, ""))
+    .query(`SELECT COUNT(order_items.uuid) from orders INNER JOIN order_items on orders.order_id = order_items.order_id WHERE datetime BETWEEN '${req.query.from}' and '${req.query.to}' AND order_items.item_id = ${req.query.itemuuid};`.replace(/:/g, ""))
     .then(query_res => {
         for (let i = 0; i < query_res.rowCount; i++){
             items.push(query_res.rows[i]);
@@ -320,10 +320,10 @@ app.get('/countitem/:from/:to/:itemuuid', (req, res) => {
 });
 
 //Count topping
-app.get('/counttopping/:from/:to/:topping', (req, res) => {
+app.get('/counttopping', (req, res) => {
     items = []
     pool
-    .query(`SELECT COUNT(order_toppings.uuid) from orders INNER JOIN order_toppings on orders.order_id = order_toppings.order_id WHERE datetime BETWEEN ${req.params.from} and ${req.params.to} AND order_toppings.item_id = ${req.params.topping};`.replace(/:/g, ""))
+    .query(`SELECT COUNT(order_toppings.uuid) from orders INNER JOIN order_toppings on orders.order_id = order_toppings.order_id WHERE datetime BETWEEN '${req.query.from}' and '${req.query.to}' AND order_toppings.item_id = ${req.query.topping};`.replace(/:/g, ""))
     .then(query_res => {
         for (let i = 0; i < query_res.rowCount; i++){
             items.push(query_res.rows[i]);
@@ -338,10 +338,10 @@ app.get('/counttopping/:from/:to/:topping', (req, res) => {
 // CONNECTOR
 
 // Get item from category
-app.get('/getitems/:category', (req, res) => {
+app.get('/getcategory', (req, res) => {
     items = []
     pool
-    .query(`SELECT * FROM items WHERE category=${req.params.category} ORDER BY id`.replace(/:/g, ""))
+    .query(`SELECT * FROM items WHERE category='${req.query.category}' ORDER BY id`.replace(/:/g, ""))
     .then(query_res => {
         for (let i = 0; i < query_res.rowCount; i++){
             items.push(query_res.rows[i]);
@@ -420,10 +420,10 @@ pool
 });
 
 // Get order item between dates
-app.get('/getorderitemdate/:from/:to/:entreename', (req, res) => {
+app.get('/getorderitemdate', (req, res) => {
     items = []
     pool
-    .query(`SELECT COUNT(order_items.uuid) from orders INNER JOIN order_items on orders.order_id = order_items.order_id WHERE datetime BETWEEN ${req.params.from} and ${req.params.to} AND order_items.entree_name = ${req.params.entreename};`.replace(/:/g, ""))
+    .query(`SELECT COUNT(order_items.uuid) from orders INNER JOIN order_items on orders.order_id = order_items.order_id WHERE datetime BETWEEN '${req.query.from}' and '${req.query.to}' AND order_items.entree_name = '${req.query.entreename}';`.replace(/:/g, ""))
     .then(query_res => {
         for (let i = 0; i < query_res.rowCount; i++){
             items.push(query_res.rows[i]);
@@ -436,10 +436,10 @@ app.get('/getorderitemdate/:from/:to/:entreename', (req, res) => {
 });
 
 // Get order topping between dates
-app.get('/getordertoppingdate/:from/:to/:toppingname', (req, res) => {
+app.get('/getordertoppingdate', (req, res) => {
     items = []
     pool
-    .query(`SELECT COUNT(order_toppings.uuid) from orders INNER JOIN order_items ON orders.order_id = order_items.order_id INNER JOIN order_toppings ON orders.order_id = order_toppings.order_id AND order_items.order_subitem = order_toppings.order_subitem WHERE datetime BETWEEN ${req.params.from} and ${req.params.to} AND order_toppings.topping_name = ${req.params.toppingname};`.replace(/:/g, ""))
+    .query(`SELECT COUNT(order_toppings.uuid) from orders INNER JOIN order_items ON orders.order_id = order_items.order_id INNER JOIN order_toppings ON orders.order_id = order_toppings.order_id AND order_items.order_subitem = order_toppings.order_subitem WHERE datetime BETWEEN '${req.query.from}' and '${req.query.to}' AND order_toppings.topping_name = '${req.query.toppingname}';`.replace(/:/g, ""))
     .then(query_res => {
         for (let i = 0; i < query_res.rowCount; i++){
             items.push(query_res.rows[i]);
@@ -452,10 +452,10 @@ app.get('/getordertoppingdate/:from/:to/:toppingname', (req, res) => {
 });
 
 // Get bigboy count
-app.get('/bigboycount/:from/:to/:entreename/:toppingname', (req, res) => {
+app.get('/bigboycount', (req, res) => {
     items = []
     pool
-    .query(`SELECT COUNT(order_toppings.uuid) from orders INNER JOIN order_items ON orders.order_id = order_items.order_id INNER JOIN order_toppings ON orders.order_id = order_toppings.order_id AND order_items.order_subitem = order_toppings.order_subitem WHERE datetime BETWEEN ${req.params.from} and ${req.params.to} AND order_items.entree_name = ${req.params.entreename} AND order_toppings.topping_name = ${req.params.toppingname};`.replace(/:/g, ""))
+    .query(`SELECT COUNT(order_toppings.uuid) from orders INNER JOIN order_items ON orders.order_id = order_items.order_id INNER JOIN order_toppings ON orders.order_id = order_toppings.order_id AND order_items.order_subitem = order_toppings.order_subitem WHERE datetime BETWEEN '${req.query.from}' and '${req.query.to}' AND order_items.entree_name = '${req.query.entreename}' AND order_toppings.topping_name = '${req.query.toppingname}';`.replace(/:/g, ""))
     .then(query_res => {
         for (let i = 0; i < query_res.rowCount; i++){
             items.push(query_res.rows[i]);
@@ -468,10 +468,10 @@ app.get('/bigboycount/:from/:to/:entreename/:toppingname', (req, res) => {
 });
 
 // Get bigboy
-app.get('/bigboy/:from/:to', (req, res) => {
+app.get('/bigboy', (req, res) => {
     items = []
     pool
-    .query(`SELECT * from orders INNER JOIN order_items ON orders.order_id = order_items.order_id INNER JOIN order_toppings ON orders.order_id = order_toppings.order_id AND order_items.order_subitem = order_toppings.order_subitem WHERE datetime BETWEEN ${req.params.from} AND ${req.params.to};`.replace(/:/g, ""))
+    .query(`SELECT * from orders INNER JOIN order_items ON orders.order_id = order_items.order_id INNER JOIN order_toppings ON orders.order_id = order_toppings.order_id AND order_items.order_subitem = order_toppings.order_subitem WHERE datetime BETWEEN '${req.query.from}' AND '${req.query.to}';`.replace(/:/g, ""))
     .then(query_res => {
         for (let i = 0; i < query_res.rowCount; i++){
             items.push(query_res.rows[i]);
@@ -487,7 +487,7 @@ app.get('/bigboy/:from/:to', (req, res) => {
 // app.get(, (req, res) => {
 //     items = []
 //     pool
-//     .query(`${req.params.}`.replace(/:/g, ""))
+//     .query(`${req.query.}`.replace(/:/g, ""))
 //     .then(query_res => {
 //         for (let i = 0; i < query_res.rowCount; i++){
 //             items.push(query_res.rows[i]);

@@ -6,7 +6,7 @@
 
 <script>
   // import HelloWorld from '../components/HelloWorld'
-  import { getItems } from '../js/backend.js'
+  import {countItem} from '../js/backend.js'
 
   export default {
     name: 'LandingView',
@@ -15,7 +15,7 @@
       //HelloWorld,
     },
     async mounted() {
-        console.log(await getItems());
+        console.log(await countItem('2022-10-01','2022-10-20',2));
     }
   }
 </script>

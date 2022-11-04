@@ -84,10 +84,10 @@
 "SELECT * FROM items WHERE category='topping' or category='mainProtein' or category='subProtein' ORDER BY id;"
 
 // Get order item between dates
-'/getorderitemdate/:from/:to'
+'/getorderitemdate/:from/:to/:entree_name'
 "SELECT COUNT(order_items.uuid) from orders INNER JOIN order_items on orders.order_id = order_items.order_id WHERE datetime BETWEEN '%s' and '%s' AND order_items.entree_name = '%s';"
-// Get order topping between dats
-'/getordertoppingdate/:from/:to'
+// Get order topping between dates
+'/getordertoppingdate/:from/:to/:topping_name'
 "SELECT COUNT(order_toppings.uuid) from orders INNER JOIN order_items ON orders.order_id = order_items.order_id INNER JOIN order_toppings ON orders.order_id = order_toppings.order_id AND order_items.order_subitem = order_toppings.order_subitem WHERE datetime BETWEEN '%s' and '%s' AND order_toppings.topping_name = '%s';"
 // Get bigboy count
 '/bigboycount/:from/:to/:entreename/:toppingname'

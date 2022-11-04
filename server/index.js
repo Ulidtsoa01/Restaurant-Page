@@ -335,8 +335,6 @@ app.get('/counttopping/:from/:to/:topping', (req, res) => {
     });
 });
 
-// SALES/SALES TOGETHER
-
 // CONNECTOR
 
 // Get item from category
@@ -360,6 +358,120 @@ app.get('/getprice', (req, res) => {
         items = []
     pool
     .query("SELECT name, price FROM items")
+    .then(query_res => {
+        for (let i = 0; i < query_res.rowCount; i++){
+            items.push(query_res.rows[i]);
+        }
+        const data = {items: items};
+        console.log(items);
+        res.send(data);
+        return;
+    });
+});
+
+// SALES/SALES TOGETHER
+
+// Get mainEntrees
+app.get('/getmainentrees', (req, res) => {
+    items = []
+pool
+.query("SELECT * FROM items WHERE category='mainEntree' ORDER BY id ;")
+.then(query_res => {
+    for (let i = 0; i < query_res.rowCount; i++){
+        items.push(query_res.rows[i]);
+    }
+    const data = {items: items};
+    console.log(items);
+    res.send(data);
+    return;
+});
+});
+
+// Get allItems
+app.get('/getitems', (req, res) => {
+    items = []
+pool
+.query("SELECT * FROM items WHERE category='mainEntree' or category='subEntree' ORDER BY id;")
+.then(query_res => {
+    for (let i = 0; i < query_res.rowCount; i++){
+        items.push(query_res.rows[i]);
+    }
+    const data = {items: items};
+    console.log(items);
+    res.send(data);
+    return;
+});
+});
+
+// Get toppings
+app.get('/toppings', (req, res) => {
+    items = []
+pool
+.query("SELECT * FROM items WHERE category='topping' or category='mainProtein' or category='subProtein' ORDER BY id;")
+.then(query_res => {
+    for (let i = 0; i < query_res.rowCount; i++){
+        items.push(query_res.rows[i]);
+    }
+    const data = {items: items};
+    console.log(items);
+    res.send(data);
+    return;
+});
+});
+
+// Get order item between dates
+app.get('/getorderitemdate/:from/:to/:entreename', (req, res) => {
+    items = []
+    pool
+    .query(`SELECT COUNT(order_items.uuid) from orders INNER JOIN order_items on orders.order_id = order_items.order_id WHERE datetime BETWEEN ${req.params.from} and ${req.params.to} AND order_items.entree_name = ${req.params.entreename};`.replace(/:/g, ""))
+    .then(query_res => {
+        for (let i = 0; i < query_res.rowCount; i++){
+            items.push(query_res.rows[i]);
+        }
+        const data = {items: items};
+        console.log(items);
+        res.send(data);
+        return;
+    });
+});
+
+// Get order topping between dates
+app.get('/getordertoppingdate/:from/:to/:toppingname', (req, res) => {
+    items = []
+    pool
+    .query(`SELECT COUNT(order_toppings.uuid) from orders INNER JOIN order_items ON orders.order_id = order_items.order_id INNER JOIN order_toppings ON orders.order_id = order_toppings.order_id AND order_items.order_subitem = order_toppings.order_subitem WHERE datetime BETWEEN ${req.params.from} and ${req.params.to} AND order_toppings.topping_name = ${req.params.toppingname};`.replace(/:/g, ""))
+    .then(query_res => {
+        for (let i = 0; i < query_res.rowCount; i++){
+            items.push(query_res.rows[i]);
+        }
+        const data = {items: items};
+        console.log(items);
+        res.send(data);
+        return;
+    });
+});
+
+// Get bigboy count
+app.get('/bigboycount/:from/:to/:entreename/:toppingname', (req, res) => {
+    items = []
+    pool
+    .query(`SELECT COUNT(order_toppings.uuid) from orders INNER JOIN order_items ON orders.order_id = order_items.order_id INNER JOIN order_toppings ON orders.order_id = order_toppings.order_id AND order_items.order_subitem = order_toppings.order_subitem WHERE datetime BETWEEN ${req.params.from} and ${req.params.to} AND order_items.entree_name = ${req.params.entreename} AND order_toppings.topping_name = ${req.params.toppingname};`.replace(/:/g, ""))
+    .then(query_res => {
+        for (let i = 0; i < query_res.rowCount; i++){
+            items.push(query_res.rows[i]);
+        }
+        const data = {items: items};
+        console.log(items);
+        res.send(data);
+        return;
+    });
+});
+
+// Get bigboy
+app.get('/bigboy/:from/:to', (req, res) => {
+    items = []
+    pool
+    .query(`SELECT * from orders INNER JOIN order_items ON orders.order_id = order_items.order_id INNER JOIN order_toppings ON orders.order_id = order_toppings.order_id AND order_items.order_subitem = order_toppings.order_subitem WHERE datetime BETWEEN ${req.params.from} AND ${req.params.to};`.replace(/:/g, ""))
     .then(query_res => {
         for (let i = 0; i < query_res.rowCount; i++){
             items.push(query_res.rows[i]);

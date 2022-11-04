@@ -192,20 +192,22 @@ export async function getToppings() {
     return result.data;
 }
 
-// Get order item between dates, '/getorderitemdate/:from/:to'
-export async function getOrderItemDate(from, to) {
+// Get order item between dates, '/getorderitemdate/:from/:to/:entreename'
+export async function getOrderItemDate(from, to, entreename) {
     let result = await instance.get('/getorderitemdate',{
         from: from,
         to: to,
+        entreename: entreename,
     });
     return result.data;
 }
 
-// Get order topping between dats, '/getordertoppingdate/:from/:to'
-export async function getOrderToppingDate(from, to) {
+// Get order topping between dates, '/getordertoppingdate/:from/:to/:toppingname'
+export async function getOrderToppingDate(from, to, toppingname) {
     let result = await instance.get('/getordertoppingdate',{
         from: from,
         to: to,
+        toppingname: toppingname,
     });
     return result.data;
 }

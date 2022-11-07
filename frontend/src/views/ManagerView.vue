@@ -220,6 +220,20 @@
 </template>
 
 <script>
+import {insertOrder} from '../js/backend.js'
+import {getQuantityById} from '../js/backend.js'
+import {getIdFromName} from '../js/backend.js'
+import {getInventory} from '../js/backend.js'
+import {addItem} from '../js/backend.js'
+import {countItem} from '../js/backend.js'
+import {countTopping} from '../js/backend.js'
+import {getOrderItemDate} from '../js/backend.js'
+import {getOrderToppingDate} from '../js/backend.js'
+import {getBigBoyCount} from '../js/backend.js'
+import {getBigBoy} from '../js/backend.js'
+import {getItemsFromCategory} from '../js/backend.js'
+import {getPrices} from '../js/backend.js'
+
 export default {
   data: () => ({
     // Layout

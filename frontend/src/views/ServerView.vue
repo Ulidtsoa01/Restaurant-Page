@@ -8,7 +8,26 @@
       <v-row v-for="j in justify" :key="j" :justify="j">
         <v-col v-for="k in 1" :key="k">
           <!--Server button-->
-          <v-btn elevation="5" color="warning">Server View</v-btn>
+          <v-btn elevation="5" color="warning">Server View</v-btn>   
+          
+          <!-- Debugging Part
+         {{total}}
+          <br></br>
+          <br></br>
+          {{sub_total}}
+          <br></br>
+          {{entrees_array}}
+          <br></br>
+          {{toppings_array}}
+          {{ latestOrderID }}
+
+          {{ calories_total}} -->
+
+          <!-- {{ current_time}} -->
+
+          <!-- {{calories_total}}
+          {{moment(new Date()).format('YYYY-DD-MM h:mm:ss')}}  -->
+
           <!--Manager button-->
           <router-view :key="$route.fullPath"></router-view>
           <router-link :to="{ path: '/manager' }" style="text-decoration: none; color: inherit;">
@@ -18,10 +37,13 @@
         <right>
           <v-col v-for="k in 1" :key="k">
             <!--ColorBlind mode button-->
-            <v-btn v-if="light_mode" @click="light_mode_button" elevation="5" class="ma-2" color="green">Light Mode</v-btn>
-            <v-btn v-if="!light_mode" @click="light_mode_button_outlined" elevation="5" class="ma-2" outlined color="green">Light Mode</v-btn>
+            <v-btn v-if="light_mode" @click="light_mode_button" elevation="5" class="ma-2" color="green">Light Mode
+            </v-btn>
+            <v-btn v-if="!light_mode" @click="light_mode_button_outlined" elevation="5" class="ma-2" outlined
+              color="green">Light Mode</v-btn>
             <v-btn v-if="dark_mode" @click="dark_mode_button" elevation="5" class="ma-2" color="green">Dark Mode</v-btn>
-            <v-btn v-if="!dark_mode" @click="dark_mode_button_outlined" elevation="5" class="ma-2" outlined color="green">Dark Mode</v-btn>
+            <v-btn v-if="!dark_mode" @click="dark_mode_button_outlined" elevation="5" class="ma-2" outlined
+              color="green">Dark Mode</v-btn>
           </v-col>
         </right>
       </v-row>
@@ -36,7 +58,7 @@
           <vue-clock />
           <!--Update button-->
           &nbsp;&nbsp;
-          <v-btn elevation="5" class="ma-1" color="green" dark large>Update</v-btn>
+          <v-btn @click="update" elevation="5" class="ma-1" color="green" dark large>Update</v-btn>
           &nbsp;&nbsp;
           <!--Order table-->
           <br>
@@ -44,37 +66,11 @@
             <template v-slot:top>
               <v-divider class="mx-4" inset vertical></v-divider>
               <v-spacer></v-spacer>
-              <v-dialog v-model="dialog" max-width="500px">
-                <v-card>
-                  <v-card-actions>
-                    <v-spacer></v-spacer>
-                    <v-btn color="blue darken-1" text @click.native="close">
-                      Cancel
-                    </v-btn>
-                    <v-btn color="blue darken-1" text @click.native="save">
-                      Save
-                    </v-btn>
-                  </v-card-actions>
-                </v-card>
-              </v-dialog>
-
-              <!--Dialog-->
-              <v-dialog v-model="dialogDelete" max-width="500px">
-                <v-card>
-                  <v-card-title class="text-h5">Are you sure you want to delete this item?</v-card-title>
-                  <v-card-actions>
-                    <v-spacer></v-spacer>
-                    <v-btn color="blue darken-1" text @click.native="deleteItemConfirm">OK</v-btn>
-                    <v-btn color="blue darken-1" text @click.native="closeDelete">Cancel</v-btn>
-                    <v-spacer></v-spacer>
-                  </v-card-actions>
-                </v-card>
-              </v-dialog>
             </template>
 
             <!--Delete button-->
             <template v-slot:item.actions="{ item }">
-              <v-btn rounded depressed color="error" small @click.native="deleteItem(item)">
+              <v-btn rounded depressed color="error" small @click="deleteItem(item)">
                 DELETE
               </v-btn>
             </template>
@@ -83,12 +79,13 @@
           <!--Add, order, clear buttons-->
           <center>
             <v-card class="pa-2" inlined tile>
-              <v-btn large elevation="5" rounded color="green" dark class="mb-2" @click.native="addItem">
+              <v-btn large elevation="5" rounded color="green" dark class="mb-2" @click="addItem">
                 Add
               </v-btn>
               &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-              <v-btn large elevation="5" rounded @click.native="getData('Order Placed!'), deleteAllItem('order')"
-                class="mb-2" color="orange" dark>Order
+              <v-btn large elevation="5" rounded
+                @click="getData('Order Placed!'), deleteAllItem('order'), insertOrderTable()" class="mb-2"
+                color="orange" dark>Order
               </v-btn>
               &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
               <v-btn large elevation="5" rounded color="primary" dark class="mb-2"
@@ -103,14 +100,22 @@
             <br>
             <v-card class="pa-2" inlined tile>
               <v-col>
-                <v-btn v-if="dark_mode" @click="tip_control(1)" elevation="8" class="ma-2" outlined color="orange">5%</v-btn>
-                <v-btn v-if="light_mode" @click="tip_control(1)" elevation="1" class="ma-2" depressed color="warning">5%</v-btn>
-                <v-btn v-if="dark_mode" @click="tip_control(2)" elevation="8" class="ma-2" outlined color="orange">10%</v-btn>
-                <v-btn v-if="light_mode" @click="tip_control(2)" elevation="1" class="ma-2" depressed color="warning">10%</v-btn>
-                <v-btn v-if="dark_mode" @click="tip_control(3)" elevation="8" class="ma-2" outlined color="orange">15%</v-btn>
-                <v-btn v-if="light_mode" @click="tip_control(3)" elevation="1" class="ma-2" depressed color="warning">15%</v-btn>
-                <v-btn v-if="dark_mode" @click="tip_control(4)" elevation="8" class="ma-2" outlined color="orange">20%</v-btn>
-                <v-btn v-if="light_mode" @click="tip_control(4)" elevation="1" class="ma-2" depressed color="warning">20%</v-btn>
+                <v-btn v-if="dark_mode" @click="tip_control(1)" elevation="8" class="ma-2" outlined color="orange">5%
+                </v-btn>
+                <v-btn v-if="light_mode" @click="tip_control(1)" elevation="1" class="ma-2" depressed color="warning">5%
+                </v-btn>
+                <v-btn v-if="dark_mode" @click="tip_control(2)" elevation="8" class="ma-2" outlined color="orange">10%
+                </v-btn>
+                <v-btn v-if="light_mode" @click="tip_control(2)" elevation="1" class="ma-2" depressed color="warning">
+                  10%</v-btn>
+                <v-btn v-if="dark_mode" @click="tip_control(3)" elevation="8" class="ma-2" outlined color="orange">15%
+                </v-btn>
+                <v-btn v-if="light_mode" @click="tip_control(3)" elevation="1" class="ma-2" depressed color="warning">
+                  15%</v-btn>
+                <v-btn v-if="dark_mode" @click="tip_control(4)" elevation="8" class="ma-2" outlined color="orange">20%
+                </v-btn>
+                <v-btn v-if="light_mode" @click="tip_control(4)" elevation="1" class="ma-2" depressed color="warning">
+                  20%</v-btn>
                 &nbsp;
               </v-col>
             </v-card>
@@ -182,7 +187,8 @@
                         :disabled="!isDisabled_entrees" elevation="10" class="ma-3" outlined color="orange" large>
                         {{ k }}
                       </v-btn>
-                      <v-btn v-if="light_mode" @click="click_entrees(k), enable_all_buttons(k), enable_entree_buttons(1)"
+                      <v-btn v-if="light_mode"
+                        @click="click_entrees(k), enable_all_buttons(k), enable_entree_buttons(1)"
                         :disabled="!isDisabled_entrees" elevation="5" class="ma-3" depressed color="warning" large>
                         {{ k }}
                       </v-btn>
@@ -206,11 +212,13 @@
                   <!--mainProteins / subProteins buttons-->
                   <div class="ma-2">
                     <a v-for="k in mainProteins_name" :key="k">
-                      <v-btn v-if="dark_mode" @click="click_proteins(k), disable_mainProteins_buttons(), enalbe_subproteins_buttons()"
+                      <v-btn v-if="dark_mode"
+                        @click="click_proteins(k), disable_mainProteins_buttons(), enalbe_subproteins_buttons()"
                         :disabled="!isDisabled_mainProteins" elevation="10" class="ma-3" outlined color="orange" large>
                         {{ k }}
                       </v-btn>
-                      <v-btn v-if="light_mode" @click="click_proteins(k), disable_mainProteins_buttons(), enalbe_subproteins_buttons()"
+                      <v-btn v-if="light_mode"
+                        @click="click_proteins(k), disable_mainProteins_buttons(), enalbe_subproteins_buttons()"
                         :disabled="!isDisabled_mainProteins" elevation="5" class="ma-3" depressed color="warning" large>
                         {{ k }}
                       </v-btn>
@@ -244,12 +252,12 @@
                   <!--toppings buttons-->
                   <div class="ma-2">
                     <a v-for="k in toppings_name" :key="k">
-                      <v-btn v-if="dark_mode" @click="click_toppings(k)" :disabled="!isDisabled" elevation="10" class="ma-3" outlined
-                        color="orange" large>
+                      <v-btn v-if="dark_mode" @click="click_toppings(k)" :disabled="!isDisabled" elevation="10"
+                        class="ma-3" outlined color="orange" large>
                         {{ k }}
                       </v-btn>
-                      <v-btn v-if="light_mode" @click="click_toppings(k)" :disabled="!isDisabled" elevation="5" class="ma-3" depressed
-                        color="warning" large>
+                      <v-btn v-if="light_mode" @click="click_toppings(k)" :disabled="!isDisabled" elevation="5"
+                        class="ma-3" depressed color="warning" large>
                         {{ k }}
                       </v-btn>
                     </a>
@@ -268,7 +276,21 @@
 <!-----------Script------------>
 <script>
 // Clock import
+import moment from 'moment'
 import VueClock from '@dangvanthanh/vue-clock';
+
+import { getLatestOrderId } from '../js/backend.js'
+import { getLatestToppingUUID } from '../js/backend.js'
+import { getLatestItemUUID } from '../js/backend.js'
+import { insertOrder } from '../js/backend.js'
+import { insertOrderItems } from '../js/backend.js'
+import { insertOrderToppings } from '../js/backend.js'
+import { getIdFromName } from '../js/backend.js'
+import { incrementInventory } from '../js/backend.js'
+import { getItemsFromCategory } from '../js/backend.js'
+
+
+
 
 export default {
   data: () => ({
@@ -282,12 +304,18 @@ export default {
     tip: 0,
     sub_total: 0,
     total: 0,
+    calories_total: 0,
     tip1: false,
     tip2: false,
     tip3: false,
     tip4: false,
     light_mode: false,
     dark_mode: true,
+    current_time: moment(new Date()).utc().format('YYYY-DD-MM hh:mm:ss'),
+
+    latestOrderID: 0,
+    latestToppingUUID: 0,
+    latestItemUUID: 0,
 
     // Layout
     justify: [
@@ -309,6 +337,10 @@ export default {
 
     items: [],
 
+    entrees_array: [],
+
+    toppings_array: [],
+
     editedIndex: -1,
 
     editedItem: {
@@ -324,7 +356,7 @@ export default {
     },
 
     mainEntrees_name: ['Gyros', 'Bowls'],
-    subEntrees_name: ['Hummus & Fita', 'Two Falafels', 'Drink'],
+    subEntrees_name: ['Hummus & Pita', 'Two Falafels', 'Drink'],
     mainProteins_name: ['Chicken', 'Pork', 'Lamb', 'Beef'],
     subProteins_name: ['Extra Chicken', 'Extra Pork', 'Extra Lamb', 'Extra Beef'],
     toppings_name: ['Olive', 'Tomato', 'Lettuce', 'Red Onion', 'Cucumber', 'White Sauce', 'Brown Sauce', 'Extra White Sauce', 'Extra Brown Sauce'],
@@ -342,6 +374,7 @@ export default {
       for (let i = 0; i < this.items.length; i++) {
         sum += this.items[i].price;
       }
+      this.sub_total_track = sum;
       return this.sub_total = sum;
     },
 
@@ -383,7 +416,7 @@ export default {
         sum += this.items[i].price;
       }
       this.tip = sum * 0.05
-      return this.tip
+      return this.tip;
     },
 
     calculate_tip_2() {
@@ -392,7 +425,7 @@ export default {
         sum += this.items[i].price;
       }
       this.tip = sum * 0.10;
-      return this.tip
+      return this.tip;
     },
 
     calculate_tip_3() {
@@ -401,7 +434,7 @@ export default {
         sum += this.items[i].price;
       }
       this.tip = sum * 0.15;
-      return this.tip
+      return this.tip;
     },
 
     calculate_tip_4() {
@@ -410,7 +443,7 @@ export default {
         sum += this.items[i].price;
       }
       this.tip = sum * 0.20;
-      return this.tip
+      return this.tip;
     },
 
     calculate_total() {
@@ -418,8 +451,12 @@ export default {
       for (let i = 0; i < this.items.length; i++) {
         sum += this.items[i].price;
       }
-
+      this.total = (sum + this.tip).toFixed(2);
       return (sum + this.tip).toFixed(2);
+    },
+
+    calculate_total_calories() {
+      return this.calories_total;
     },
   },
 
@@ -439,35 +476,61 @@ export default {
   // methods
   methods: {
     // Entrees buttons
-    click_entrees: function (e) {
+    click_entrees(e) {
       if (e === 'Gyros') {
         this.count++;
+        this.calories_total += 724;
         this.items.push({
           number: this.count, name: 'Gyros', price: 8.09
+        });
+
+        this.entrees_array.push({
+          number: this.count,
+          name: e,
         });
       }
       else if (e === 'Bowls') {
         this.count++;
+        this.calories_total += 340;
         this.items.push({
           number: this.count, name: 'Bowls', price: 8.09
         });
+        this.entrees_array.push({
+          number: this.count,
+          name: e,
+        });
       }
-      else if (e === 'Hummus & Fita') {
+      else if (e === 'Hummus & Pita') {
         this.count++;
+        this.calories_total += 240;
         this.items.push({
-          number: this.count, name: 'Hummus & Fita', price: 3.49
+          number: this.count, name: 'Hummus & Pita', price: 3.49
+        });
+        this.entrees_array.push({
+          number: this.count,
+          name: e,
         });
       }
       else if (e === 'Two Falafels') {
         this.count++;
+        this.calories_total += 115;
         this.items.push({
           number: this.count, name: 'Two Falafels', price: 3.59
+        });
+        this.entrees_array.push({
+          number: this.count,
+          name: e,
         });
       }
       else if (e === 'Drink') {
         this.count++;
+        this.calories_total += 130;
         this.items.push({
           number: this.count, name: 'Drink', price: 2.45
+        });
+        this.entrees_array.push({
+          number: this.count,
+          name: e,
         });
       }
     },
@@ -475,93 +538,179 @@ export default {
     // Proteins buttons
     click_proteins: function (e) {
       if (e === 'Chicken') {
+        this.calories_total += 180;
         this.items.push({
           number: this.count, name: 'Chicken', price: 0
         });
+
+        this.toppings_array.push({
+          number: this.count,
+          name: e,
+        })
       }
       else if (e === 'Pork') {
+        this.calories_total += 200;
         this.items.push({
           number: this.count, name: 'Pork', price: 0
         });
+        this.toppings_array.push({
+          number: this.count,
+          name: e,
+        })
       }
       else if (e === 'Lamb') {
+        this.calories_total += 250;
         this.items.push({
           number: this.count, name: 'Lamb', price: 0
         });
+        this.toppings_array.push({
+          number: this.count,
+          name: e,
+        })
       }
       else if (e === 'Beef') {
+        this.calories_total += 170;
         this.items.push({
           number: this.count, name: 'Beef', price: 0
         });
+        this.toppings_array.push({
+          number: this.count,
+          name: e,
+        })
       }
       else if (e === 'Extra Chicken') {
+        this.calories_total += 180;
         this.items.push({
-          number: this.count, name: 'Extra Pork', price: 1.99
+          number: this.count, name: 'Extra Chicken', price: 1.99
         });
+        this.toppings_array.push({
+          number: this.count,
+          name: e,
+        })
       }
       else if (e === 'Extra Pork') {
+        this.calories_total += 200;
         this.items.push({
           number: this.count, name: 'Extra Pork', price: 1.99
         });
+        this.toppings_array.push({
+          number: this.count,
+          name: e,
+        })
       }
       else if (e === 'Extra Lamb') {
+        this.calories_total += 250;
         this.items.push({
           number: this.count, name: 'Extra Lamb', price: 1.99
         });
+        this.toppings_array.push({
+          number: this.count,
+          name: e,
+        })
       }
       else if (e === 'Extra Beef') {
+        this.calories_total += 170;
         this.items.push({
           number: this.count, name: 'Extra Beef', price: 1.99
         });
+        this.toppings_array.push({
+          number: this.count,
+          name: e,
+        })
       }
     },
 
     // Toppings buttons
     click_toppings: function (e) {
       if (e === 'Olive') {
+        this.calories_total += 50;
         this.items.push({
           number: this.count, name: 'Olive', price: 0
         });
+        this.toppings_array.push({
+          number: this.count,
+          name: e,
+        })
       }
       else if (e === 'Tomato') {
+        this.calories_total += 30;
         this.items.push({
           number: this.count, name: 'Tomato', price: 0
         });
+        this.toppings_array.push({
+          number: this.count,
+          name: e,
+        })
       }
       else if (e === 'Lettuce') {
+        this.calories_total += 10;
         this.items.push({
           number: this.count, name: 'Lettuce', price: 0
         });
+        this.toppings_array.push({
+          number: this.count,
+          name: e,
+        })
       }
       else if (e === 'Red Onion') {
+        this.calories_total += 30;
         this.items.push({
           number: this.count, name: 'Red Onion', price: 0
         });
+        this.toppings_array.push({
+          number: this.count,
+          name: e,
+        })
       }
       else if (e === 'Cucumber') {
+        this.calories_total += 16;
         this.items.push({
           number: this.count, name: 'Cucumber', price: 0
         });
+        this.toppings_array.push({
+          number: this.count,
+          name: e,
+        })
       }
       else if (e === 'White Sauce') {
+        this.calories_total += 10;
         this.items.push({
           number: this.count, name: 'White Sauce', price: 0
         });
+        this.toppings_array.push({
+          number: this.count,
+          name: e,
+        })
       }
       else if (e === 'Brown Sauce') {
+        this.calories_total += 10;
         this.items.push({
-          number: this.count, name: 'Brwon Sauce', price: 0
+          number: this.count, name: 'Brown Sauce', price: 0
         });
+        this.toppings_array.push({
+          number: this.count,
+          name: e,
+        })
       }
       else if (e === 'Extra White Sauce') {
+        this.calories_total += 10;
         this.items.push({
           number: this.count, name: 'Extra White Sauce', price: 0.39
         });
+        this.toppings_array.push({
+          number: this.count,
+          name: e,
+        })
       }
       else if (e === 'Extra Brown Sauce') {
+        this.calories_total += 10;
         this.items.push({
           number: this.count, name: 'Extra Brown Sauce', price: 0.39
         });
+        this.toppings_array.push({
+          number: this.count,
+          name: e,
+        })
       }
     },
 
@@ -631,23 +780,100 @@ export default {
       this.editedIndex = this.items.indexOf(item)
       this.editedItem = Object.assign({}, item)
       this.dialogDelete = true
+      this.items.splice(this.editedIndex, 1)
+      this.closeDelete()
 
-      if (item.name === 'Gyros' || item.name === 'Bowls' || item.name === 'Hummus & Fita'
-        || item.name === 'Two Falafels' || item.name === 'Drink') {
-        this.count -= 1
+      if (item.name === 'Gyros' || item.name === 'Bowls' || item.name === 'Hummus & Pita' || item.name === 'Two Falafels' || item.name === 'Drink') {
+        this.count -= 1;
         this.enable_entrees = true;
         this.enalbe_mainProteins = false;
         this.enalbe_subProteins = false;
         this.enable_toppings = false;
+        this.entrees_array.pop(this.entrees_array.length-1);
       }
 
       if (item.name === 'Chicken' || item.name === 'Pork' || item.name === 'Lamb' || item.name === 'Beef') {
         this.enalbe_mainProteins = true;
         this.enalbe_subProteins = false;
       }
+      
+      if (item.name === 'Chicken' || item.name === 'Pork' || item.name === 'Lamb' || item.name === 'Beef' 
+      || item.name === 'Extra Chicken' || item.name === 'Extra Pork' || item.name === 'Extra Lamb' || item.name === 'Extra Beef'
+      || item.name === 'Olive' || item.name === 'Tomato' || item.name === 'Lettuce' || item.name === 'Red Onion'
+      || item.name === 'Cucumber' || item.name === 'White Sauce' || item.name === 'Extra White Sauce'
+      || item.name === 'Brown Sauce' || item.name === 'Extra Brown Sauce') {
+        this.toppings_array.pop(this.toppings_array.length-1);
+      }
 
       if (item.name === 'Extra Chicken' || item.name === 'Extra Pork' || item.name === 'Extra Lamb' || item.name === 'Extra Beef') {
         this.enalbe_subProteins = true;
+      }
+
+      if (item.name === 'Gyros') {
+        this.calories_total -= 724;
+      }
+      else if (item.name === 'Bowls') {
+        this.calories_total -= 340;
+      }
+      else if (item.name === 'Hummus & Pita') {
+        this.calories_total -= 240;
+      }
+      else if (item.name === 'Two Falafels') {
+        this.calories_total -= 115;
+      }
+      else if (item.name === 'Drink') {
+        this.calories_total -= 130;
+      }
+      else if (item.name === 'Chicken') {
+        this.calories_total -= 180;
+      }
+      else if (item.name === 'Extra Chicken') {
+        this.calories_total -= 180;
+      }
+      else if (item.name === 'Pork') {
+        this.calories_total -= 200;
+      }
+      else if (item.name === 'Extra Pork') {
+        this.calories_total -= 200;
+      }
+      else if (item.name === 'Lamb') {
+        this.calories_total -= 250;
+      }
+      else if (item.name === 'Extra Lamb') {
+        this.calories_total -= 250;
+      }
+      else if (item.name === 'Beef') {
+        this.calories_total -= 170;
+      }
+      else if (item.name === 'Extra Beef') {
+        this.calories_total -= 170;
+      }
+      else if (item.name === 'Olive') {
+        this.calories_total -= 50;
+      }
+      else if (item.name === 'Tomato') {
+        this.calories_total -= 30;
+      }
+      else if (item.name === 'Lettuce') {
+        this.calories_total -= 10;
+      }
+      else if (item.name === 'Red Onion') {
+        this.calories_total -= 30;
+      }
+      else if (item.name === 'Cucumber') {
+        this.calories_total -= 16;
+      }
+      else if (item.name === 'White Sauce') {
+        this.calories_total -= 10;
+      }
+      else if (item.name === 'Extra White Sauce') {
+        this.calories_total -= 10;
+      }
+      else if (item.name === 'Brown Sauce') {
+        this.calories_total -= 10;
+      }
+      else if (item.name === 'Extra Brown Sauce') {
+        this.calories_total -= 10;
       }
     },
 
@@ -656,6 +882,8 @@ export default {
         for (let i = this.items.length; i >= 0; i--) {
           this.items.pop(i)
         }
+        this.entrees_array = [];
+        this.toppings_array = [];
         this.count = -1;
         this.enalbe_mainProteins = false;
         this.enalbe_subProteins = false;
@@ -664,6 +892,7 @@ export default {
         this.tip = 0;
         this.total = 0;
         this.sub_total = 0;
+        this.calories_total = 0;
         this.tip1 = false;
         this.tip2 = false;
         this.tip3 = false;
@@ -674,32 +903,7 @@ export default {
         for (let i = this.items.length; i >= 0; i--) {
           this.items.pop(i)
         }
-        this.count = -1;
-        this.enalbe_mainProteins = false;
-        this.enalbe_subProteins = false;
-        this.enable_toppings = false;
-        this.enable_entrees = true;
-        this.tip = 0;
-        this.total = 0;
-        this.sub_total = 0;
-        this.tip1 = false;
-        this.tip2 = false;
-        this.tip3 = false;
-        this.tip4 = false;
       }
-    },
-
-    deleteItemConfirm() {
-      this.items.splice(this.editedIndex, 1)
-      this.closeDelete()
-    },
-
-    close() {
-      this.dialog = false
-      this.$nextTick(() => {
-        this.editedItem = Object.assign({}, this.defaultItem)
-        this.editedIndex = -1
-      })
     },
 
     closeDelete() {
@@ -708,15 +912,6 @@ export default {
         this.editedItem = Object.assign({}, this.defaultItem)
         this.editedIndex = -1
       })
-    },
-
-    save() {
-      if (this.editedIndex > -1) {
-        Object.assign(this.items[this.editedIndex], this.editedItem)
-      } else {
-        this.items.push(this.editedItem)
-      }
-      this.close()
     },
 
     getData(data) {
@@ -743,8 +938,72 @@ export default {
       this.$vuetify.theme.dark = true;
       this.light_mode = false;
       this.dark_mode = true;
-    }
-  }
+    },
+
+    async getOrderID() {
+      this.latestOrderID = await getLatestOrderId();
+    },
+
+    async getToppingUUID() {
+      this.latestToppingUUID = await getLatestToppingUUID();
+    },
+
+    async getItemUUID() {
+      this.latestItemUUID = await getLatestItemUUID();
+    },
+
+    async insertOrderTable() {    
+      await insertOrder(this.latestOrderID + 1, this.calories_total, this.sub_total, this.tip, this.total, this.current_time);
+      
+        let c = 1;
+        if (this.entrees_array != []) {
+          for (let i = 0; i < this.entrees_array.length; i++) {
+          let id_entrees = await getIdFromName(this.entrees_array[i].name);
+          await insertOrderItems(this.latestItemUUID + c, this.latestOrderID + 1, this.entrees_array[i].number, id_entrees, this.entrees_array[i].name);
+          let inventroy_id_entrees = await getIdFromName(this.entrees_array[i].name);
+          await incrementInventory(inventroy_id_entrees);
+          c += 1;
+        }
+        }
+
+        let d = 1;
+        if (this.toppings_array != []) {
+          for (let j = 0; j < this.toppings_array.length; j++) {
+          let id_toppings = await getIdFromName(this.toppings_array[j].name);
+          await insertOrderToppings(this.latestToppingUUID + d, this.latestOrderID + 1, this.toppings_array[j].number, id_toppings, this.toppings_array[j].name);
+          let inventory_id_toppings = await getIdFromName(this.toppings_array[j].name);
+          await incrementInventory(inventory_id_toppings);
+          d += 1;
+        }
+      }
+        this.entrees_array = [];
+        this.toppings_array = [];
+        this.count = -1;
+        this.latestOrderID = await getLatestOrderId();
+        this.latestItemUUID = await getLatestItemUUID();
+        this.latestToppingUUID = await getLatestToppingUUID();
+        this.enalbe_mainProteins = false;
+        this.enalbe_subProteins = false;
+        this.enable_toppings = false;
+        this.enable_entrees = true;
+        this.tip = 0;
+        this.total = 0;
+        this.sub_total = 0;
+        this.calories_total = 0;
+        this.tip1 = false;
+        this.tip2 = false;
+        this.tip3 = false;
+        this.tip4 = false;
+    },
+  },
+
+  async mounted() {
+    await this.getOrderID();
+    await this.getToppingUUID();
+    await this.getItemUUID();
+    await this.getIdFromName();
+  },
+
 }
 </script>
 <!-----------Script------------>
@@ -752,6 +1011,5 @@ export default {
 
 <!-----------Style------------->
 <style>
-
 </style>
 <!-----------Style------------->

@@ -270,7 +270,7 @@ app.get('/addinventory', (req, res) => {
 });
 
 // Delete item
-app.get('/deleteitem', (req, res) => {
+app.get('/deleteinventory', (req, res) => {
     items = []
     pool
     .query(`DELETE FROM inventory where item_id = ${req.query.itemid}`.replace(/:/g, ""))
@@ -286,7 +286,7 @@ app.get('/deleteitem', (req, res) => {
 });
 
 // Delete inventory
-app.get('/deleteinventory', (req, res) => {
+app.get('/deleteitem', (req, res) => {
     items = []
     pool
     .query(`DELETE FROM items where id = ${req.query.itemid}`.replace(/:/g, ""))

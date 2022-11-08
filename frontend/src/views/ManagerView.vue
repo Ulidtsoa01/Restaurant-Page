@@ -97,7 +97,7 @@
         <center>
           <h1 class="font-weight-bold">Inventory</h1>
         </center>
-        <v-data-table :headers="inventoryHeader" :items="inventory" class="elevation-1">
+        <v-data-table :headers="inventoryHeader" :items="inventory" sort-by="id" class="elevation-1">
           <template v-slot:top>
             <v-divider class="mx-4" inset vertical></v-divider>
             <v-spacer></v-spacer>
@@ -105,16 +105,14 @@
               <template v-slot:activator="{ on, attrs }">
                 <center>
                   <v-btn color="primary" dark class="mb-2" v-bind="attrs" v-on="on">
-                    Add
+                    Add New Item
                   </v-btn>
-                  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                  <v-btn color="black" dark class="mb-2"> Edit </v-btn>
                 </center>
               </template>
 
               <v-card>
                 <v-card-title>
-                  <span class="text-h5">{{ "New Inventory Item" }}</span>
+                  <span class="text-h5">{{ createTitle }}</span>
                 </v-card-title>
 
                 <v-card-text>
@@ -158,7 +156,7 @@
                       </v-col>
                       <v-col cols="12" sm="6" md="4">
                         <v-text-field
-                          v-model="editedInventory.quantity"
+                          v-model="editedInventory.item_quantity"
                           label="Quantity"
                         ></v-text-field>
                       </v-col>
@@ -197,24 +195,39 @@
                 </v-card-actions>
               </v-card>
             </v-dialog>
-
             <v-dialog v-model="dialogDelete" max-width="500px">
               <v-card>
                 <v-card-title class="text-h5"
-                  >Are you sure you want to delete this item?</v-card-title
+                  >Delete this item?</v-card-title
                 >
                 <v-card-actions>
                   <v-spacer></v-spacer>
-                  <v-btn color="blue darken-1" text @click.native="deleteItemConfirm"
-                    >OK</v-btn
-                  >
-                  <v-btn color="blue darken-1" text @click.native="closeDelete"
+                  <v-btn color="blue darken-1" text @click="closeDelete"
                     >Cancel</v-btn
+                  >
+                  <v-btn color="blue darken-1" text @click="deleteItemConfirm"
+                    >Ok</v-btn
                   >
                   <v-spacer></v-spacer>
                 </v-card-actions>
               </v-card>
             </v-dialog>
+          </template>
+          <template v-slot:item.actions="{ item }">
+            <v-icon
+              small
+              class="mr-2"
+              @click="editItem(item)"
+            >
+              mdi-pencil
+            </v-icon>
+            <v-icon
+              small
+              class="mr-2"
+              @click="deleteItem(item)"
+            >
+              mdi-delete
+            </v-icon>
           </template>
         </v-data-table>
       </v-col>
@@ -223,12 +236,18 @@
 </template>
 
 <script>
-import { insertOrder } from "../js/backend.js";
-import { getQuantityById } from "../js/backend.js";
-import { getIdFromName } from "../js/backend.js";
 import { getInventory } from "../js/backend.js";
 import { addItem } from "../js/backend.js";
 import { addInventory } from "../js/backend.js";
+import { updateItemItems } from "../js/backend.js";
+import { updateItemInventory } from "../js/backend.js";
+import { deleteItem } from "../js/backend.js";
+import { deleteItemInventory } from '../js/backend.js';
+
+
+import { insertOrder } from "../js/backend.js";
+import { getQuantityById } from "../js/backend.js";
+import { getIdFromName } from "../js/backend.js";
 import { countItem } from "../js/backend.js";
 import { countTopping } from "../js/backend.js";
 import { getOrderItemDate } from "../js/backend.js";
@@ -238,8 +257,8 @@ import { getBigBoy } from "../js/backend.js";
 import { getItemsFromCategory } from "../js/backend.js";
 import { getPrices } from "../js/backend.js";
 
-export default {
 
+export default {
   async mounted() {
     this.dates = [this.getToday()]
     this.inventory = await getInventory();
@@ -293,16 +312,17 @@ export default {
     ],
 
     inventoryHeader: [
-      { text: "Inventory ID", value: "id" },
+      { text: "Inventory ID", value: "id"},
       { text: "Item ID", value: "item_id" },
       { text: "Name", value: "name" },
       { text: "Category", value: "category" },
       { text: "Price", value: "price" },
-      { text: "Quantity", value: "quantity" },
+      { text: "Quantity", value: "item_quantity" },
       { text: "Number Sold", value: "num_sold" },
       { text: "Vendor", value: "vendor" },
       { text: "Purchase Price", value: "purchase_price" },
       { text: "Batch", value: "batch_quantity" },
+      { text: 'Actions', value: 'actions', sortable: false },
     ],
 
     items: [],
@@ -331,7 +351,7 @@ export default {
       category: "",
       calories: 0,
       price: 0.0,
-      quantity: 0,
+      item_quantity: 0,
       num_sold: 0,
       vendor: "",
       purchase_price: 0.0,
@@ -345,7 +365,7 @@ export default {
       category: "",
       calories: 0,
       price: 0.0,
-      quantity: 0,
+      item_quantity: 0,
       num_sold: 0,
       vendor: "",
       purchase_price: 0.0,
@@ -360,7 +380,27 @@ export default {
         return this.dates.join(" – ").replaceAll("-","/");
       }
     },
+
+    createTitle () {
+       if(this.editedIndex == -1)
+       {
+        return 'Add New Item'
+       }
+       else
+       {
+        return 'Edit Existing Item'
+       }
+      },
   },
+
+  watch: {
+      dialog (val) {
+        val || this.close()
+      },
+      dialogDelete (val) {
+        val || this.closeDelete()
+      },
+    },
 
   methods: {
     click_report: function (e) {
@@ -392,30 +432,56 @@ export default {
     },
 
     editItem(item) {
-      this.editedIndex = this.items.indexOf(item);
       this.editedInventory = Object.assign({}, item);
+      this.editedIndex = this.editedInventory.item_id
       this.dialog = true;
     },
+
+
+    deleteItem (item) {
+        this.editedInventory = Object.assign({}, item)
+        this.editedIndex = this.editedInventory.item_id;
+        this.dialogDelete = true
+    },
+      
+   async deleteItemConfirm () {
+        // SAFEGUARD TO PREVENT ACCIDENTAL DELETION
+        console.log(this.editedIndex)
+        if(this.editedIndex > 22)
+        {
+          await deleteItemInventory(this.editedIndex);
+          await deleteItem(this.editedIndex);
+        }
+        this.inventory = await getInventory();
+        this.closeDelete()
+      },
 
     close () {
         this.dialog = false
         this.$nextTick(() => {
-          this.editedItem = Object.assign({}, this.defaultInventory)
+          this.editedInventory = Object.assign({}, this.defaultInventory)
+          this.editedIndex = -1
+        })
+      },
+
+      closeDelete () {
+        this.dialogDelete = false
+        this.$nextTick(() => {
+          this.editedInventory = Object.assign({}, this.defaultInventory)
           this.editedIndex = -1
         })
       },
 
     async save() {
-      if (this.editedIndex > -1) {
-        Object.assign(this.inventory[this.editedIndex], this.editedInventory)
-      }
-      console.log(this.editedInventory)
       var temp = this.editedInventory;
-      var category = temp.category;
-      await addItem(temp.item_id,temp.name,temp.category,temp.price,temp.calories);
-      console.log("IN MANAGER VIEW:")
-      console.log(temp.quantity)
-      await addInventory(temp.id,temp.item_id,temp.name,temp.quantity,temp.num_sold,temp.vendor,temp.purchase_price,temp.batch_quantity);
+      if (this.editedIndex > -1) {
+        await updateItemItems(temp.name,temp.price,this.editedIndex);
+        await updateItemInventory(temp.name,this.editedIndex)
+      }
+      else{
+        await addItem(temp.item_id,temp.name,temp.category,temp.price,temp.calories);
+        await addInventory(temp.id,temp.item_id,temp.name,temp.item_quantity,temp.num_sold,temp.vendor,temp.purchase_price,temp.batch_quantity);
+      }
       this.inventory = await getInventory();
       this.close();
     },

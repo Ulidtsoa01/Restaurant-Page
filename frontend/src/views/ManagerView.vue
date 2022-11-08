@@ -158,7 +158,7 @@
                       </v-col>
                       <v-col cols="12" sm="6" md="4">
                         <v-text-field
-                          v-model="editedInventory.item_quantity"
+                          v-model="editedInventory.quantity"
                           label="Quantity"
                         ></v-text-field>
                       </v-col>
@@ -298,7 +298,7 @@ export default {
       { text: "Name", value: "name" },
       { text: "Category", value: "category" },
       { text: "Price", value: "price" },
-      { text: "Quantity", value: "item_quantity" },
+      { text: "Quantity", value: "quantity" },
       { text: "Number Sold", value: "num_sold" },
       { text: "Vendor", value: "vendor" },
       { text: "Purchase Price", value: "purchase_price" },
@@ -331,7 +331,7 @@ export default {
       category: "",
       calories: 0,
       price: 0.0,
-      item_quantity: 0,
+      quantity: 0,
       num_sold: 0,
       vendor: "",
       purchase_price: 0.0,
@@ -345,7 +345,7 @@ export default {
       category: "",
       calories: 0,
       price: 0.0,
-      item_quantity: 0,
+      quantity: 0,
       num_sold: 0,
       vendor: "",
       purchase_price: 0.0,
@@ -413,6 +413,8 @@ export default {
       var temp = this.editedInventory;
       var category = temp.category;
       await addItem(temp.item_id,temp.name,temp.category,temp.price,temp.calories);
+      console.log("IN MANAGER VIEW:")
+      console.log(temp.quantity)
       await addInventory(temp.id,temp.item_id,temp.name,temp.quantity,temp.num_sold,temp.vendor,temp.purchase_price,temp.batch_quantity);
       this.inventory = await getInventory();
       this.close();

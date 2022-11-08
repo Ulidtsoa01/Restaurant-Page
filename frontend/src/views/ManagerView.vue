@@ -213,7 +213,7 @@
               </v-card>
             </v-dialog>
           </template>
-          <template v-slot:item.actions="{ item }">
+          <template v-slot:item.edit="{ item }">
             <v-icon
               small
               class="mr-2"
@@ -221,6 +221,8 @@
             >
               mdi-pencil
             </v-icon>
+            </template>
+          <template v-slot:item.delete="{ item }">
             <v-icon
               small
               class="mr-2"
@@ -322,7 +324,8 @@ export default {
       { text: "Vendor", value: "vendor" },
       { text: "Purchase Price", value: "purchase_price" },
       { text: "Batch", value: "batch_quantity" },
-      { text: 'Actions', value: 'actions', sortable: false },
+      { text: 'Edit', value: 'edit', sortable: false },
+      { text: 'Delete', value: 'delete', sortable: false },
     ],
 
     items: [],

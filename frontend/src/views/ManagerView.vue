@@ -15,14 +15,11 @@
           <!--Manager Button-->
           <v-btn elevation="2" class="ma-2" color="warning">Manager View</v-btn>
         </v-col>
-        <right>
-          <v-col v-for="k in 1" :key="k">
-            <!--ColorBlind Mode Button-->
+          <!-- <v-col v-for="k in 1" :key="k">
             <v-btn elevation="2" class="ma-2" outlined color="green"
               >Colorblind Mode</v-btn
             >
-          </v-col>
-        </right>
+        </v-col> -->
       </v-row>
     </v-container>
 
@@ -125,13 +122,13 @@
                     <v-row>
                       <v-col cols="12" sm="6" md="4">
                         <v-text-field
-                          v-model="editedInventory.inventoryID"
+                          v-model="editedInventory.id"
                           label="Inventory ID"
                         ></v-text-field>
                       </v-col>
                       <v-col cols="12" sm="6" md="4">
                         <v-text-field
-                          v-model="editedInventory.itemID"
+                          v-model="editedInventory.item_id"
                           label="Item Id"
                         ></v-text-field>
                       </v-col>
@@ -155,13 +152,13 @@
                       </v-col>
                       <v-col cols="12" sm="6" md="4">
                         <v-text-field
-                          v-model="editedInventory.quantity"
+                          v-model="editedInventory.item_quantity"
                           label="Quantity"
                         ></v-text-field>
                       </v-col>
                       <v-col cols="12" sm="6" md="4">
                         <v-text-field
-                          v-model="editedInventory.numSold"
+                          v-model="editedInventory.num_sold"
                           label="Number Sold"
                         ></v-text-field>
                       </v-col>
@@ -173,13 +170,13 @@
                       </v-col>
                       <v-col cols="12" sm="6" md="4">
                         <v-text-field
-                          v-model="editedInventory.purchasePrice"
+                          v-model="editedInventory.purchase_price"
                           label="Purchase Price"
                         ></v-text-field>
                       </v-col>
                       <v-col cols="12" sm="6" md="4">
                         <v-text-field
-                          v-model="editedInventory.batch"
+                          v-model="editedInventory.batch_quantity"
                           label="Batch"
                         ></v-text-field>
                       </v-col>
@@ -189,8 +186,8 @@
 
                 <v-card-actions>
                   <v-spacer></v-spacer>
-                  <v-btn color="blue darken-1" text @click.native="close"> Cancel </v-btn>
-                  <v-btn color="blue darken-1" text @click.native="save"> Save </v-btn>
+                  <v-btn color="blue darken-1" text @click="close"> Cancel </v-btn>
+                  <v-btn color="blue darken-1" text @click="save"> Save </v-btn>
                 </v-card-actions>
               </v-card>
             </v-dialog>
@@ -220,25 +217,33 @@
 </template>
 
 <script>
-import {insertOrder} from '../js/backend.js'
-import {getQuantityById} from '../js/backend.js'
-import {getIdFromName} from '../js/backend.js'
-import {getInventory} from '../js/backend.js'
-import {addItem} from '../js/backend.js'
-import {countItem} from '../js/backend.js'
-import {countTopping} from '../js/backend.js'
-import {getOrderItemDate} from '../js/backend.js'
-import {getOrderToppingDate} from '../js/backend.js'
-import {getBigBoyCount} from '../js/backend.js'
-import {getBigBoy} from '../js/backend.js'
-import {getItemsFromCategory} from '../js/backend.js'
-import {getPrices} from '../js/backend.js'
+import { insertOrder } from "../js/backend.js";
+import { getQuantityById } from "../js/backend.js";
+import { getIdFromName } from "../js/backend.js";
+import { getInventory } from "../js/backend.js";
+import { addItem } from "../js/backend.js";
+import { addInventory } from "../js/backend.js";
+import { countItem } from "../js/backend.js";
+import { countTopping } from "../js/backend.js";
+import { getOrderItemDate } from "../js/backend.js";
+import { getOrderToppingDate } from "../js/backend.js";
+import { getBigBoyCount } from "../js/backend.js";
+import { getBigBoy } from "../js/backend.js";
+import { getItemsFromCategory } from "../js/backend.js";
+import { getPrices } from "../js/backend.js";
 
 export default {
+
+  async mounted() {
+    this.dates = [this.getToday()]
+    this.inventory = await getInventory();
+  },
+
   data: () => ({
     // Layout
     justify: ["space-between"],
-    dates: ["2022-11-01"],
+
+    dates: [],
     header: [],
 
     dialog: false,
@@ -282,21 +287,22 @@ export default {
     ],
 
     inventoryHeader: [
-      { text: "Inventory ID", value: "name" },
-      { text: "Item ID", value: "price" },
-      { text: "Name", value: "quantity" },
+      { text: "Inventory ID", value: "id" },
+      { text: "Item ID", value: "item_id" },
+      { text: "Name", value: "name" },
       { text: "Category", value: "category" },
       { text: "Price", value: "price" },
-      { text: "Quantity", value: "quantity" },
-      { text: "Number Sold", value: "numsold" },
+      { text: "Quantity", value: "item_quantity" },
+      { text: "Number Sold", value: "num_sold" },
       { text: "Vendor", value: "vendor" },
-      { text: "Purchase Price", value: "price" },
-      { text: "Batch", value: "batch" },
+      { text: "Purchase Price", value: "purchase_price" },
+      { text: "Batch", value: "batch_quantity" },
     ],
 
     items: [],
 
     inventory: [],
+    editedIndex: -1,
 
     salesReportRow: {
       name: "",
@@ -312,33 +318,39 @@ export default {
       popular: false,
     },
 
-    editedInventory: {
-      inventoryID: 0,
-      itemID: 0,
+    defaultInventory: {
+      id: 0,
+      item_id: 0,
       name: "",
       category: "",
       price: 0.0,
-      quantity: 0,
-      numSold: 0,
+      item_quantity: 0,
+      num_sold: 0,
       vendor: "",
-      purchasePrice: 0.0,
+      purchase_price: 0.0,
+      batch_quantity: 0,
     },
 
-    defaultInventory: {
-      inventoryID: 0,
-      itemID: 0,
+    editedInventory: {
+      id: 0,
+      item_id: 0,
       name: "",
       category: "",
       price: 0.0,
-      quantity: 0,
-      numSold: 0,
+      item_quantity: 0,
+      num_sold: 0,
       vendor: "",
-      purchasePrice: 0.0,
+      purchase_price: 0.0,
+      batch_quantity: 0,
     },
   }),
   computed: {
     dateRangeText() {
-      return this.dates.join(" ~ ");
+      if (this.dates.length === 0) {
+        return "Select two dates";
+      } else {
+        return this.dates.join(" – ").replaceAll("-","/");
+      }
     },
   },
 
@@ -377,31 +389,33 @@ export default {
       this.dialog = true;
     },
 
-    deleteItem(item) {
-      this.editedIndex = this.items.indexOf(item);
-      this.editedInventory = Object.assign({}, item);
-      this.dialogDelete = true;
-    },
+    close () {
+        this.dialog = false
+        this.$nextTick(() => {
+          this.editedItem = Object.assign({}, this.defaultInventory)
+          this.editedIndex = -1
+        })
+      },
 
-    deleteItemConfirm() {
-      this.items.splice(this.editedIndex, 1);
-      this.closeDelete();
-    },
-
-    close() {
-      this.dialog = false;
-    },
-
-    closeDelete() {
-      this.dialogDelete = false;
-      this.$nextTick(() => {
-        this.editedInventory = Object.assign({}, this.defaultInventory);
-        this.editedIndex = -1;
-      });
-    },
-
-    save() {
+    async save() {
+      if (this.editedIndex > -1) {
+        Object.assign(this.inventory[this.editedIndex], this.editedInventory)
+      }
+      console.log(this.editedInventory)
+      var temp = this.editedInventory;
+      await addInventory(parseInt(temp.id),parseInt(temp.item_id),temp.name,parseFloat(temp.quantity),parseFloat(temp.num_sold),temp.vendor,parseFloat(temp.purchase_price),parseInt(temp.batch_quantity))
+      this.inventory = await getInventory();
       this.close();
+    },
+
+    getToday() {
+      var today = new Date();
+      var dd = String(today.getDate()).padStart(2, '0');
+      var mm = String(today.getMonth() + 1).padStart(2, '0');
+      var yyyy = today.getFullYear();
+      today = yyyy + '-' + mm + '-' + dd;
+      console.log(today);
+      return today;
     },
   },
 };

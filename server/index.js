@@ -256,8 +256,9 @@ app.get('/additem', (req, res) => {
 // Add inventory
 app.get('/addinventory', (req, res) => {
     items = []
+    console.log(req.query);
     pool
-    .query(`INSERT INTO inventory (id,item_id,name,item_quantity,num_sold,vendor,purchase_price,batch_quantity) VALUES (${req.query.id},${req.query.itemid},'${req.query.name}',${req.query.quantity},${req.query.num_sold},'${req.query.vendor}',${req.query.purcahse_price},${req.query.batch_quantity})`.replace(/:/g, ""))
+    .query(`INSERT INTO inventory VALUES (${req.query.id},${req.query.itemid},'${req.query.name}',${req.query.quantity},${req.query.num_sold},'${req.query.vendor}',${req.query.purchase_price},${req.query.batch_quantity});`.replace(/:/g, ""))
     .then(query_res => {
         for (let i = 0; i < query_res.rowCount; i++){
             items.push(query_res.rows[i]);

@@ -152,6 +152,12 @@
                       </v-col>
                       <v-col cols="12" sm="6" md="4">
                         <v-text-field
+                          v-model="editedInventory.calories"
+                          label="Calories"
+                        ></v-text-field>
+                      </v-col>
+                      <v-col cols="12" sm="6" md="4">
+                        <v-text-field
                           v-model="editedInventory.item_quantity"
                           label="Quantity"
                         ></v-text-field>
@@ -323,6 +329,7 @@ export default {
       item_id: 0,
       name: "",
       category: "",
+      calories: 0,
       price: 0.0,
       item_quantity: 0,
       num_sold: 0,
@@ -336,6 +343,7 @@ export default {
       item_id: 0,
       name: "",
       category: "",
+      calories: 0,
       price: 0.0,
       item_quantity: 0,
       num_sold: 0,
@@ -403,7 +411,9 @@ export default {
       }
       console.log(this.editedInventory)
       var temp = this.editedInventory;
-      await addInventory(parseInt(temp.id),parseInt(temp.item_id),temp.name,parseFloat(temp.quantity),parseFloat(temp.num_sold),temp.vendor,parseFloat(temp.purchase_price),parseInt(temp.batch_quantity))
+      var category = temp.category;
+      await addItem(temp.item_id,temp.name,temp.category,temp.price,temp.calories);
+      await addInventory(temp.id,temp.item_id,temp.name,temp.quantity,temp.num_sold,temp.vendor,temp.purchase_price,temp.batch_quantity);
       this.inventory = await getInventory();
       this.close();
     },

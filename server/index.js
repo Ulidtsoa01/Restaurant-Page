@@ -258,7 +258,7 @@ app.get('/addinventory', (req, res) => {
     items = []
     console.log(req.query);
     pool
-    .query(`INSERT INTO inventory VALUES (${req.query.id},${req.query.itemid},'${req.query.name}',${req.query.quantity},${req.query.num_sold},'${req.query.vendor}',${req.query.purchase_price},${req.query.batch_quantity});`.replace(/:/g, ""))
+    .query(`INSERT INTO inventory (id,item_id,name,item_quantity,num_sold,vendor,purchase_price,batch_quantity) VALUES (${req.query.id},${req.query.itemid},'${req.query.name}',${req.query.quantity},${req.query.num_sold},'${req.query.vendor}',${req.query.purchase_price},${req.query.batch_quantity})`.replace(/:/g, ""))
     .then(query_res => {
         for (let i = 0; i < query_res.rowCount; i++){
             items.push(query_res.rows[i]);
@@ -271,7 +271,7 @@ app.get('/addinventory', (req, res) => {
 });
 
 // Delete item
-app.get('/deleteitem', (req, res) => {
+app.get('/deleteinventory', (req, res) => {
     items = []
     pool
     .query(`DELETE FROM inventory where item_id = ${req.query.itemid}`.replace(/:/g, ""))
@@ -287,7 +287,7 @@ app.get('/deleteitem', (req, res) => {
 });
 
 // Delete inventory
-app.get('/deleteinventory', (req, res) => {
+app.get('/deleteitem', (req, res) => {
     items = []
     pool
     .query(`DELETE FROM items where id = ${req.query.itemid}`.replace(/:/g, ""))

@@ -1,17 +1,20 @@
-<template>
-    <div>
-        <h1>Welcome Login</h1>
-    </div>
+<template>  
+  <div id="app">
+    <login-form/>
+  </div>
 </template>
 
 <script>
-  // import HelloWorld from '../components/HelloWorld'
+import LoginForm from "../components/LoginForm";
 
-  export default {
-    name: 'LoginView',
-
-    components: {
-      //HelloWorld,
-    },
+export default {
+  name: "App",
+  components: {
+    LoginForm
   }
+};
 </script>
+
+<style>
+
+</style>

@@ -8,20 +8,26 @@
       <v-row v-for="j in justify" :key="j" :justify="j">
         <v-col v-for="k in 1" :key="k">
           <!--Server button-->
-          <v-btn elevation="5" color="warning">Server View</v-btn>   
-          
+          <v-btn elevation="5" color="warning">Server View</v-btn>
+
           <!-- Debugging Part
-         {{total}}
+          {{ entrees_array }}
+          {{ toppings_array }}
+          {{ calories_total }} -->
+          <!-- {{ subEntrees_name }}
+          {{ mainProteins_name }}
+          {{ subProteins_name }}
+          {{ total }}
           <br></br>
           <br></br>
-          {{sub_total}}
+          {{ sub_total }}
           <br></br>
-          {{entrees_array}}
+          {{ entrees_array }}
           <br></br>
-          {{toppings_array}}
+          {{ toppings_array }}
           {{ latestOrderID }}
 
-          {{ calories_total}} -->
+          {{ calories_total }} -->
 
           <!-- {{ current_time}} -->
 
@@ -37,13 +43,20 @@
         <right>
           <v-col v-for="k in 1" :key="k">
             <!--ColorBlind mode button-->
-            <v-btn v-if="light_mode" @click="light_mode_button" elevation="5" class="ma-2" color="green">Light Mode
+            <v-btn v-if="isLightMode" @click="light_mode_button" elevation="5" class="ma-2" color="green">
+              Light Mode
             </v-btn>
-            <v-btn v-if="!light_mode" @click="light_mode_button_outlined" elevation="5" class="ma-2" outlined
-              color="green">Light Mode</v-btn>
-            <v-btn v-if="dark_mode" @click="dark_mode_button" elevation="5" class="ma-2" color="green">Dark Mode</v-btn>
-            <v-btn v-if="!dark_mode" @click="dark_mode_button_outlined" elevation="5" class="ma-2" outlined
-              color="green">Dark Mode</v-btn>
+            <v-btn v-if="!isLightMode" @click="light_mode_button_outlined" elevation="5" class="ma-2" outlined
+              color="green">
+              Light Mode
+            </v-btn>
+            <v-btn v-if="isdarkMode" @click="dark_mode_button" elevation="5" class="ma-2" color="green">
+              Dark Mode
+            </v-btn>
+            <v-btn v-if="!isdarkMode" @click="dark_mode_button_outlined" elevation="5" class="ma-2" outlined
+              color="green">
+              Dark Mode
+            </v-btn>
           </v-col>
         </right>
       </v-row>
@@ -58,7 +71,9 @@
           <vue-clock />
           <!--Update button-->
           &nbsp;&nbsp;
-          <v-btn @click="update" elevation="5" class="ma-1" color="green" dark large>Update</v-btn>
+          <v-btn @click="updateItems(), getData('Updated!'), deleteAllItem('clear')" elevation="5" class="ma-1"
+            color="green" dark large>Update
+          </v-btn>
           &nbsp;&nbsp;
           <!--Order table-->
           <br>
@@ -70,7 +85,7 @@
 
             <!--Delete button-->
             <template v-slot:item.actions="{ item }">
-              <v-btn rounded depressed color="error" small @click="deleteItem(item)">
+              <v-btn depressed color="error" small @click="deleteItem(item)">
                 DELETE
               </v-btn>
             </template>
@@ -79,7 +94,8 @@
           <!--Add, order, clear buttons-->
           <center>
             <v-card class="pa-2" inlined tile>
-              <v-btn large elevation="5" rounded color="green" dark class="mb-2" @click="addItem">
+              <v-btn large elevation="5" rounded color="green" dark class="mb-2"
+                @click="addItem(), getData('Add Your Next Item!')">
                 Add
               </v-btn>
               &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
@@ -100,23 +116,27 @@
             <br>
             <v-card class="pa-2" inlined tile>
               <v-col>
-                <v-btn v-if="dark_mode" @click="tip_control(1)" elevation="8" class="ma-2" outlined color="orange">5%
-                </v-btn>
-                <v-btn v-if="light_mode" @click="tip_control(1)" elevation="1" class="ma-2" depressed color="warning">5%
-                </v-btn>
-                <v-btn v-if="dark_mode" @click="tip_control(2)" elevation="8" class="ma-2" outlined color="orange">10%
-                </v-btn>
-                <v-btn v-if="light_mode" @click="tip_control(2)" elevation="1" class="ma-2" depressed color="warning">
-                  10%</v-btn>
-                <v-btn v-if="dark_mode" @click="tip_control(3)" elevation="8" class="ma-2" outlined color="orange">15%
-                </v-btn>
-                <v-btn v-if="light_mode" @click="tip_control(3)" elevation="1" class="ma-2" depressed color="warning">
-                  15%</v-btn>
-                <v-btn v-if="dark_mode" @click="tip_control(4)" elevation="8" class="ma-2" outlined color="orange">20%
-                </v-btn>
-                <v-btn v-if="light_mode" @click="tip_control(4)" elevation="1" class="ma-2" depressed color="warning">
-                  20%</v-btn>
-                &nbsp;
+                <h2>
+                  Tip:
+                  <v-btn v-if="dark_mode" @click="tip_control(1)" elevation="8" class="ma-2" outlined color="orange">5%
+                  </v-btn>
+                  <v-btn v-if="light_mode" @click="tip_control(1)" elevation="1" class="ma-2" depressed color="warning">
+                    5%
+                  </v-btn>
+                  <v-btn v-if="dark_mode" @click="tip_control(2)" elevation="8" class="ma-2" outlined color="orange">10%
+                  </v-btn>
+                  <v-btn v-if="light_mode" @click="tip_control(2)" elevation="1" class="ma-2" depressed color="warning">
+                    10%</v-btn>
+                  <v-btn v-if="dark_mode" @click="tip_control(3)" elevation="8" class="ma-2" outlined color="orange">15%
+                  </v-btn>
+                  <v-btn v-if="light_mode" @click="tip_control(3)" elevation="1" class="ma-2" depressed color="warning">
+                    15%</v-btn>
+                  <v-btn v-if="dark_mode" @click="tip_control(4)" elevation="8" class="ma-2" outlined color="orange">20%
+                  </v-btn>
+                  <v-btn v-if="light_mode" @click="tip_control(4)" elevation="1" class="ma-2" depressed color="warning">
+                    20%</v-btn>
+                  &nbsp;
+                </h2>
               </v-col>
             </v-card>
           </center>
@@ -213,12 +233,12 @@
                   <div class="ma-2">
                     <a v-for="k in mainProteins_name" :key="k">
                       <v-btn v-if="dark_mode"
-                        @click="click_proteins(k), disable_mainProteins_buttons(), enalbe_subproteins_buttons()"
+                        @click="click_proteins(k), disable_mainProteins_buttons(), enable_subProteins_buttons()"
                         :disabled="!isDisabled_mainProteins" elevation="10" class="ma-3" outlined color="orange" large>
                         {{ k }}
                       </v-btn>
                       <v-btn v-if="light_mode"
-                        @click="click_proteins(k), disable_mainProteins_buttons(), enalbe_subproteins_buttons()"
+                        @click="click_proteins(k), disable_mainProteins_buttons(), enable_subProteins_buttons()"
                         :disabled="!isDisabled_mainProteins" elevation="5" class="ma-3" depressed color="warning" large>
                         {{ k }}
                       </v-btn>
@@ -279,7 +299,7 @@
 import moment from 'moment'
 import VueClock from '@dangvanthanh/vue-clock';
 
-import { getLatestOrderId } from '../js/backend.js'
+import { getItems, getLatestOrderId } from '../js/backend.js'
 import { getLatestToppingUUID } from '../js/backend.js'
 import { getLatestItemUUID } from '../js/backend.js'
 import { insertOrder } from '../js/backend.js'
@@ -288,9 +308,7 @@ import { insertOrderToppings } from '../js/backend.js'
 import { getIdFromName } from '../js/backend.js'
 import { incrementInventory } from '../js/backend.js'
 import { getItemsFromCategory } from '../js/backend.js'
-
-
-
+import { getToppings } from '../js/backend.js'
 
 export default {
   data: () => ({
@@ -300,7 +318,7 @@ export default {
     enable_toppings: false,
     enable_entrees: true,
     enalbe_mainProteins: false,
-    enalbe_subProteins: false,
+    enable_subProteins: false,
     tip: 0,
     sub_total: 0,
     total: 0,
@@ -355,16 +373,22 @@ export default {
       price: 0.0
     },
 
-    mainEntrees_name: ['Gyros', 'Bowls'],
-    subEntrees_name: ['Hummus & Pita', 'Two Falafels', 'Drink'],
-    mainProteins_name: ['Chicken', 'Pork', 'Lamb', 'Beef'],
-    subProteins_name: ['Extra Chicken', 'Extra Pork', 'Extra Lamb', 'Extra Beef'],
-    toppings_name: ['Olive', 'Tomato', 'Lettuce', 'Red Onion', 'Cucumber', 'White Sauce', 'Brown Sauce', 'Extra White Sauce', 'Extra Brown Sauce'],
+    mainEntrees_all: [],
+    mainEntrees_name: [],
+    subEntrees_name: [],
+    subEntrees_all: [],
+    mainProteins_name: [],
+    mainProteins_all: [],
+    subProteins_name: [],
+    subProteins_all: [],
+    toppings_name: [],
+    toppings_all: [],
 
   }), // data end
 
   // computed
   computed: {
+
     formTitle() {
       return this.editedIndex === -1 ? 'New Item' : 'Edit Item'
     },
@@ -387,7 +411,7 @@ export default {
     },
 
     isDisabled_subProteins() {
-      return this.enalbe_subProteins;
+      return this.enable_subProteins;
     },
 
     isDisabled_entrees() {
@@ -408,6 +432,14 @@ export default {
 
     istip4() {
       return this.tip4;
+    },
+
+    isdarkMode() {
+      return this.dark_mode;
+    },
+
+    isLightMode() {
+      return this.light_mode;
     },
 
     calculate_tip_1() {
@@ -458,6 +490,14 @@ export default {
     calculate_total_calories() {
       return this.calories_total;
     },
+
+    ee() {
+
+    }
+
+
+
+
   },
 
   // watch
@@ -477,241 +517,57 @@ export default {
   methods: {
     // Entrees buttons
     click_entrees(e) {
-      if (e === 'Gyros') {
-        this.count++;
-        this.calories_total += 724;
-        this.items.push({
-          number: this.count, name: 'Gyros', price: 8.09
-        });
-
-        this.entrees_array.push({
-          number: this.count,
-          name: e,
-        });
+      for (let i = 0; i < this.mainEntrees_all.length; i++) {
+        if (e === this.mainEntrees_all[i].name) {
+          this.count++;
+          this.calories_total += this.mainEntrees_all[i].calories;
+          this.items.push({
+            number: this.count,
+            name: this.mainEntrees_all[i].name,
+            price: this.mainEntrees_all[i].price,
+          })
+        }
       }
-      else if (e === 'Bowls') {
-        this.count++;
-        this.calories_total += 340;
-        this.items.push({
-          number: this.count, name: 'Bowls', price: 8.09
-        });
-        this.entrees_array.push({
-          number: this.count,
-          name: e,
-        });
-      }
-      else if (e === 'Hummus & Pita') {
-        this.count++;
-        this.calories_total += 240;
-        this.items.push({
-          number: this.count, name: 'Hummus & Pita', price: 3.49
-        });
-        this.entrees_array.push({
-          number: this.count,
-          name: e,
-        });
-      }
-      else if (e === 'Two Falafels') {
-        this.count++;
-        this.calories_total += 115;
-        this.items.push({
-          number: this.count, name: 'Two Falafels', price: 3.59
-        });
-        this.entrees_array.push({
-          number: this.count,
-          name: e,
-        });
-      }
-      else if (e === 'Drink') {
-        this.count++;
-        this.calories_total += 130;
-        this.items.push({
-          number: this.count, name: 'Drink', price: 2.45
-        });
-        this.entrees_array.push({
-          number: this.count,
-          name: e,
-        });
-      }
+      this.entrees_array.push({
+        number: this.count,
+        name: e,
+      });
     },
 
     // Proteins buttons
     click_proteins: function (e) {
-      if (e === 'Chicken') {
-        this.calories_total += 180;
-        this.items.push({
-          number: this.count, name: 'Chicken', price: 0
-        });
-
-        this.toppings_array.push({
-          number: this.count,
-          name: e,
-        })
+      for (let i = 0; i < this.mainProteins_all.length; i++) {
+        if (e === this.mainProteins_all[i].name) {
+          this.calories_total += this.mainProteins_all[i].calories;
+          this.items.push({
+            number: this.count,
+            name: this.mainProteins_all[i].name,
+            price: this.mainProteins_all[i].price,
+          })
+        }
       }
-      else if (e === 'Pork') {
-        this.calories_total += 200;
-        this.items.push({
-          number: this.count, name: 'Pork', price: 0
-        });
-        this.toppings_array.push({
-          number: this.count,
-          name: e,
-        })
-      }
-      else if (e === 'Lamb') {
-        this.calories_total += 250;
-        this.items.push({
-          number: this.count, name: 'Lamb', price: 0
-        });
-        this.toppings_array.push({
-          number: this.count,
-          name: e,
-        })
-      }
-      else if (e === 'Beef') {
-        this.calories_total += 170;
-        this.items.push({
-          number: this.count, name: 'Beef', price: 0
-        });
-        this.toppings_array.push({
-          number: this.count,
-          name: e,
-        })
-      }
-      else if (e === 'Extra Chicken') {
-        this.calories_total += 180;
-        this.items.push({
-          number: this.count, name: 'Extra Chicken', price: 1.99
-        });
-        this.toppings_array.push({
-          number: this.count,
-          name: e,
-        })
-      }
-      else if (e === 'Extra Pork') {
-        this.calories_total += 200;
-        this.items.push({
-          number: this.count, name: 'Extra Pork', price: 1.99
-        });
-        this.toppings_array.push({
-          number: this.count,
-          name: e,
-        })
-      }
-      else if (e === 'Extra Lamb') {
-        this.calories_total += 250;
-        this.items.push({
-          number: this.count, name: 'Extra Lamb', price: 1.99
-        });
-        this.toppings_array.push({
-          number: this.count,
-          name: e,
-        })
-      }
-      else if (e === 'Extra Beef') {
-        this.calories_total += 170;
-        this.items.push({
-          number: this.count, name: 'Extra Beef', price: 1.99
-        });
-        this.toppings_array.push({
-          number: this.count,
-          name: e,
-        })
-      }
+      this.toppings_array.push({
+        number: this.count,
+        name: e,
+      });
     },
 
     // Toppings buttons
     click_toppings: function (e) {
-      if (e === 'Olive') {
-        this.calories_total += 50;
-        this.items.push({
-          number: this.count, name: 'Olive', price: 0
-        });
-        this.toppings_array.push({
-          number: this.count,
-          name: e,
-        })
+      for (let i = 0; i < this.toppings_all.length; i++) {
+        if (e === this.toppings_all[i].name) {
+          this.calories_total += this.toppings_all[i].calories;
+          this.items.push({
+            number: this.count,
+            name: this.toppings_all[i].name,
+            price: this.toppings_all[i].price,
+          })
+        }
       }
-      else if (e === 'Tomato') {
-        this.calories_total += 30;
-        this.items.push({
-          number: this.count, name: 'Tomato', price: 0
-        });
-        this.toppings_array.push({
-          number: this.count,
-          name: e,
-        })
-      }
-      else if (e === 'Lettuce') {
-        this.calories_total += 10;
-        this.items.push({
-          number: this.count, name: 'Lettuce', price: 0
-        });
-        this.toppings_array.push({
-          number: this.count,
-          name: e,
-        })
-      }
-      else if (e === 'Red Onion') {
-        this.calories_total += 30;
-        this.items.push({
-          number: this.count, name: 'Red Onion', price: 0
-        });
-        this.toppings_array.push({
-          number: this.count,
-          name: e,
-        })
-      }
-      else if (e === 'Cucumber') {
-        this.calories_total += 16;
-        this.items.push({
-          number: this.count, name: 'Cucumber', price: 0
-        });
-        this.toppings_array.push({
-          number: this.count,
-          name: e,
-        })
-      }
-      else if (e === 'White Sauce') {
-        this.calories_total += 10;
-        this.items.push({
-          number: this.count, name: 'White Sauce', price: 0
-        });
-        this.toppings_array.push({
-          number: this.count,
-          name: e,
-        })
-      }
-      else if (e === 'Brown Sauce') {
-        this.calories_total += 10;
-        this.items.push({
-          number: this.count, name: 'Brown Sauce', price: 0
-        });
-        this.toppings_array.push({
-          number: this.count,
-          name: e,
-        })
-      }
-      else if (e === 'Extra White Sauce') {
-        this.calories_total += 10;
-        this.items.push({
-          number: this.count, name: 'Extra White Sauce', price: 0.39
-        });
-        this.toppings_array.push({
-          number: this.count,
-          name: e,
-        })
-      }
-      else if (e === 'Extra Brown Sauce') {
-        this.calories_total += 10;
-        this.items.push({
-          number: this.count, name: 'Extra Brown Sauce', price: 0.39
-        });
-        this.toppings_array.push({
-          number: this.count,
-          name: e,
-        })
-      }
+      this.toppings_array.push({
+        number: this.count,
+        name: e,
+      });
     },
 
     tip_control(k) {
@@ -741,11 +597,14 @@ export default {
       }
     },
 
-    enable_all_buttons(k) {
-      if (k === 'Gyros' || k === 'Bowls') {
-        this.enable_toppings = true;
-        this.enalbe_mainProteins = true;
-        this.enalbe_subProteins = false;
+    async enable_all_buttons(k) {
+      let array = await getItemsFromCategory('mainEntree');
+      for (let i = 0; i < array.length; i++) {
+        if (k === array[i].name) {
+          this.enable_toppings = true;
+          this.enalbe_mainProteins = true;
+          this.enable_subProteins = false;
+        }
       }
     },
 
@@ -761,119 +620,85 @@ export default {
       this.enalbe_mainProteins = false;
     },
 
-    enalbe_subproteins_buttons() {
-      this.enalbe_subProteins = true;
+    enable_subProteins_buttons() {
+      this.enable_subProteins = true;
     },
 
     disable_subProteins_buttons() {
-      this.enalbe_subProteins = false;
+      this.enable_subProteins = false;
     },
 
     addItem() {
       this.enable_toppings = false;
       this.enable_entrees = true;
       this.enalbe_mainProteins = false;
-      this.enalbe_subProteins = false;
+      this.enable_subProteins = false;
+
+      let empty_array = [{
+        number: '',
+        name: '',
+        price: 0,
+      }];
+      this.items.push({
+        number: '',
+        name: '',
+        price: 0,
+      });
     },
 
-    deleteItem(item) {
+    async deleteItem(item) {
       this.editedIndex = this.items.indexOf(item)
       this.editedItem = Object.assign({}, item)
       this.dialogDelete = true
       this.items.splice(this.editedIndex, 1)
       this.closeDelete()
 
-      if (item.name === 'Gyros' || item.name === 'Bowls' || item.name === 'Hummus & Pita' || item.name === 'Two Falafels' || item.name === 'Drink') {
-        this.count -= 1;
-        this.enable_entrees = true;
-        this.enalbe_mainProteins = false;
-        this.enalbe_subProteins = false;
-        this.enable_toppings = false;
-        this.entrees_array.pop(this.entrees_array.length-1);
+      for (let i = 0; i < this.mainEntrees_all.length; i++) {
+        if (item.name === this.mainEntrees_all[i].name) {
+          this.count -= 1;
+          this.enable_entrees = true;
+          this.enalbe_mainProteins = false;
+          this.enable_subProteins = false;
+          this.enable_toppings = false;
+          this.entrees_array.pop(this.entrees_array.length - 1);
+        }
       }
 
-      if (item.name === 'Chicken' || item.name === 'Pork' || item.name === 'Lamb' || item.name === 'Beef') {
-        this.enalbe_mainProteins = true;
-        this.enalbe_subProteins = false;
-      }
-      
-      if (item.name === 'Chicken' || item.name === 'Pork' || item.name === 'Lamb' || item.name === 'Beef' 
-      || item.name === 'Extra Chicken' || item.name === 'Extra Pork' || item.name === 'Extra Lamb' || item.name === 'Extra Beef'
-      || item.name === 'Olive' || item.name === 'Tomato' || item.name === 'Lettuce' || item.name === 'Red Onion'
-      || item.name === 'Cucumber' || item.name === 'White Sauce' || item.name === 'Extra White Sauce'
-      || item.name === 'Brown Sauce' || item.name === 'Extra Brown Sauce') {
-        this.toppings_array.pop(this.toppings_array.length-1);
+      let array = await getItemsFromCategory('mainProtein')
+      for (let j = 0; j < array.length; j++) {
+        if (item.name === array[j].name) {
+          this.enalbe_mainProteins = true;
+          this.enable_subProteins = false;
+        }
       }
 
-      if (item.name === 'Extra Chicken' || item.name === 'Extra Pork' || item.name === 'Extra Lamb' || item.name === 'Extra Beef') {
-        this.enalbe_subProteins = true;
+      for (let m = 0; m < this.subProteins_all.length; m++) {
+        if (item.name === this.subProteins_all[m].name) {
+          this.enable_subProteins = true;
+        }
       }
 
-      if (item.name === 'Gyros') {
-        this.calories_total -= 724;
+      let array2 = await getItemsFromCategory('mainProtein');
+      for (let p = 0; p < this.subProteins_all.length; p++) {
+        array2.push(this.subProteins_all[p]);
       }
-      else if (item.name === 'Bowls') {
-        this.calories_total -= 340;
+      for (let o = 0; o < this.toppings_all.length; o++) {
+        array2.push(this.toppings_all[o]);
       }
-      else if (item.name === 'Hummus & Pita') {
-        this.calories_total -= 240;
+      for (let l = 0; l < array2.length; l++) {
+        if (item.name === array2[l].name) {
+          this.toppings_array.pop(this.toppings_array.length - 1);
+        }
       }
-      else if (item.name === 'Two Falafels') {
-        this.calories_total -= 115;
+
+      let array3 = await getItems();
+      for (let u = 0; u < array2.length; u++) {
+        array3.push(array2[u]);
       }
-      else if (item.name === 'Drink') {
-        this.calories_total -= 130;
-      }
-      else if (item.name === 'Chicken') {
-        this.calories_total -= 180;
-      }
-      else if (item.name === 'Extra Chicken') {
-        this.calories_total -= 180;
-      }
-      else if (item.name === 'Pork') {
-        this.calories_total -= 200;
-      }
-      else if (item.name === 'Extra Pork') {
-        this.calories_total -= 200;
-      }
-      else if (item.name === 'Lamb') {
-        this.calories_total -= 250;
-      }
-      else if (item.name === 'Extra Lamb') {
-        this.calories_total -= 250;
-      }
-      else if (item.name === 'Beef') {
-        this.calories_total -= 170;
-      }
-      else if (item.name === 'Extra Beef') {
-        this.calories_total -= 170;
-      }
-      else if (item.name === 'Olive') {
-        this.calories_total -= 50;
-      }
-      else if (item.name === 'Tomato') {
-        this.calories_total -= 30;
-      }
-      else if (item.name === 'Lettuce') {
-        this.calories_total -= 10;
-      }
-      else if (item.name === 'Red Onion') {
-        this.calories_total -= 30;
-      }
-      else if (item.name === 'Cucumber') {
-        this.calories_total -= 16;
-      }
-      else if (item.name === 'White Sauce') {
-        this.calories_total -= 10;
-      }
-      else if (item.name === 'Extra White Sauce') {
-        this.calories_total -= 10;
-      }
-      else if (item.name === 'Brown Sauce') {
-        this.calories_total -= 10;
-      }
-      else if (item.name === 'Extra Brown Sauce') {
-        this.calories_total -= 10;
+      for (let y = 0; y < array3.length; y++) {
+        if (item.name === array3[y].name) {
+          this.calories_total -= array3[y].calories;
+        }
       }
     },
 
@@ -886,7 +711,7 @@ export default {
         this.toppings_array = [];
         this.count = -1;
         this.enalbe_mainProteins = false;
-        this.enalbe_subProteins = false;
+        this.enable_subProteins = false;
         this.enable_toppings = false;
         this.enable_entrees = true;
         this.tip = 0;
@@ -952,23 +777,65 @@ export default {
       this.latestItemUUID = await getLatestItemUUID();
     },
 
-    async insertOrderTable() {    
+    async updateItems() {
+      let a = await getItemsFromCategory("mainEntree");
+      this.mainEntrees_name.splice(0);
+      for (let i = 0; i < a.length; i++) {
+        if (a[i].name != null) {
+          this.mainEntrees_name.push(a[i].name);
+        }
+      }
+
+      let b = await getItemsFromCategory("subEntree");
+      this.subEntrees_name.splice(0);
+      for (let j = 0; j < b.length; j++) {
+        if (b[j].name != null) {
+          this.subEntrees_name.push(b[j].name);
+        }
+      }
+
+      let c = await getItemsFromCategory("mainProtein");
+      this.mainProteins_name.splice(0);
+      for (let n = 0; n < c.length; n++) {
+        if (c[n].name != null) {
+          this.mainProteins_name.push(c[n].name);
+        }
+      }
+
+      let d = await getItemsFromCategory("subProtein");
+      this.subProteins_name.splice(0);
+      for (let m = 0; m < d.length; m++) {
+        if (d[m].name != null) {
+          this.subProteins_name.push(d[m].name);
+        }
+      }
+
+      let e = await getItemsFromCategory("topping");
+      this.toppings_name.splice(0);
+      for (let u = 0; u < e.length; u++) {
+        if (e[u].name != null) {
+          this.toppings_name.push(e[u].name);
+        }
+      }
+    },
+
+    async insertOrderTable() {
       await insertOrder(this.latestOrderID + 1, this.calories_total, this.sub_total, this.tip, this.total, this.current_time);
-      
-        let c = 1;
-        if (this.entrees_array != []) {
-          for (let i = 0; i < this.entrees_array.length; i++) {
+
+      let c = 1;
+      if (this.entrees_array != []) {
+        for (let i = 0; i < this.entrees_array.length; i++) {
           let id_entrees = await getIdFromName(this.entrees_array[i].name);
           await insertOrderItems(this.latestItemUUID + c, this.latestOrderID + 1, this.entrees_array[i].number, id_entrees, this.entrees_array[i].name);
           let inventroy_id_entrees = await getIdFromName(this.entrees_array[i].name);
           await incrementInventory(inventroy_id_entrees);
           c += 1;
         }
-        }
+      }
 
-        let d = 1;
-        if (this.toppings_array != []) {
-          for (let j = 0; j < this.toppings_array.length; j++) {
+      let d = 1;
+      if (this.toppings_array != []) {
+        for (let j = 0; j < this.toppings_array.length; j++) {
           let id_toppings = await getIdFromName(this.toppings_array[j].name);
           await insertOrderToppings(this.latestToppingUUID + d, this.latestOrderID + 1, this.toppings_array[j].number, id_toppings, this.toppings_array[j].name);
           let inventory_id_toppings = await getIdFromName(this.toppings_array[j].name);
@@ -976,25 +843,40 @@ export default {
           d += 1;
         }
       }
-        this.entrees_array = [];
-        this.toppings_array = [];
-        this.count = -1;
-        this.latestOrderID = await getLatestOrderId();
-        this.latestItemUUID = await getLatestItemUUID();
-        this.latestToppingUUID = await getLatestToppingUUID();
-        this.enalbe_mainProteins = false;
-        this.enalbe_subProteins = false;
-        this.enable_toppings = false;
-        this.enable_entrees = true;
-        this.tip = 0;
-        this.total = 0;
-        this.sub_total = 0;
-        this.calories_total = 0;
-        this.tip1 = false;
-        this.tip2 = false;
-        this.tip3 = false;
-        this.tip4 = false;
+      this.entrees_array = [];
+      this.toppings_array = [];
+      this.count = -1;
+      this.latestOrderID = await getLatestOrderId();
+      this.latestItemUUID = await getLatestItemUUID();
+      this.latestToppingUUID = await getLatestToppingUUID();
+      this.enalbe_mainProteins = false;
+      this.enable_subProteins = false;
+      this.enable_toppings = false;
+      this.enable_entrees = true;
+      this.tip = 0;
+      this.total = 0;
+      this.sub_total = 0;
+      this.calories_total = 0;
+      this.tip1 = false;
+      this.tip2 = false;
+      this.tip3 = false;
+      this.tip4 = false;
     },
+
+    async getItemInfo() {
+      this.mainEntrees_all = await getItems();
+      this.mainProteins_all = await getItemsFromCategory('mainProtein');
+      this.subProteins_all = await getItemsFromCategory('subProtein');
+      for (let i = 0; i < this.subProteins_all.length; i++) {
+        this.mainProteins_all.push(this.subProteins_all[i]);
+      }
+      this.toppings_all = await getItemsFromCategory('topping');
+    }
+  },
+
+  async created() {
+    await this.updateItems();
+    await this.getItemInfo();
   },
 
   async mounted() {
@@ -1011,5 +893,6 @@ export default {
 
 <!-----------Style------------->
 <style>
+
 </style>
 <!-----------Style------------->

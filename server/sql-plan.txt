@@ -144,3 +144,18 @@ getItemsFromCategory(category)
 getPrices()
 '/getprice'
 "SELECT name, price FROM items"
+
+//REVISED QUERIES FOR MANAGER REPORTS
+
+getSalesReport(from, to)
+'/getsalesreport'
+
+getRestockReport(from, to)
+'/getrestockreport'
+
+getExcessReport(from, to)
+'/getexcessreport'
+
+getPairsTogether()
+'/getpairstogether'
+

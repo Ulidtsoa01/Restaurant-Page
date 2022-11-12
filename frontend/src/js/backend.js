@@ -157,8 +157,13 @@ export async function getExcessReport(from, to) {
 
 // Get pairs together, '/getpairstogether'
 // Returns array of objects
-export async function getPairsTogether() {
-    let result = await instance.get('/getpairstogether');
+export async function getPairsTogether(from, to) {
+    let result = await instance.get('/getpairstogether',{
+        params: {
+            from: from,
+            to: to,
+        }
+    });
     return result.data.items;
 }
 

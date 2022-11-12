@@ -588,7 +588,7 @@ app.get('/getpairstogether', (req, res) => {
     res.header("Access-Control-Allow-Origin", "*");
     items = []
     pool
-    .query(`SELECT entree_name, topping_name, COUNT(*) AS count FROM (SELECT entree_name, topping_name from orders INNER JOIN order_items ON orders.order_id = order_items.order_id INNER JOIN order_toppings ON orders.order_id = order_toppings.order_id AND order_items.order_subitem = order_toppings.order_subitem) as big GROUP BY entree_name, topping_name ORDER BY count DESC;`)
+    .query(`SELECT entree_name, topping_name, COUNT(*) AS count FROM (SELECT entree_name, topping_name, datetime from orders INNER JOIN order_items ON orders.order_id = order_items.order_id INNER JOIN order_toppings ON orders.order_id = order_toppings.order_id AND order_items.order_subitem = order_toppings.order_subitem) as big WHERE datetime BETWEEN '${req.query.from}' and '${req.query.to}' GROUP BY entree_name, topping_name ORDER BY count DESC;`)
     .then(query_res => {
         for (let i = 0; i < query_res.rowCount; i++){
             items.push(query_res.rows[i]);

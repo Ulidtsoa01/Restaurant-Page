@@ -253,7 +253,6 @@ import { getSalesReport } from "../js/backend.js";
 
 export default {
   async mounted() {
-    this.dates = []
     this.inventory = await getInventory();
   },
 
@@ -403,7 +402,6 @@ export default {
         this.header = this.excessHeader;
         this.items = await getExcessReport(from,to);
       } else if (e === "Restock") {
-        console.log(await getRestockReport(from,to));
         this.header = this.restockHeader;
         this.items = await getRestockReport(from,to);
       } else if (e === "Pairs") {
@@ -428,7 +426,6 @@ export default {
       
    async deleteItemConfirm () {
         // SAFEGUARD TO PREVENT ACCIDENTAL DELETION
-        console.log(this.editedIndex)
         if(this.editedIndex > 22)
         {
           await deleteItemInventory(this.editedIndex);
@@ -474,7 +471,6 @@ export default {
     //   var mm = String(today.getMonth() + 1).padStart(2, '0');
     //   var yyyy = today.getFullYear();
     //   today = yyyy + '-' + mm + '-' + dd;
-    //   console.log(today);
     //   return today;
     // },
   },

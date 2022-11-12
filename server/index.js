@@ -523,9 +523,9 @@ app.get('/getsalesreport', (req, res) => {
     (CASE WHEN category='mainEntree' OR category='subEntree' 
     THEN (SELECT COUNT(order_items.uuid) from orders INNER JOIN order_items on orders.order_id = order_items.order_id WHERE datetime BETWEEN '${req.query.from}' and '${req.query.to}' AND order_items.entree_name = name) 
     ELSE (SELECT COUNT(order_toppings.uuid) from orders INNER JOIN order_toppings on orders.order_id = order_toppings.order_id WHERE datetime BETWEEN '${req.query.from}' and '${req.query.to}' AND order_toppings.topping_name = name) END) as num_sold, 
-    (((CASE WHEN category='mainEntree' OR category='subEntree' 
+    ROUND(CAST((((CASE WHEN category='mainEntree' OR category='subEntree' 
     THEN (SELECT COUNT(order_items.uuid) from orders INNER JOIN order_items on orders.order_id = order_items.order_id WHERE datetime BETWEEN '${req.query.from}' and '${req.query.to}' AND order_items.entree_name = name) 
-    ELSE (SELECT COUNT(order_toppings.uuid) from orders INNER JOIN order_toppings on orders.order_id = order_toppings.order_id WHERE datetime BETWEEN '${req.query.from}' and '${req.query.to}' AND order_toppings.topping_name = name) END))*price) as revenue from items;`.replace(/:/g, ""))
+    ELSE (SELECT COUNT(order_toppings.uuid) from orders INNER JOIN order_toppings on orders.order_id = order_toppings.order_id WHERE datetime BETWEEN '${req.query.from}' and '${req.query.to}' AND order_toppings.topping_name = name) END))*price) as numeric), 2) as revenue from items ORDER BY revenue DESC;`.replace(/:/g, ""))
     .then(query_res => {
         for (let i = 0; i < query_res.rowCount; i++){
             items.push(query_res.rows[i]);

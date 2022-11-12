@@ -245,24 +245,15 @@ import { updateItemItems } from "../js/backend.js";
 import { updateItemInventory } from "../js/backend.js";
 import { deleteItem } from "../js/backend.js";
 import { deleteItemInventory } from '../js/backend.js';
-
-
-import { insertOrder } from "../js/backend.js";
-import { getQuantityById } from "../js/backend.js";
-import { getIdFromName } from "../js/backend.js";
-import { countItem } from "../js/backend.js";
-import { countTopping } from "../js/backend.js";
-import { getOrderItemDate } from "../js/backend.js";
-import { getOrderToppingDate } from "../js/backend.js";
-import { getBigBoyCount } from "../js/backend.js";
-import { getBigBoy } from "../js/backend.js";
-import { getItemsFromCategory } from "../js/backend.js";
-import { getPrices } from "../js/backend.js";
+import { getRestockReport } from "../js/backend.js";
+import { getExcessReport } from "../js/backend.js";
+import { getPairsTogether } from "../js/backend.js";
+import { getSalesReport } from "../js/backend.js";
 
 
 export default {
   async mounted() {
-    this.dates = [this.getToday()]
+    this.dates = []
     this.inventory = await getInventory();
   },
 
@@ -279,38 +270,26 @@ export default {
     salesHeader: [
       { text: "Name", value: "name" },
       { text: "Price", value: "price" },
-      { text: "Quantity", value: "quantity" },
+      { text: "Number Sold", value: "num_sold" },
       { text: "Revenue", value: "revenue" },
     ],
 
     excessHeader: [
       { text: "Name", value: "name" },
-      { text: "Category", value: "category" },
-      { text: "Price", value: "price" },
-      { text: "Sold in Time Frame", value: "soldRange" },
-      { text: "Percent Sold", value: "percentSold" },
-      { text: "Total Sold", value: "totalSold" },
-      { text: "Item Quantity", value: "itemQuantity" },
-      { text: "Batch Quantity", value: "batchQuantity" },
+      { text: "Number Sold", value: "num_sold" },
+      { text: "Item Quantity", value: "item_quantity" },
     ],
 
     restockHeader: [
       { text: "Name", value: "name" },
-      { text: "Category", value: "category" },
-      { text: "Price", value: "price" },
-      { text: "Sold in Time Frame", value: "soldRange" },
-      { text: "Deficit", value: "deficit" },
-      { text: "Total Sold", value: "totalSold" },
-      { text: "Vendor", value: "vendor" },
-      { text: "Purchase Price", value: "purchasePrice" },
-      { text: "Batch Quantity", value: "batchQuantity" },
+      { text: "Number Sold", value: "num_sold" },
+      { text: "Item Quantity", value: "item_quantity" },
     ],
 
     pairsHeader: [
-      { text: "Entree", value: "entree" },
-      { text: "Topping", value: "topping" },
-      { text: "Occurences", value: "occurences" },
-      { text: "Popular", value: "popular" },
+      { text: "Entree", value: "entree_name" },
+      { text: "Topping", value: "topping_name" },
+      { text: "Occurences", value: "count" },
     ],
 
     inventoryHeader: [
@@ -332,20 +311,6 @@ export default {
 
     inventory: [],
     editedIndex: -1,
-
-    salesReportRow: {
-      name: "",
-      price: 0.0,
-      quantity: 0,
-      revenue: 0,
-    },
-
-    pairsRow: {
-      entree: "",
-      topping: "",
-      occurences: 0,
-      popular: false,
-    },
 
     defaultInventory: {
       id: 0,
@@ -378,9 +343,25 @@ export default {
   computed: {
     dateRangeText() {
       if (this.dates.length === 0) {
-        return "Select two dates";
-      } else {
-        return this.dates.join(" – ").replaceAll("-","/");
+        return "Select Two Dates";
+      } else if(this.dates.length == 1) {
+        var date0 = new Date(this.dates[0].replace(/-/g, '\/'));
+        var from = date0.toLocaleDateString();
+        return from;
+      }
+      else{
+        var date1 = new Date(this.dates[0].replace(/-/g, '\/'));
+        var date2 = new Date(this.dates[1].replace(/-/g, '\/'));
+        if(date1 > date2)
+        {
+          var temp = this.dates[0];
+          this.dates[0] = this.dates[1];
+          this.dates[1] = temp;
+          [date1, date2] = [date2, date1];
+        }
+        var from = date1.toLocaleDateString();
+        var to = date2.toLocaleDateString();
+        return from + ' - ' + to;
       }
     },
 
@@ -406,31 +387,29 @@ export default {
     },
 
   methods: {
-    click_report: function (e) {
+    click_report: async function (e) {
+      var from = this.dates[0];
+      var to;
+      if(this.dates.length === 1){
+        to = from;
+      }
+      else{
+        to = this.dates[1];
+      }
       if (e === "Sales") {
         this.header = this.salesHeader;
-        this.items = [];
-        this.items.push({
-          name: "Gyro",
-          price: 1.0,
-          quantity: 4,
-          revenue: 11.0,
-        });
+        this.items = await getSalesReport(from,to);
       } else if (e === "Excess") {
         this.header = this.excessHeader;
-        this.items = [];
+        this.items = await getExcessReport(from,to);
       } else if (e === "Restock") {
+        console.log(await getRestockReport(from,to));
         this.header = this.restockHeader;
-        this.items = [];
+        this.items = await getRestockReport(from,to);
       } else if (e === "Pairs") {
         this.header = this.pairsHeader;
-        this.items = [];
-        this.items.push({
-          entree: "Gyro",
-          topping: "Chicken",
-          occurences: 4,
-          popular: true,
-        });
+        this.items = await getPairsTogether(from,to);
+        
       }
     },
 
@@ -489,15 +468,15 @@ export default {
       this.close();
     },
 
-    getToday() {
-      var today = new Date();
-      var dd = String(today.getDate()).padStart(2, '0');
-      var mm = String(today.getMonth() + 1).padStart(2, '0');
-      var yyyy = today.getFullYear();
-      today = yyyy + '-' + mm + '-' + dd;
-      console.log(today);
-      return today;
-    },
+    // getToday() {
+    //   var today = new Date();
+    //   var dd = String(today.getDate()).padStart(2, '0');
+    //   var mm = String(today.getMonth() + 1).padStart(2, '0');
+    //   var yyyy = today.getFullYear();
+    //   today = yyyy + '-' + mm + '-' + dd;
+    //   console.log(today);
+    //   return today;
+    // },
   },
 };
 </script>

@@ -25,4 +25,5 @@ Teammates will schedule next SCRUM meeting.
 ## Additional Comments Or Concerns
 Any additional comments that teammates want to address.
 (Team meeting slides)
+(Time spent tasks)
 

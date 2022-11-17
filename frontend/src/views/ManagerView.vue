@@ -97,7 +97,7 @@
         <center>
           <h1 class="font-weight-bold">Inventory</h1>
         </center>
-        <v-data-table :headers="inventoryHeader" :items="inventory" sort-by="id" class="elevation-1">
+        <v-data-table :headers="inventoryHeader" :items="inventory" sort-by="item_id" class="elevation-1">
           <template v-slot:top>
             <v-divider class="mx-4" inset vertical></v-divider>
             <v-spacer></v-spacer>
@@ -120,27 +120,18 @@
                     <v-row>
                       <v-col cols="12" sm="6" md="4">
                         <v-text-field
-                          v-model="editedInventory.id"
-                          label="Inventory ID"
-                        ></v-text-field>
-                      </v-col>
-                      <v-col cols="12" sm="6" md="4">
-                        <v-text-field
-                          v-model="editedInventory.item_id"
-                          label="Item Id"
-                        ></v-text-field>
-                      </v-col>
-                      <v-col cols="12" sm="6" md="4">
-                        <v-text-field
                           v-model="editedInventory.name"
                           label="Name"
                         ></v-text-field>
                       </v-col>
                       <v-col cols="12" sm="6" md="4">
-                        <v-text-field
+                        <v-select
                           v-model="editedInventory.category"
+                          :items="categories"
+                          item-text="choice"
                           label="Category"
-                        ></v-text-field>
+                          single-line
+                        ></v-select>
                       </v-col>
                       <v-col cols="12" sm="6" md="4">
                         <v-text-field
@@ -162,28 +153,10 @@
                       </v-col>
                       <v-col cols="12" sm="6" md="4">
                         <v-text-field
-                          v-model="editedInventory.num_sold"
-                          label="Number Sold"
-                        ></v-text-field>
-                      </v-col>
-                      <v-col cols="12" sm="6" md="4">
-                        <v-text-field
                           v-model="editedInventory.vendor"
                           label="Vendor"
                         ></v-text-field>
-                      </v-col>
-                      <v-col cols="12" sm="6" md="4">
-                        <v-text-field
-                          v-model="editedInventory.purchase_price"
-                          label="Purchase Price"
-                        ></v-text-field>
-                      </v-col>
-                      <v-col cols="12" sm="6" md="4">
-                        <v-text-field
-                          v-model="editedInventory.batch_quantity"
-                          label="Batch"
-                        ></v-text-field>
-                      </v-col>
+                        </v-col>
                     </v-row>
                   </v-container>
                 </v-card-text>
@@ -238,7 +211,7 @@
 </template>
 
 <script>
-import { getInventory } from "../js/backend.js";
+import { getInventory} from "../js/backend.js";
 import { addItem } from "../js/backend.js";
 import { addInventory } from "../js/backend.js";
 import { updateItemItems } from "../js/backend.js";
@@ -249,6 +222,8 @@ import { getRestockReport } from "../js/backend.js";
 import { getExcessReport } from "../js/backend.js";
 import { getPairsTogether } from "../js/backend.js";
 import { getSalesReport } from "../js/backend.js";
+import { getLatestItemId } from "../js/backend.js";
+import { getLatestInventoryId } from "../js/backend.js";
 
 
 export default {
@@ -265,6 +240,13 @@ export default {
 
     dialog: false,
     dialogDelete: false,
+
+    categories: [
+      { choice: 'Entree'},
+      { choice: 'Side'},
+      { choice: 'Protein'},
+      { choice: 'Topping'},
+    ],
 
     salesHeader: [
       { text: "Name", value: "name" },
@@ -292,7 +274,7 @@ export default {
     ],
 
     inventoryHeader: [
-      { text: "Inventory ID", value: "id"},
+      // { text: "Inventory ID", value: "id"},
       { text: "Item ID", value: "item_id" },
       { text: "Name", value: "name" },
       { text: "Category", value: "category" },
@@ -300,8 +282,7 @@ export default {
       { text: "Quantity", value: "item_quantity" },
       { text: "Number Sold", value: "num_sold" },
       { text: "Vendor", value: "vendor" },
-      { text: "Purchase Price", value: "purchase_price" },
-      { text: "Batch", value: "batch_quantity" },
+      // { text: "Batch", value: "batch_quantity" },
       { text: 'Edit', value: 'edit', sortable: false },
       { text: 'Delete', value: 'delete', sortable: false },
     ],
@@ -312,7 +293,7 @@ export default {
     editedIndex: -1,
 
     defaultInventory: {
-      id: 0,
+      // id: 0,
       item_id: 0,
       name: "",
       category: "",
@@ -321,12 +302,11 @@ export default {
       item_quantity: 0,
       num_sold: 0,
       vendor: "",
-      purchase_price: 0.0,
-      batch_quantity: 0,
+      // batch_quantity: 300,
     },
 
     editedInventory: {
-      id: 0,
+      // id: 0,
       item_id: 0,
       name: "",
       category: "",
@@ -335,8 +315,7 @@ export default {
       item_quantity: 0,
       num_sold: 0,
       vendor: "",
-      purchase_price: 0.0,
-      batch_quantity: 0,
+      // batch_quantity: 300,
     },
   }),
   computed: {
@@ -453,13 +432,41 @@ export default {
 
     async save() {
       var temp = this.editedInventory;
+      var cat = temp.category;
+      if(cat === "Entree")
+      {
+        cat = "mainEntree"
+      }
+      else if(cat === "Side")
+      {
+        cat = "subEntree"
+      }
+      else if(cat === "Protein")
+      {
+        cat = "mainProtein"
+      }
+      else if(cat === "Topping")
+      {
+        cat = "topping"
+      }
       if (this.editedIndex > -1) {
         await updateItemItems(temp.name,temp.price,this.editedIndex);
         await updateItemInventory(temp.name,this.editedIndex)
       }
       else{
-        await addItem(temp.item_id,temp.name,temp.category,temp.price,temp.calories);
-        await addInventory(temp.id,temp.item_id,temp.name,temp.item_quantity,temp.num_sold,temp.vendor,temp.purchase_price,temp.batch_quantity);
+        var itemId = await getLatestItemId() + 1;
+        var inventoryId = await getLatestInventoryId() + 1;
+        await addItem(itemId,temp.name,cat,temp.price,temp.calories);
+        await addInventory(inventoryId,itemId,temp.name,temp.item_quantity,temp.num_sold,temp.vendor,1,300);
+        if(cat === "mainProtein")
+        {
+          cat = "subProtein";
+          itemId += 1;
+          inventoryId += 1;
+          var name = "Extra " + temp.name;
+          await addItem(itemId,name,cat,temp.price,temp.calories);
+          await addInventory(inventoryId,itemId,name,temp.item_quantity,temp.num_sold,temp.vendor,1,300);
+        }
       }
       this.inventory = await getInventory();
       this.close();

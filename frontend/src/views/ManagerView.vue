@@ -405,7 +405,7 @@ export default {
       
    async deleteItemConfirm () {
         // SAFEGUARD TO PREVENT ACCIDENTAL DELETION
-        if(this.editedIndex > 22)
+        if(this.editedIndex > 28)
         {
           await deleteItemInventory(this.editedIndex);
           await deleteItem(this.editedIndex);

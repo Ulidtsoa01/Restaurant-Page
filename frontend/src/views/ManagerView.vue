@@ -1,9 +1,10 @@
 <template>
-  <div>
+  <div v-if="signedIn">
     <v-container class="Top">
       <v-row v-for="j in justify" :key="j" :justify="j">
         <v-col v-for="k in 1" :key="k">
           <!--Server Button-->
+          <!--
           <router-link
             :key="$route.path"
             :to="{ path: '/server' }"
@@ -12,8 +13,14 @@
             <v-btn outlined color="orange">Server View</v-btn>
           </router-link>
           <router-view :key="$route.fullPath"></router-view>
+          -->
+            <v-btn outlined color="orange"
+            @click="$router.push('/server/'+$route.params.credential)">Server View</v-btn>
           <!--Manager Button-->
           <v-btn elevation="2" class="ma-2" color="warning">Manager View</v-btn>
+          <!--Client Button-->
+            <v-btn outlined color="orange"
+            @click="$router.push('/client/'+$route.params.credential)">Client View</v-btn>
         </v-col>
           <!-- <v-col v-for="k in 1" :key="k">
             <v-btn elevation="2" class="ma-2" outlined color="green"
@@ -235,6 +242,17 @@
       </v-col>
     </v-container>
   </div>
+  <div v-else>
+    <v-container fluid>
+        <v-row align="center" justify="center">
+            <v-col>
+                <p class="text-h1" style="text-align: center; padding-top: 20%">
+                Not Signed In
+                </p>
+            </v-col>
+        </v-row>
+    </v-container>
+  </div>
 </template>
 
 <script>
@@ -249,9 +267,14 @@ import { getRestockReport } from "../js/backend.js";
 import { getExcessReport } from "../js/backend.js";
 import { getPairsTogether } from "../js/backend.js";
 import { getSalesReport } from "../js/backend.js";
+import { loadGoogle, userSignedIn } from '../js/login.js';
 
 
 export default {
+  async created() {
+    await loadGoogle();
+    this.signedIn = await userSignedIn(this.$route.params.credential);
+  },
   async mounted() {
     this.inventory = await getInventory();
   },
@@ -338,6 +361,7 @@ export default {
       purchase_price: 0.0,
       batch_quantity: 0,
     },
+    signedIn: false,
   }),
   computed: {
     dateRangeText() {

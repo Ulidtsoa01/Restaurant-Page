@@ -6,6 +6,7 @@
       <form class="login-right" @submit.prevent>
         <div class="h2">Login</div>
         <div class="form-group">
+        <!--
           <input type="text" id="username" placeholder="Username" v-model="username">
           <label for="username">Username</label>    
         </div>
@@ -19,13 +20,16 @@
         </div> 
         <div class="button-area">
           <button class="btn btn-primary pull-right" @click="login()" >Login</button>
+          -->
+            <div id="buttonDiv"></div> 
         </div>
       </form>
     </div>
   </template>
   
   <script>
-  import axios from "axios";
+  //import axios from "axios";
+  import { promptLogin } from '../js/login.js';
   export default {
     name: "LoginForm",
     template: "#login-form",
@@ -44,33 +48,39 @@
       }, init);
     },
     methods: {
-      isRememberMe() {
-        return this.rememberMe === true;
-      },
-      login() {
-        //we should handle errors in a more scalabe way, but this works for now
+      /*isRememberMe() {*/
+        /*return this.rememberMe === true;*/
+      /*},*/
+      /*login() {*/
+        /*//we should handle errors in a more scalabe way, but this works for now*/
   
-        alert(this.username + " " + this.password + " " + this.rememberMe);
+        /*alert(this.username + " " + this.password + " " + this.rememberMe);*/
   
-        axios
-          .post("http://api2.wisksolution.com/login", {
-            body: {
-              username: this.username,
-              password: this.password
-            }
-          })
-          .then(response => {
-            alert(response);
-            //handle response and save JWT
-          })
-          .catch(err => {
-            alert(err);
-          });
+        /*axios*/
+          /*.post("http://api2.wisksolution.com/login", {*/
+            /*body: {*/
+              /*username: this.username,*/
+              /*password: this.password*/
+            /*}*/
+          /*})*/
+          /*.then(response => {*/
+            /*alert(response);*/
+            /*//handle response and save JWT*/
+          /*})*/
+          /*.catch(err => {*/
+            /*alert(err);*/
+          /*});*/
+      /*},*/
+      /*register() {*/
+        /*alert("Coming soon ...");*/
+      /*}*/
+      signedIn(e) {
+          this.$router.push("/server/"+e.credential);
       },
-      register() {
-        alert("Coming soon ...");
-      }
-    }
+    },
+    async mounted() {
+        await promptLogin(this.signedIn);
+    },
   };
   </script>
   

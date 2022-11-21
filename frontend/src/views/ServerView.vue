@@ -2,7 +2,7 @@
 
 <!----------Template----------->
 <template>
-  <div>
+  <div v-if="signedIn">
     <!--Top-->
     <v-container class="Top">
       <v-row v-for="j in justify" :key="j" :justify="j">
@@ -35,10 +35,10 @@
           {{moment(new Date()).format('YYYY-DD-MM h:mm:ss')}}  -->
 
           <!--Manager button-->
-          <router-view :key="$route.fullPath"></router-view>
-          <router-link :to="{ path: '/manager' }" style="text-decoration: none; color: inherit;">
-            <v-btn elevation="5" class="ma-2" outlined color="orange">Manager View</v-btn>
-          </router-link>
+            <v-btn elevation="5" class="ma-2" outlined color="orange" @click="$router.push('/manager/'+$route.params.credential)" >Manager View</v-btn>
+          <!--Client Button-->
+            <v-btn outlined color="orange"
+            @click="$router.push('/client/'+$route.params.credential)">Client View</v-btn>
         </v-col>
         <right>
           <v-col v-for="k in 1" :key="k">
@@ -290,6 +290,17 @@
       </v-row>
     </v-container>
   </div>
+  <div v-else>
+    <v-container fluid>
+        <v-row align="center" justify="center">
+            <v-col>
+                <p class="text-h1" style="text-align: center; padding-top: 20%">
+                Not Signed In
+                </p>
+            </v-col>
+        </v-row>
+    </v-container>
+  </div>
 </template>
 <!----------Template----------->
 
@@ -309,6 +320,7 @@ import { getIdFromName } from '../js/backend.js'
 import { incrementInventory } from '../js/backend.js'
 import { getItemsFromCategory } from '../js/backend.js'
 import { getToppings } from '../js/backend.js'
+import { loadGoogle, userSignedIn } from '../js/login.js';
 
 export default {
   data: () => ({
@@ -383,6 +395,7 @@ export default {
     subProteins_all: [],
     toppings_name: [],
     toppings_all: [],
+    signedIn: false,
 
   }), // data end
 
@@ -875,6 +888,8 @@ export default {
   },
 
   async created() {
+    await loadGoogle();
+    this.signedIn = await userSignedIn(this.$route.params.credential);
     await this.updateItems();
     await this.getItemInfo();
   },

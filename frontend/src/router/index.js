@@ -15,17 +15,17 @@ const routes = [
     component: LandingView
   },
   {
-    path: '/client',
+    path: '/client/:credential?',
     name: 'client',
     component: ClientView
   },
   {
-    path: '/server',
+      path: '/server/:credential?',
     name: 'server',
     component: ServerView
   },
   {
-    path: '/manager',
+    path: '/manager/:credential?',
     name: 'manager',
     component: ManagerView
   },

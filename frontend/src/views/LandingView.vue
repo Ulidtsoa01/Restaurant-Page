@@ -21,4 +21,5 @@
         await promptLogin();
     }
   }
+}
 </script>

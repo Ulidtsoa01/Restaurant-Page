@@ -1,7 +1,7 @@
 <template id="login-form">
     <div class="login-wrapper">
       <div class="login-left">
-        <img height="100" src="../views/pom.png">
+        <img height="100" src="../views/images/pom.png">
       </div>
       <form class="login-right" @submit.prevent>
         <div class="h2">Login</div>

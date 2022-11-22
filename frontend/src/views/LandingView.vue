@@ -1,21 +1,21 @@
 <template>
-    <div>
-        <h1>Welcome</h1>
-    </div>
+  <div>
+      <h1>Welcome</h1>
+      <div id="buttonDiv"></div> 
+  </div>
 </template>
 
 <script>
-  // import HelloWorld from '../components/HelloWorld'
-  import {countItem} from '../js/backend.js'
-
-  export default {
-    name: 'LandingView',
-
-    components: {
-      //HelloWorld,
-    },
-    async mounted() {
-        console.log(await countItem('2022-10-01','2022-10-20',2));
-    }
+// import HelloWorld from '../components/HelloWorld'
+export default {
+  name: 'LandingView',
+  components: {
+    //HelloWorld,
+  },
+  methods: {
+  },
+  async mounted() {
+      await promptLogin();
   }
+}
 </script>

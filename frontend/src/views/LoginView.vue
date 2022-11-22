@@ -1,48 +1,18 @@
-<template>
-  <div>
-{{number}}
-asd
-</div>
-  
-
-
+<template>  
+  <div id="app">
+    <login-form/>
+  </div>
 </template>
 
 <script>
-// import HelloWorld from '../components/HelloWorld'
-
-import total from './ClientView.vue'
-
-export default {   
-  props: {
-    
-  },
-
-  data: () => ({
-    total : total,
-    number : 0,
-  }),
-
+import LoginForm from "../components/LoginForm";
+export default {
+  name: "App",
   components: {
-  },
-
-  comptued: {
-    isDisabled() {
-      return this.total.total;
-    }
-  },
-
-  created() {
-    this.number = this.$route.query.sub_total
-  },
-
-  method: {
-    click_proteins() {
-      this.click += 1;
-      if (this.click  === 1) {
-        this.enable = false;
-      }
-    }
+    LoginForm
   }
-}
+};
 </script>
+
+<style>
+</style>

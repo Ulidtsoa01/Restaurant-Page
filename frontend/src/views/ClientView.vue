@@ -1,5 +1,24 @@
 <!----------Template----------->
 <template>
+
+<div v-if="signedIn">
+        <h1>Welcome Client</h1>
+        <v-btn block>
+            Block Button
+        </v-btn>
+    </div>
+  <div v-else>
+    <v-container fluid>
+        <v-row align="center" justify="center">
+            <v-col>
+                <p class="text-h1" style="text-align: center; padding-top: 20%">
+                Not Signed In
+                </p>
+            </v-col>
+        </v-row>
+    </v-container>
+  </div>
+
   <div>
     
     <!--Top-->
@@ -221,15 +240,14 @@
   
   </div>
 
-
 </template>
 <!----------Template----------->
 
 <!-----------Script------------>
 <script>
-// Clock import
-import moment from 'moment'
-import VueClock from '@dangvanthanh/vue-clock';
+
+  // import HelloWorld from '../components/HelloWorld'
+import { loadGoogle, userSignedIn } from '../js/login.js';
 
 import { getItems, getLatestOrderId } from '../js/backend.js'
 import { getLatestToppingUUID } from '../js/backend.js'
@@ -250,6 +268,7 @@ export default {
 
 
   data: () => ({
+  signedIn: false,
     cart_total: 0,
     total: 0,
     sub_total: 0,
@@ -925,6 +944,8 @@ export default {
     await this.updateItems();
     await this.getItemInfo();
     await this.make_all_items();
+    await loadGoogle();
+    this.signedIn = await userSignedIn(this.$route.params.credential);
   },
 
   async mounted() {
@@ -935,6 +956,7 @@ export default {
   },
 
 }
+
 </script>
 <!-----------Script------------>
 

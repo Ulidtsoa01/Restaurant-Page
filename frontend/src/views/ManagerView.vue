@@ -1,9 +1,10 @@
 <template>
-  <div>
+  <div v-if="signedIn">
     <v-container class="Top">
       <v-row v-for="j in justify" :key="j" :justify="j">
         <v-col v-for="k in 1" :key="k">
           <!--Server Button-->
+          <!--
           <router-link
             :key="$route.path"
             :to="{ path: '/server' }"
@@ -12,8 +13,14 @@
             <v-btn outlined color="orange">Server View</v-btn>
           </router-link>
           <router-view :key="$route.fullPath"></router-view>
+          -->
+            <v-btn outlined color="orange"
+            @click="$router.push('/server/'+$route.params.credential)">Server View</v-btn>
           <!--Manager Button-->
           <v-btn elevation="2" class="ma-2" color="warning">Manager View</v-btn>
+          <!--Client Button-->
+            <v-btn outlined color="orange"
+            @click="$router.push('/client/'+$route.params.credential)">Client View</v-btn>
         </v-col>
           <!-- <v-col v-for="k in 1" :key="k">
             <v-btn elevation="2" class="ma-2" outlined color="green"
@@ -97,7 +104,7 @@
         <center>
           <h1 class="font-weight-bold">Inventory</h1>
         </center>
-        <v-data-table :headers="inventoryHeader" :items="inventory" sort-by="id" class="elevation-1">
+        <v-data-table :headers="inventoryHeader" :items="inventory" sort-by="item_id" class="elevation-1">
           <template v-slot:top>
             <v-divider class="mx-4" inset vertical></v-divider>
             <v-spacer></v-spacer>
@@ -120,27 +127,18 @@
                     <v-row>
                       <v-col cols="12" sm="6" md="4">
                         <v-text-field
-                          v-model="editedInventory.id"
-                          label="Inventory ID"
-                        ></v-text-field>
-                      </v-col>
-                      <v-col cols="12" sm="6" md="4">
-                        <v-text-field
-                          v-model="editedInventory.item_id"
-                          label="Item Id"
-                        ></v-text-field>
-                      </v-col>
-                      <v-col cols="12" sm="6" md="4">
-                        <v-text-field
                           v-model="editedInventory.name"
                           label="Name"
                         ></v-text-field>
                       </v-col>
                       <v-col cols="12" sm="6" md="4">
-                        <v-text-field
+                        <v-select
                           v-model="editedInventory.category"
+                          :items="categories"
+                          item-text="choice"
                           label="Category"
-                        ></v-text-field>
+                          single-line
+                        ></v-select>
                       </v-col>
                       <v-col cols="12" sm="6" md="4">
                         <v-text-field
@@ -162,28 +160,10 @@
                       </v-col>
                       <v-col cols="12" sm="6" md="4">
                         <v-text-field
-                          v-model="editedInventory.num_sold"
-                          label="Number Sold"
-                        ></v-text-field>
-                      </v-col>
-                      <v-col cols="12" sm="6" md="4">
-                        <v-text-field
                           v-model="editedInventory.vendor"
                           label="Vendor"
                         ></v-text-field>
-                      </v-col>
-                      <v-col cols="12" sm="6" md="4">
-                        <v-text-field
-                          v-model="editedInventory.purchase_price"
-                          label="Purchase Price"
-                        ></v-text-field>
-                      </v-col>
-                      <v-col cols="12" sm="6" md="4">
-                        <v-text-field
-                          v-model="editedInventory.batch_quantity"
-                          label="Batch"
-                        ></v-text-field>
-                      </v-col>
+                        </v-col>
                     </v-row>
                   </v-container>
                 </v-card-text>
@@ -235,34 +215,42 @@
       </v-col>
     </v-container>
   </div>
+  <div v-else>
+    <v-container fluid>
+        <v-row align="center" justify="center">
+            <v-col>
+                <p class="text-h1" style="text-align: center; padding-top: 20%">
+                Not Signed In
+                </p>
+            </v-col>
+        </v-row>
+    </v-container>
+  </div>
 </template>
 
 <script>
-import { getInventory } from "../js/backend.js";
+import { getInventory} from "../js/backend.js";
 import { addItem } from "../js/backend.js";
 import { addInventory } from "../js/backend.js";
 import { updateItemItems } from "../js/backend.js";
 import { updateItemInventory } from "../js/backend.js";
 import { deleteItem } from "../js/backend.js";
 import { deleteItemInventory } from '../js/backend.js';
-
-
-import { insertOrder } from "../js/backend.js";
-import { getQuantityById } from "../js/backend.js";
-import { getIdFromName } from "../js/backend.js";
-import { countItem } from "../js/backend.js";
-import { countTopping } from "../js/backend.js";
-import { getOrderItemDate } from "../js/backend.js";
-import { getOrderToppingDate } from "../js/backend.js";
-import { getBigBoyCount } from "../js/backend.js";
-import { getBigBoy } from "../js/backend.js";
-import { getItemsFromCategory } from "../js/backend.js";
-import { getPrices } from "../js/backend.js";
+import { getRestockReport } from "../js/backend.js";
+import { getExcessReport } from "../js/backend.js";
+import { getPairsTogether } from "../js/backend.js";
+import { getSalesReport } from "../js/backend.js";
+import { loadGoogle, userSignedIn } from '../js/login.js';
+import { getLatestItemId } from "../js/backend.js";
+import { getLatestInventoryId } from "../js/backend.js";
 
 
 export default {
+  async created() {
+    await loadGoogle();
+    this.signedIn = await userSignedIn(this.$route.params.credential);
+  },
   async mounted() {
-    this.dates = [this.getToday()]
     this.inventory = await getInventory();
   },
 
@@ -276,45 +264,40 @@ export default {
     dialog: false,
     dialogDelete: false,
 
+    categories: [
+      { choice: 'Entree'},
+      { choice: 'Side'},
+      { choice: 'Protein'},
+      { choice: 'Topping'},
+    ],
+
     salesHeader: [
       { text: "Name", value: "name" },
       { text: "Price", value: "price" },
-      { text: "Quantity", value: "quantity" },
+      { text: "Number Sold", value: "num_sold" },
       { text: "Revenue", value: "revenue" },
     ],
 
     excessHeader: [
       { text: "Name", value: "name" },
-      { text: "Category", value: "category" },
-      { text: "Price", value: "price" },
-      { text: "Sold in Time Frame", value: "soldRange" },
-      { text: "Percent Sold", value: "percentSold" },
-      { text: "Total Sold", value: "totalSold" },
-      { text: "Item Quantity", value: "itemQuantity" },
-      { text: "Batch Quantity", value: "batchQuantity" },
+      { text: "Number Sold", value: "num_sold" },
+      { text: "Item Quantity", value: "item_quantity" },
     ],
 
     restockHeader: [
       { text: "Name", value: "name" },
-      { text: "Category", value: "category" },
-      { text: "Price", value: "price" },
-      { text: "Sold in Time Frame", value: "soldRange" },
-      { text: "Deficit", value: "deficit" },
-      { text: "Total Sold", value: "totalSold" },
-      { text: "Vendor", value: "vendor" },
-      { text: "Purchase Price", value: "purchasePrice" },
-      { text: "Batch Quantity", value: "batchQuantity" },
+      { text: "Number Sold", value: "num_sold" },
+      { text: "Item Quantity", value: "item_quantity" },
     ],
 
     pairsHeader: [
-      { text: "Entree", value: "entree" },
-      { text: "Topping", value: "topping" },
-      { text: "Occurences", value: "occurences" },
-      { text: "Popular", value: "popular" },
+      { text: "Entree", value: "entree_name" },
+      { text: "Topping", value: "topping_name" },
+      { text: "Occurences", value: "count" },
     ],
 
     inventoryHeader: [
-      { text: "Inventory ID", value: "id"},
+      // { text: "Inventory ID", value: "id"},
       { text: "Item ID", value: "item_id" },
       { text: "Name", value: "name" },
       { text: "Category", value: "category" },
@@ -322,8 +305,7 @@ export default {
       { text: "Quantity", value: "item_quantity" },
       { text: "Number Sold", value: "num_sold" },
       { text: "Vendor", value: "vendor" },
-      { text: "Purchase Price", value: "purchase_price" },
-      { text: "Batch", value: "batch_quantity" },
+      // { text: "Batch", value: "batch_quantity" },
       { text: 'Edit', value: 'edit', sortable: false },
       { text: 'Delete', value: 'delete', sortable: false },
     ],
@@ -333,22 +315,8 @@ export default {
     inventory: [],
     editedIndex: -1,
 
-    salesReportRow: {
-      name: "",
-      price: 0.0,
-      quantity: 0,
-      revenue: 0,
-    },
-
-    pairsRow: {
-      entree: "",
-      topping: "",
-      occurences: 0,
-      popular: false,
-    },
-
     defaultInventory: {
-      id: 0,
+      // id: 0,
       item_id: 0,
       name: "",
       category: "",
@@ -357,12 +325,11 @@ export default {
       item_quantity: 0,
       num_sold: 0,
       vendor: "",
-      purchase_price: 0.0,
-      batch_quantity: 0,
+      // batch_quantity: 300,
     },
 
     editedInventory: {
-      id: 0,
+      // id: 0,
       item_id: 0,
       name: "",
       category: "",
@@ -371,16 +338,32 @@ export default {
       item_quantity: 0,
       num_sold: 0,
       vendor: "",
-      purchase_price: 0.0,
-      batch_quantity: 0,
+      // batch_quantity: 300,
     },
+    signedIn: false,
   }),
   computed: {
     dateRangeText() {
       if (this.dates.length === 0) {
-        return "Select two dates";
-      } else {
-        return this.dates.join(" – ").replaceAll("-","/");
+        return "Select Two Dates";
+      } else if(this.dates.length == 1) {
+        var date0 = new Date(this.dates[0].replace(/-/g, '\/'));
+        var from = date0.toLocaleDateString();
+        return from;
+      }
+      else{
+        var date1 = new Date(this.dates[0].replace(/-/g, '\/'));
+        var date2 = new Date(this.dates[1].replace(/-/g, '\/'));
+        if(date1 > date2)
+        {
+          var temp = this.dates[0];
+          this.dates[0] = this.dates[1];
+          this.dates[1] = temp;
+          [date1, date2] = [date2, date1];
+        }
+        var from = date1.toLocaleDateString();
+        var to = date2.toLocaleDateString();
+        return from + ' - ' + to;
       }
     },
 
@@ -406,31 +389,28 @@ export default {
     },
 
   methods: {
-    click_report: function (e) {
+    click_report: async function (e) {
+      var from = this.dates[0];
+      var to;
+      if(this.dates.length === 1){
+        to = from;
+      }
+      else{
+        to = this.dates[1];
+      }
       if (e === "Sales") {
         this.header = this.salesHeader;
-        this.items = [];
-        this.items.push({
-          name: "Gyro",
-          price: 1.0,
-          quantity: 4,
-          revenue: 11.0,
-        });
+        this.items = await getSalesReport(from,to);
       } else if (e === "Excess") {
         this.header = this.excessHeader;
-        this.items = [];
+        this.items = await getExcessReport(from,to);
       } else if (e === "Restock") {
         this.header = this.restockHeader;
-        this.items = [];
+        this.items = await getRestockReport(from,to);
       } else if (e === "Pairs") {
         this.header = this.pairsHeader;
-        this.items = [];
-        this.items.push({
-          entree: "Gyro",
-          topping: "Chicken",
-          occurences: 4,
-          popular: true,
-        });
+        this.items = await getPairsTogether(from,to);
+        
       }
     },
 
@@ -449,8 +429,7 @@ export default {
       
    async deleteItemConfirm () {
         // SAFEGUARD TO PREVENT ACCIDENTAL DELETION
-        console.log(this.editedIndex)
-        if(this.editedIndex > 22)
+        if(this.editedIndex > 28)
         {
           await deleteItemInventory(this.editedIndex);
           await deleteItem(this.editedIndex);
@@ -477,27 +456,54 @@ export default {
 
     async save() {
       var temp = this.editedInventory;
+      var cat = temp.category;
+      if(cat === "Entree")
+      {
+        cat = "mainEntree"
+      }
+      else if(cat === "Side")
+      {
+        cat = "subEntree"
+      }
+      else if(cat === "Protein")
+      {
+        cat = "mainProtein"
+      }
+      else if(cat === "Topping")
+      {
+        cat = "topping"
+      }
       if (this.editedIndex > -1) {
         await updateItemItems(temp.name,temp.price,this.editedIndex);
         await updateItemInventory(temp.name,this.editedIndex)
       }
       else{
-        await addItem(temp.item_id,temp.name,temp.category,temp.price,temp.calories);
-        await addInventory(temp.id,temp.item_id,temp.name,temp.item_quantity,temp.num_sold,temp.vendor,temp.purchase_price,temp.batch_quantity);
+        var itemId = await getLatestItemId() + 1;
+        var inventoryId = await getLatestInventoryId() + 1;
+        await addItem(itemId,temp.name,cat,temp.price,temp.calories);
+        await addInventory(inventoryId,itemId,temp.name,temp.item_quantity,temp.num_sold,temp.vendor,1,300);
+        if(cat === "mainProtein")
+        {
+          cat = "subProtein";
+          itemId += 1;
+          inventoryId += 1;
+          var name = "Extra " + temp.name;
+          await addItem(itemId,name,cat,temp.price,temp.calories);
+          await addInventory(inventoryId,itemId,name,temp.item_quantity,temp.num_sold,temp.vendor,1,300);
+        }
       }
       this.inventory = await getInventory();
       this.close();
     },
 
-    getToday() {
-      var today = new Date();
-      var dd = String(today.getDate()).padStart(2, '0');
-      var mm = String(today.getMonth() + 1).padStart(2, '0');
-      var yyyy = today.getFullYear();
-      today = yyyy + '-' + mm + '-' + dd;
-      console.log(today);
-      return today;
-    },
+    // getToday() {
+    //   var today = new Date();
+    //   var dd = String(today.getDate()).padStart(2, '0');
+    //   var mm = String(today.getMonth() + 1).padStart(2, '0');
+    //   var yyyy = today.getFullYear();
+    //   today = yyyy + '-' + mm + '-' + dd;
+    //   return today;
+    // },
   },
 };
 </script>

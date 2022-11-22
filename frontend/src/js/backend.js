@@ -105,6 +105,68 @@ export async function insertOrderToppings(uuid, orderid, subitem, id, name) {
 
 // MANAGER
 
+// Get item id, route: '/latestitemid'
+// Returns the most recent item id
+export async function getLatestItemId() {
+    let result = await instance.get('/latestitemid');
+    return result.data.items[0].item_id;
+}
+
+// Get inventory id, route: '/latestid'
+// Returns the most recent item id
+export async function getLatestInventoryId() {
+    let result = await instance.get('/latestid');
+    return result.data.items[0].id;
+}
+
+// Get sales report, '/getsalesreport'
+// Returns array of objects
+export async function getSalesReport(from, to) {
+    let result = await instance.get('/getsalesreport',{
+        params: {
+            from: from,
+            to: to,
+        }
+    });
+    return result.data.items;
+}
+
+// Get restock report, '/getrestockreport'
+// Returns array of objects
+export async function getRestockReport(from, to) {
+    let result = await instance.get('/getrestockreport',{
+        params: {
+            from: from,
+            to: to,
+        }
+    });
+    return result.data.items;
+}
+
+// Get excess report, '/getexcessreport'
+// Returns array of objects
+export async function getExcessReport(from, to) {
+    let result = await instance.get('/getexcessreport',{
+        params: {
+            from: from,
+            to: to,
+        }
+    });
+    return result.data.items;
+}
+
+// Get pairs together, '/getpairstogether'
+// Returns array of objects
+export async function getPairsTogether(from, to) {
+    let result = await instance.get('/getpairstogether',{
+        params: {
+            from: from,
+            to: to,
+        }
+    });
+    return result.data.items;
+}
+
 // Get inventory, '/inventory'
 // Returns array of objects
 export async function getInventory() {

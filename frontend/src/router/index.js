@@ -5,6 +5,7 @@ import ClientView from '../views/ClientView.vue'
 import ServerView from '../views/ServerView.vue'
 import ManagerView from '../views/ManagerView.vue'
 import LoginView from '../views/LoginView.vue'
+import ClientCheckoutView from '../views/ClientCheckoutView.vue'
 
 Vue.use(VueRouter)
 
@@ -18,6 +19,11 @@ const routes = [
     path: '/client',
     name: 'client',
     component: ClientView
+  },
+  {
+    path: '/checkout',
+    name: 'ClientCheckoutView',
+    component: ClientCheckoutView
   },
   {
     path: '/server',

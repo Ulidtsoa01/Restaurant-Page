@@ -1,17 +1,48 @@
 <template>
-    <div>
-        <h1>Welcome Login</h1>
-    </div>
+  <div>
+{{number}}
+asd
+</div>
+  
+
+
 </template>
 
 <script>
-  // import HelloWorld from '../components/HelloWorld'
+// import HelloWorld from '../components/HelloWorld'
 
-  export default {
-    name: 'LoginView',
+import total from './ClientView.vue'
 
-    components: {
-      //HelloWorld,
-    },
+export default {   
+  props: {
+    
+  },
+
+  data: () => ({
+    total : total,
+    number : 0,
+  }),
+
+  components: {
+  },
+
+  comptued: {
+    isDisabled() {
+      return this.total.total;
+    }
+  },
+
+  created() {
+    this.number = this.$route.query.sub_total
+  },
+
+  method: {
+    click_proteins() {
+      this.click += 1;
+      if (this.click  === 1) {
+        this.enable = false;
+      }
+    }
   }
+}
 </script>

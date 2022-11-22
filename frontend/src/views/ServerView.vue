@@ -8,12 +8,16 @@
       <v-row v-for="j in justify" :key="j" :justify="j">
         <v-col v-for="k in 1" :key="k">
           <!--Server button-->
-          <v-btn elevation="5" color="warning">Server View</v-btn>
-
+          <v-btn elevation="5" color="#4174D9">Server View</v-btn>
           <!-- Debugging Part
-          {{ entrees_array }}
+
+          
+
+          <!-- {{all_items}} -->
+          <!-- {{  subProteins_name  }} -->
+          <!-- {{ entrees_array }}
           {{ toppings_array }}
-          {{ calories_total }} -->
+          {{ calories_total }} --> 
           <!-- {{ subEntrees_name }}
           {{ mainProteins_name }}
           {{ subProteins_name }}
@@ -37,13 +41,16 @@
           <!--Manager button-->
           <router-view :key="$route.fullPath"></router-view>
           <router-link :to="{ path: '/manager' }" style="text-decoration: none; color: inherit;">
-            <v-btn elevation="5" class="ma-2" outlined color="orange">Manager View</v-btn>
+            <v-btn elevation="5" class="ma-2" outlined color="#4174D9">Manager View</v-btn>
           </router-link>
         </v-col>
         <right>
           <v-col v-for="k in 1" :key="k">
             <!--ColorBlind mode button-->
-            <v-btn v-if="isLightMode" @click="light_mode_button" elevation="5" class="ma-2" color="green">
+
+            <v-switch v-model="singleExpand" label="Colorblind Mode"></v-switch>
+
+            <!-- <v-btn v-if="isLightMode" @click="light_mode_button" elevation="5" class="ma-2" color="green">
               Light Mode
             </v-btn>
             <v-btn v-if="!isLightMode" @click="light_mode_button_outlined" elevation="5" class="ma-2" outlined
@@ -56,7 +63,7 @@
             <v-btn v-if="!isdarkMode" @click="dark_mode_button_outlined" elevation="5" class="ma-2" outlined
               color="green">
               Dark Mode
-            </v-btn>
+            </v-btn> -->
           </v-col>
         </right>
       </v-row>
@@ -72,7 +79,7 @@
           <!--Update button-->
           &nbsp;&nbsp;
           <v-btn @click="updateItems(), getData('Updated!'), deleteAllItem('clear')" elevation="5" class="ma-1"
-            color="green" dark large>Update
+            color="#42a376" dark large>Update
           </v-btn>
           &nbsp;&nbsp;
           <!--Order table-->
@@ -94,17 +101,17 @@
           <!--Add, order, clear buttons-->
           <center>
             <v-card class="pa-2" inlined tile>
-              <v-btn large elevation="5" rounded color="green" dark class="mb-2"
+              <v-btn large elevation="5" rounded color="#42a376" dark class="mb-2"
                 @click="addItem(), getData('Add Your Next Item!')">
                 Add
               </v-btn>
               &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
               <v-btn large elevation="5" rounded
                 @click="getData('Order Placed!'), deleteAllItem('order'), insertOrderTable()" class="mb-2"
-                color="orange" dark>Order
+                color="#4174D9" dark>Order
               </v-btn>
-              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-              <v-btn large elevation="5" rounded color="primary" dark class="mb-2"
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+              <v-btn large elevation="5" rounded color="#42a376" dark class="mb-2"
                 @click.native="deleteAllItem('clear')">
                 clear
               </v-btn>
@@ -118,20 +125,21 @@
               <v-col>
                 <h2>
                   Tip:
-                  <v-btn v-if="dark_mode" @click="tip_control(1)" elevation="8" class="ma-2" outlined color="orange">5%
+                  &nbsp;
+                  <v-btn v-if="dark_mode" @click="tip_control(1)" elevation="8" class="ma-2"  color="#4174D9">5%
                   </v-btn>
                   <v-btn v-if="light_mode" @click="tip_control(1)" elevation="1" class="ma-2" depressed color="warning">
                     5%
                   </v-btn>
-                  <v-btn v-if="dark_mode" @click="tip_control(2)" elevation="8" class="ma-2" outlined color="orange">10%
+                  <v-btn v-if="dark_mode" @click="tip_control(2)" elevation="8" class="ma-2"  color="#4174D9">10%
                   </v-btn>
                   <v-btn v-if="light_mode" @click="tip_control(2)" elevation="1" class="ma-2" depressed color="warning">
                     10%</v-btn>
-                  <v-btn v-if="dark_mode" @click="tip_control(3)" elevation="8" class="ma-2" outlined color="orange">15%
+                  <v-btn v-if="dark_mode" @click="tip_control(3)" elevation="8" class="ma-2"  color="#4174D9">15%
                   </v-btn>
                   <v-btn v-if="light_mode" @click="tip_control(3)" elevation="1" class="ma-2" depressed color="warning">
                     15%</v-btn>
-                  <v-btn v-if="dark_mode" @click="tip_control(4)" elevation="8" class="ma-2" outlined color="orange">20%
+                  <v-btn v-if="dark_mode" @click="tip_control(4)" elevation="8" class="ma-2"  color="#4174D9">20%
                   </v-btn>
                   <v-btn v-if="light_mode" @click="tip_control(4)" elevation="1" class="ma-2" depressed color="warning">
                     20%</v-btn>
@@ -186,6 +194,7 @@
             <br><br>
             <v-row no-gutters>
               <v-col v-for="n in 1" :key="n" :cols="n === 2 ? 5 : undefined">
+                <br><br>
                 <v-card class="pa-2" inlined tile>
                   <h2 class="font-weight-bold">
                     Entrees / Drinks
@@ -194,22 +203,22 @@
                   <div class="ma-2">
                     <a v-for="k in mainEntrees_name" :key="k">
                       <v-btn v-if="dark_mode" @click="click_entrees(k), enable_all_buttons(k), enable_entree_buttons()"
-                        :disabled="!isDisabled_entrees" elevation="10" class="ma-3" outlined color="orange" large>
+                        :disabled="!isDisabled_entrees" elevation="10" class="ma-3" color="#4174D9" large>
                         {{ k }}
                       </v-btn>
                       <v-btn v-if="light_mode" @click="click_entrees(k), enable_all_buttons(k), enable_entree_buttons()"
-                        :disabled="!isDisabled_entrees" elevation="5" class="ma-3" depressed color="warning" large>
+                        :disabled="!isDisabled_entrees" elevation="5" class="ma-3" depressed color="blue" large>
                         {{ k }}
                       </v-btn>
                     </a>
                     <a v-for="k in subEntrees_name" :key="k">
                       <v-btn v-if="dark_mode" @click="click_entrees(k), enable_all_buttons(k), enable_entree_buttons(1)"
-                        :disabled="!isDisabled_entrees" elevation="10" class="ma-3" outlined color="orange" large>
+                        :disabled="!isDisabled_entrees" elevation="10" class="ma-3" color="#4174D9" large>
                         {{ k }}
                       </v-btn>
                       <v-btn v-if="light_mode"
                         @click="click_entrees(k), enable_all_buttons(k), enable_entree_buttons(1)"
-                        :disabled="!isDisabled_entrees" elevation="5" class="ma-3" depressed color="warning" large>
+                        :disabled="!isDisabled_entrees" elevation="5" class="ma-3" depressed color="blue" large>
                         {{ k }}
                       </v-btn>
                     </a>
@@ -234,7 +243,7 @@
                     <a v-for="k in mainProteins_name" :key="k">
                       <v-btn v-if="dark_mode"
                         @click="click_proteins(k), disable_mainProteins_buttons(), enable_subProteins_buttons()"
-                        :disabled="!isDisabled_mainProteins" elevation="10" class="ma-3" outlined color="orange" large>
+                        :disabled="!isDisabled_mainProteins" elevation="10" class="ma-3" color="#4174D9" large>
                         {{ k }}
                       </v-btn>
                       <v-btn v-if="light_mode"
@@ -244,11 +253,11 @@
                       </v-btn>
                     </a>
                     <a v-for="k in subProteins_name" :key="k">
-                      <v-btn v-if="dark_mode" @click="click_proteins(k), disable_subProteins_buttons()"
-                        :disabled="!isDisabled_subProteins" elevation="10" class="ma-3" outlined color="orange" large>
+                      <v-btn v-if="dark_mode" @click="click_subProteins(k), disable_subProteins_buttons()"
+                        :disabled="!isDisabled_subProteins" elevation="10" class="ma-3" color="#4174D9" large>
                         {{ k }}
                       </v-btn>
-                      <v-btn v-if="light_mode" @click="click_proteins(k), disable_subProteins_buttons()"
+                      <v-btn v-if="light_mode" @click="click_subProteins(k), disable_subProteins_buttons()"
                         :disabled="!isDisabled_subProteins" elevation="5" class="ma-3" depressed color="warning" large>
                         {{ k }}
                       </v-btn>
@@ -272,12 +281,12 @@
                   <!--toppings buttons-->
                   <div class="ma-2">
                     <a v-for="k in toppings_name" :key="k">
-                      <v-btn v-if="dark_mode" @click="click_toppings(k)" :disabled="!isDisabled" elevation="10"
-                        class="ma-3" outlined color="orange" large>
+                      <v-btn v-if="dark_mode" @click="click_toppings(k), enable_toppings_button(e)"
+                        :disabled="!isDisabled" elevation="10" class="ma-3" color="#4174D9" large>
                         {{ k }}
                       </v-btn>
-                      <v-btn v-if="light_mode" @click="click_toppings(k)" :disabled="!isDisabled" elevation="5"
-                        class="ma-3" depressed color="warning" large>
+                      <v-btn v-if="light_mode" @click="click_toppings(k), enable_toppings_button(e)"
+                        :disabled="!isDisabled" elevation="5" class="ma-3" depressed color="warning" large>
                         {{ k }}
                       </v-btn>
                     </a>
@@ -319,6 +328,7 @@ export default {
     enable_entrees: true,
     enalbe_mainProteins: false,
     enable_subProteins: false,
+    enable_delete: false,
     tip: 0,
     sub_total: 0,
     total: 0,
@@ -329,7 +339,11 @@ export default {
     tip4: false,
     light_mode: false,
     dark_mode: true,
-    current_time: moment(new Date()).utc().format('YYYY-DD-MM hh:mm:ss'),
+    flag_delete: false,
+    current_time: moment(new Date()).format('YYYY-MM-DD hh:mm:ss'),
+    topping_count: 0,
+
+    subProtein_count: 0,
 
     latestOrderID: 0,
     latestToppingUUID: 0,
@@ -373,6 +387,7 @@ export default {
       price: 0.0
     },
 
+    all_items: [],
     mainEntrees_all: [],
     mainEntrees_name: [],
     subEntrees_name: [],
@@ -388,11 +403,6 @@ export default {
 
   // computed
   computed: {
-
-    formTitle() {
-      return this.editedIndex === -1 ? 'New Item' : 'Edit Item'
-    },
-
     calculate_subTotal() {
       let sum = 0;
       for (let i = 0; i < this.items.length; i++) {
@@ -416,6 +426,10 @@ export default {
 
     isDisabled_entrees() {
       return this.enable_entrees;
+    },
+
+    isDisabled_delete() {
+      return this.enable_delete;
     },
 
     istip1() {
@@ -490,14 +504,6 @@ export default {
     calculate_total_calories() {
       return this.calories_total;
     },
-
-    ee() {
-
-    }
-
-
-
-
   },
 
   // watch
@@ -519,7 +525,7 @@ export default {
     click_entrees(e) {
       for (let i = 0; i < this.mainEntrees_all.length; i++) {
         if (e === this.mainEntrees_all[i].name) {
-          this.count++;
+          this.count_update();
           this.calories_total += this.mainEntrees_all[i].calories;
           this.items.push({
             number: this.count,
@@ -532,42 +538,132 @@ export default {
         number: this.count,
         name: e,
       });
+      this.flag_delete = false;
+    },
+
+    count_update() {
+      if (this.count > -1) {
+        this.count = this.items[this.items.length - 1].number + 1;
+      }
+      else {
+        this.count += 1;
+      }
     },
 
     // Proteins buttons
-    click_proteins: function (e) {
-      for (let i = 0; i < this.mainProteins_all.length; i++) {
-        if (e === this.mainProteins_all[i].name) {
-          this.calories_total += this.mainProteins_all[i].calories;
-          this.items.push({
-            number: this.count,
-            name: this.mainProteins_all[i].name,
-            price: this.mainProteins_all[i].price,
-          })
+    click_proteins(e) {
+      if (this.flag_delete) {
+        for (let i = 0; i < this.mainProteins_all.length; i++) {
+          if (e === this.mainProteins_all[i].name) {
+            this.calories_total += this.mainProteins_all[i].calories;
+            this.items.splice(this.editedIndex, 0, {
+              number: this.items[this.editedIndex - 1].number,
+              name: this.mainProteins_all[i].name,
+              price: this.mainProteins_all[i].price,
+            })
+          }
         }
+        this.toppings_array.push({
+          number: this.items[this.editedIndex - 1].number,
+          name: e,
+        });
       }
-      this.toppings_array.push({
-        number: this.count,
-        name: e,
-      });
+      else {
+        for (let i = 0; i < this.mainProteins_all.length; i++) {
+          if (e === this.mainProteins_all[i].name) {
+            this.calories_total += this.mainProteins_all[i].calories;
+            this.items.push({
+              number: this.count,
+              name: this.mainProteins_all[i].name,
+              price: this.mainProteins_all[i].price,
+            })
+          }
+        }
+        this.toppings_array.push({
+          number: this.count,
+          name: e,
+        });
+      }
+      this.flag_delete = false;
+    },
+
+    click_subProteins(e) {
+      if (this.flag_delete) {
+        for (let i = 0; i < this.mainProteins_all.length; i++) {
+          if (e === this.mainProteins_all[i].name) {
+            this.calories_total += this.mainProteins_all[i].calories;
+            this.items.splice(this.editedIndex, 0, {
+              number: this.items[this.editedIndex - 1].number,
+              name: this.mainProteins_all[i].name,
+              price: this.mainProteins_all[i].price,
+            })
+          }
+        }
+        this.toppings_array.push({
+          number: this.items[this.editedIndex - 1].number,
+          name: e,
+        });
+      }
+      else {
+        for (let i = 0; i < this.mainProteins_all.length; i++) {
+          if (e === this.mainProteins_all[i].name) {
+            this.calories_total += this.mainProteins_all[i].calories;
+            this.items.push({
+              number: this.count,
+              name: this.mainProteins_all[i].name,
+              price: this.mainProteins_all[i].price,
+            })
+          }
+        }
+        this.toppings_array.push({
+          number: this.count,
+          name: e,
+        });
+      }
+      this.flag_delete = false;
+      this.subProtein_count += 1;
     },
 
     // Toppings buttons
-    click_toppings: function (e) {
-      for (let i = 0; i < this.toppings_all.length; i++) {
-        if (e === this.toppings_all[i].name) {
-          this.calories_total += this.toppings_all[i].calories;
-          this.items.push({
-            number: this.count,
-            name: this.toppings_all[i].name,
-            price: this.toppings_all[i].price,
-          })
+    click_toppings(e) {
+      if (this.flag_delete) {
+        for (let i = 0; i < this.toppings_all.length; i++) {
+          if (e === this.toppings_all[i].name) {
+            this.calories_total += this.toppings_all[i].calories;
+            this.items.splice(this.editedIndex, 0, {
+              number: this.items[this.editedIndex - 1].number,
+              name: this.toppings_all[i].name,
+              price: this.toppings_all[i].price,
+            })
+          }
         }
+        this.toppings_array.push({
+          number: this.items[this.editedIndex - 1].number,
+          name: e,
+        });
+        let count = 4;
+        count -= 1;
+        this.enable_toppings_button(count)
       }
-      this.toppings_array.push({
-        number: this.count,
-        name: e,
-      });
+      else {
+        for (let i = 0; i < this.toppings_all.length; i++) {
+          if (e === this.toppings_all[i].name) {
+            this.calories_total += this.toppings_all[i].calories;
+            this.items.push({
+              number: this.count,
+              name: this.toppings_all[i].name,
+              price: this.toppings_all[i].price,
+            })
+          }
+        }
+        this.toppings_array.push({
+          number: this.count,
+          name: e,
+        });
+      }
+      this.flag_delete = false;
+      this.topping_count += 1;
+      this.enable_toppings_button(this.topping_count);
     },
 
     tip_control(k) {
@@ -594,6 +690,15 @@ export default {
         this.tip2 = false;
         this.tip3 = false;
         this.tip4 = true;
+      }
+    },
+
+    enable_toppings_button(e) {
+      if (this.topping_count > 3) {
+        this.enable_toppings = false;
+      }
+      else {
+        this.enable_toppings = true;
       }
     },
 
@@ -633,26 +738,33 @@ export default {
       this.enable_entrees = true;
       this.enalbe_mainProteins = false;
       this.enable_subProteins = false;
+      this.flag_delete = false;
+      this.topping_count = 0;
 
-      let empty_array = [{
-        number: '',
-        name: '',
-        price: 0,
-      }];
-      this.items.push({
-        number: '',
-        name: '',
-        price: 0,
-      });
+      // this.items.push({
+      //   number: this.count,
+      //   name: '',
+      //   price: 0,
+      // });
     },
 
     async deleteItem(item) {
       this.editedIndex = this.items.indexOf(item)
       this.editedItem = Object.assign({}, item)
       this.dialogDelete = true
-      this.items.splice(this.editedIndex, 1)
-      this.closeDelete()
+      this.flag_delete = true
+      let mainEntrees_flag = false;
 
+      for (let d = 0; d < this.toppings_all.length; d++) {
+        if (item.name === this.toppings_all[d].name) {
+          this.topping_count -= 1;
+          this.enable_toppings_button(this.topping_count);
+        }
+      }
+
+      // check_buttons(item);
+
+      // check if item is one of the mainEntrees items
       for (let i = 0; i < this.mainEntrees_all.length; i++) {
         if (item.name === this.mainEntrees_all[i].name) {
           this.count -= 1;
@@ -660,23 +772,90 @@ export default {
           this.enalbe_mainProteins = false;
           this.enable_subProteins = false;
           this.enable_toppings = false;
-          this.entrees_array.pop(this.entrees_array.length - 1);
+          this.flag_delete = false;
+          mainEntrees_flag = true;
         }
       }
 
-      let array = await getItemsFromCategory('mainProtein')
-      for (let j = 0; j < array.length; j++) {
-        if (item.name === array[j].name) {
-          this.enalbe_mainProteins = true;
-          this.enable_subProteins = false;
-        }
-      }
+      // if mainEntrees item was removed, remove all proteins and toppings
+      var q = 0;
+      var r = 0;
+      var s = 0;
 
-      for (let m = 0; m < this.subProteins_all.length; m++) {
-        if (item.name === this.subProteins_all[m].name) {
-          this.enable_subProteins = true;
+      if (mainEntrees_flag) {
+        while (q < this.items.length) {
+          if (this.items[q].number === item.number) {
+            this.remove_calories(this.items[q].name);
+            this.remove_count(this.items[q].name);
+            this.items.splice(q, 1);
+          }
+          else {
+            ++q;
+          }
+        }
+        while (r < this.toppings_array.length) {
+          if (this.toppings_array[r].number === item.number) {
+            this.toppings_array.splice(r, 1);
+          }
+          else {
+            ++r;
+          }
+        }
+        // splice from entrees_array
+        for (let t = 0; t < this.entrees_array.length; t++) {
+          if (item.name === this.entrees_array[t].name &&
+            item.number === this.entrees_array[t].number) {
+            this.entrees_array.splice(t, 1);
+          }
         }
       }
+      else {
+        this.items.splice(this.editedIndex, 1)
+        this.remove_calories(item.name);
+        // splice from toppings_array
+        for (let g = 0; g < this.toppings_array.length; g++) {
+          if (item.name === this.toppings_array[g].name &&
+            item.number === this.toppings_array[g].number) {
+            this.toppings_array.splice(g, 1);
+          }
+        }
+
+        // enable mainProteins and disable subProteins buttons
+        let array = await getItemsFromCategory('mainProtein')
+        for (let j = 0; j < array.length; j++) {
+          if (item.name === array[j].name) {
+            this.enalbe_mainProteins = true;
+            this.enable_subProteins = false;
+          }
+        }
+
+        // enable subProteins button
+        for (let m = 0; m < this.subProteins_all.length; m++) {
+          if (item.name === this.subProteins_all[m].name) {
+            this.enable_subProteins = true;
+          }
+        }
+      }
+    },
+
+    remove_count(e) {
+      for (let i = 0; i < this.toppings_all.length; i++) {
+        if (e === this.toppings_all[i].name) {
+          this.topping_count -= 1;
+        }
+      }
+    },
+
+    remove_calories(e) {
+      for (let i = 0; i < this.all_items.length; i++) {
+        if (e === this.all_items[i].name) {
+          this.calories_total -= this.all_items[i].calories;
+        }
+      }
+    },
+
+    async make_all_items() {
+      this.all_items = await getItems();
 
       let array2 = await getItemsFromCategory('mainProtein');
       for (let p = 0; p < this.subProteins_all.length; p++) {
@@ -685,20 +864,9 @@ export default {
       for (let o = 0; o < this.toppings_all.length; o++) {
         array2.push(this.toppings_all[o]);
       }
-      for (let l = 0; l < array2.length; l++) {
-        if (item.name === array2[l].name) {
-          this.toppings_array.pop(this.toppings_array.length - 1);
-        }
-      }
 
-      let array3 = await getItems();
       for (let u = 0; u < array2.length; u++) {
-        array3.push(array2[u]);
-      }
-      for (let y = 0; y < array3.length; y++) {
-        if (item.name === array3[y].name) {
-          this.calories_total -= array3[y].calories;
-        }
+        this.all_items.push(array2[u]);
       }
     },
 
@@ -722,6 +890,8 @@ export default {
         this.tip2 = false;
         this.tip3 = false;
         this.tip4 = false;
+        this.flag_delete = false;
+        this.topping_count = 0;
         alert("Cleared!")
       }
       else {
@@ -729,14 +899,6 @@ export default {
           this.items.pop(i)
         }
       }
-    },
-
-    closeDelete() {
-      this.dialogDelete = false
-      this.$nextTick(() => {
-        this.editedItem = Object.assign({}, this.defaultItem)
-        this.editedIndex = -1
-      })
     },
 
     getData(data) {
@@ -861,6 +1023,8 @@ export default {
       this.tip2 = false;
       this.tip3 = false;
       this.tip4 = false;
+      this.flag_delete = false;
+      this.topping_count = 0;
     },
 
     async getItemInfo() {
@@ -877,6 +1041,7 @@ export default {
   async created() {
     await this.updateItems();
     await this.getItemInfo();
+    await this.make_all_items();
   },
 
   async mounted() {

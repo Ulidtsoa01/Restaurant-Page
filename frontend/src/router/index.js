@@ -16,7 +16,7 @@ const routes = [
     component: LandingView
   },
   {
-    path: '/client/:credential?',
+    path: '/client',
     name: 'client',
     component: ClientView
   },

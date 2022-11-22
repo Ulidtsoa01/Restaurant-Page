@@ -1,7 +1,14 @@
-<template>  
+<template>
   <div id="app">
-    <login-form/>
+    <login-form />
+
+    <center>
+      <br><br>
+      <v-btn @click="move()" color="blue">Client</v-btn>
+    </center>
   </div>
+
+
 </template>
 
 <script>
@@ -11,10 +18,19 @@ export default {
   name: "App",
   components: {
     LoginForm
+  },
+
+  methods: {
+    move() {
+      this.$router.push({
+        path: 'client',
+      })
+    },
   }
 };
 </script>
 
 <style>
+
 </style>
 

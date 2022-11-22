@@ -1,28 +1,8 @@
 <!----------Template----------->
 <template>
-
-<div v-if="signedIn">
-        <h1>Welcome Client</h1>
-        <v-btn block>
-            Block Button
-        </v-btn>
-    </div>
-  <div v-else>
-    <v-container fluid>
-        <v-row align="center" justify="center">
-            <v-col>
-                <p class="text-h1" style="text-align: center; padding-top: 20%">
-                Not Signed In
-                </p>
-            </v-col>
-        </v-row>
-    </v-container>
-  </div>
-
-  <div>
-    
+  <div v-if="signedIn">
     <!--Top-->
-    {{order}}
+    {{ order }}
     <v-container class="Top">
       <v-row v-for="j in justify" :key="j" :justify="j">
         <v-col v-for="k in 1" :key="k">
@@ -30,13 +10,13 @@
             <v-img src="./pom.png" width="300"></v-img>
           </v-col>
         </v-col>
-          <v-col v-for="k in 1" :key="k">
-            <!--ColorBlind mode button-->
-            <v-switch v-model="singleExpand" label="Colorblind Mode"></v-switch>
-          </v-col>
+        <v-col v-for="k in 1" :key="k">
+          <!--ColorBlind mode button-->
+          <v-switch v-model="singleExpand" label="Colorblind Mode"></v-switch>
+        </v-col>
       </v-row>
     </v-container>
-    
+
     <!--Middle-->
     <v-container class="Mid">
       <v-row v-for="j in justify" :key="j" :justify="j">
@@ -69,7 +49,8 @@
             <center>
               <v-btn @click="deleteAllItem('clear')" small color="red">Clear</v-btn>
               <br><br>
-              <v-btn @click="calculate_cart_total(), addItem(), getData('Add Your Next Item!')" small color="#4174D9">Add to cart</v-btn>
+              <v-btn @click="calculate_cart_total(), addItem(), getData('Add Your Next Item!')" small color="#4174D9">
+                Add to cart</v-btn>
               <br><br>
               <p1>
                 Your cart: $
@@ -237,7 +218,18 @@
 
       </v-row>
     </v-container>
-  
+
+  </div>
+  <div v-else>
+    <v-container fluid>
+      <v-row align="center" justify="center">
+        <v-col>
+          <p class="text-h1" style="text-align: center; padding-top: 20%">
+            Not Signed In
+          </p>
+        </v-col>
+      </v-row>
+    </v-container>
   </div>
 
 </template>
@@ -246,7 +238,7 @@
 <!-----------Script------------>
 <script>
 
-  // import HelloWorld from '../components/HelloWorld'
+// import HelloWorld from '../components/HelloWorld'
 import { loadGoogle, userSignedIn } from '../js/login.js';
 
 import { getItems, getLatestOrderId } from '../js/backend.js'
@@ -268,7 +260,7 @@ export default {
 
 
   data: () => ({
-  signedIn: false,
+    signedIn: false,
     cart_total: 0,
     total: 0,
     sub_total: 0,

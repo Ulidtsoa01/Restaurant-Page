@@ -13,7 +13,7 @@
 
           
 
-          <!-- {{all_items}} -->
+           {{all_items}} -->
           <!-- {{  subProteins_name  }} -->
           <!-- {{ entrees_array }}
           {{ toppings_array }}
@@ -529,7 +529,6 @@ export default {
     },
   },
 
-  // Clock
   components: { VueClock },
 
   // methods

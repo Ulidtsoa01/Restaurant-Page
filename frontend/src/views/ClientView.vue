@@ -7,7 +7,7 @@
       <v-row v-for="j in justify" :key="j" :justify="j">
         <v-col v-for="k in 1" :key="k">
           <v-col>
-            <v-img src="./pom.png" width="300"></v-img>
+            <v-img src="./images/pom.png" width="300"></v-img>
           </v-col>
         </v-col>
         <v-col v-for="k in 1" :key="k">
@@ -79,19 +79,19 @@
                   <v-card outlined class="ma-10" width="300" :disabled="!isDisabled_entrees"
                     @click="click_entrees(k.name), enable_all_buttons(k.name), enable_entree_buttons()">
                     <a v-if="k.name === 'Gyros'">
-                      <v-img src="./Gyros.jpg" height="180px"></v-img>
+                      <v-img src="./images/Gyros.jpg" height="180px"></v-img>
                     </a>
                     <a v-else-if="k.name === 'Bowls'">
-                      <v-img src="./Bowls.jpeg" height="180px"></v-img>
+                      <v-img src="./images/Bowls.jpeg" height="180px"></v-img>
                     </a>
                     <a v-else-if="k.name === 'Hummus & Pita'">
-                      <v-img src="./Hummus.jpeg" height="180px"></v-img>
+                      <v-img src="./images/Hummus.jpeg" height="180px"></v-img>
                     </a>
                     <a v-else-if="k.name === 'Two Falafels'">
-                      <v-img src="./Falafels.jpg" height="180px"></v-img>
+                      <v-img src="./images/Falafels.jpg" height="180px"></v-img>
                     </a>
                     <a v-else-if="k.name === 'Drink'">
-                      <v-img src="./Drink.jpeg" height="180px"></v-img>
+                      <v-img src="./images/Drink.jpeg" height="180px"></v-img>
                     </a>
 
                     <div class="text-center">

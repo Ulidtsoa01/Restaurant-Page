@@ -21,7 +21,7 @@ const routes = [
     component: ClientView
   },
   {
-    path: '/checkout',
+    path: '/checkout/:credential?',
     name: 'ClientCheckoutView',
     component: ClientCheckoutView
   },

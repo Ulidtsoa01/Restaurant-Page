@@ -181,7 +181,7 @@
               <br>
               <!--Pom & honey image-->
               <v-col>
-                <v-img src="./pom.png" width="300"></v-img>
+                <v-img src="./images/pom.png" width="300"></v-img>
               </v-col>
             </v-card>
           </center>

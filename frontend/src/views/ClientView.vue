@@ -1,8 +1,8 @@
 <!----------Template----------->
 <template>
-  <div v-if="signedIn">
+  <!-- <div v-if="signedIn"> -->
+    <div>
     <!--Top-->
-    {{ order }}
     <v-container class="Top">
       <v-row v-for="j in justify" :key="j" :justify="j">
         <v-col v-for="k in 1" :key="k">
@@ -10,10 +10,12 @@
             <v-img src="./images/pom.png" width="300"></v-img>
           </v-col>
         </v-col>
+        <right>
         <v-col v-for="k in 1" :key="k">
           <!--ColorBlind mode button-->
           <v-switch v-model="singleExpand" label="Colorblind Mode"></v-switch>
         </v-col>
+      </right>
       </v-row>
     </v-container>
 
@@ -220,7 +222,7 @@
     </v-container>
 
   </div>
-  <div v-else>
+  <!-- <div v-else>
     <v-container fluid>
       <v-row align="center" justify="center">
         <v-col>
@@ -230,7 +232,7 @@
         </v-col>
       </v-row>
     </v-container>
-  </div>
+  </div> -->
 
 </template>
 <!----------Template----------->
@@ -283,7 +285,6 @@ export default {
     light_mode: false,
     dark_mode: true,
     flag_delete: false,
-    current_time: moment(new Date()).format('YYYY-MM-DD hh:mm:ss'),
     topping_count: 0,
 
     subProtein_count: 0,
@@ -398,8 +399,6 @@ export default {
   watch: {
   },
 
-  // Clock
-  components: { VueClock },
 
   // methods
   methods: {

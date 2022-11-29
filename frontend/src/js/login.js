@@ -4,7 +4,7 @@ import axios from 'axios';
 // Function to initialize login
 // Callback function called when user logs in
 export async function promptLogin(callback) {
-      loadScript("http://accounts.google.com/gsi/client")
+      loadScript("https://accounts.google.com/gsi/client")
         .then(() => {
           // Script is loaded, do something
         google.accounts.id.initialize({
@@ -15,7 +15,7 @@ export async function promptLogin(callback) {
                 document.getElementById("buttonDiv"),
                 { theme: "outline", size: "large" }  // customization attributes
           );
-          //google.accounts.id.prompt();
+          google.accounts.id.prompt();
           /*google.account.id.cancel();*/
         })
         .catch(() => {
@@ -31,5 +31,5 @@ export async function userSignedIn(credential) {
 }
 
 export async function loadGoogle() {
-  loadScript("http://accounts.google.com/gsi/client");
+  loadScript("https://accounts.google.com/gsi/client");
 }

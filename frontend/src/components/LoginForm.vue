@@ -79,7 +79,7 @@
       },
     },
     async mounted() {
-        await promptLogin(this.signedIn);
+        // await promptLogin(this.signedIn);
     },
   };
   </script>

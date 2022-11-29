@@ -14,6 +14,9 @@ Attendance was Daniel, Jun, Anuj, Libe, Max, and Jacob
 - Blockers have been learning about the translate api
 
 ### Anuj
+-  Fixed small bugs in manager GUI
+-  Will start working on google maps integration
+-  No blockers
  
 ### Jun
 - Added images to client side

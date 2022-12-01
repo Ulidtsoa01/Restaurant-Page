@@ -4,7 +4,7 @@
         <img height="100" src="../views/images/pom.png">
       </div>
       <form class="login-right" @submit.prevent>
-        <div class="h2">Login</div>
+        <p style="color: black">Login</p>
         <div class="form-group">
         <!--
           <input type="text" id="username" placeholder="Username" v-model="username">
@@ -29,6 +29,7 @@
   
   <script>
   //import axios from "axios";
+  import { translateAll } from '../js/backend.js'
   import { promptLogin } from '../js/login.js';
   export default {
     name: "LoginForm",
@@ -46,6 +47,9 @@
         document.querySelector(".login-wrapper").classList.toggle("open");
         init = 300;
       }, init);
+    },
+    async created() {
+        await translateAll("es");
     },
     methods: {
       /*isRememberMe() {*/
@@ -79,7 +83,7 @@
       },
     },
     async mounted() {
-        // await promptLogin(this.signedIn);
+         await promptLogin(this.signedIn);
     },
   };
   </script>
@@ -170,32 +174,7 @@
     transform: translateY(15px);
   }
   
-  .h1 {
-    color: #fff;
-    opacity: 0.8;
-    font-size: 20px;
-    font-weight: 400;
-    text-transform: uppercase;
-    letter-spacing: 0.2405em;
-    transition: all 770ms cubic-bezier(0.51, 0.04, 0.12, 0.99);
-    text-align: center;
-    cursor: pointer;
-    position: absolute;
-    transform: translateY(-10px);
-  }
   
-  .open .h1 {
-    -webkit-transform: translateX(200px) translateZ(0) translateY(-10px);
-    transform: translateX(200px) translateZ(0) translateY(-10px);
-  }
-  
-  .h2 {
-    color: #000;
-    font-size: 20px;
-    letter-spacing: -0.00933333em;
-    font-weight: 600;
-    padding-bottom: 15px;
-  }
   
   .login-wrapper {
     width: 60vw;

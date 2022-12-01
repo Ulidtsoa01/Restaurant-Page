@@ -6,7 +6,6 @@
 
 <script>
   // import HelloWorld from '../components/HelloWorld'
-  import { translate } from '../js/translate.js'
   import { loadGoogle, promptLogin, userSignedIn } from '../js/login.js'
 
   export default {

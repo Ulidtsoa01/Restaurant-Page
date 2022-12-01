@@ -8,6 +8,13 @@
                 </v-col>
                 <right>
                     <v-col v-for="k in 1" :key="k">
+                        <v-select
+                            label="Choose language"
+                            :items="langs"
+                            @change="translateHandle"
+                        ></v-select>
+                    </v-col>
+                    <v-col v-for="k in 1" :key="k">
                         <!--ColorBlind mode button-->
                         <v-switch v-model="singleExpand" label="Colorblind Mode"></v-switch>
                     </v-col>
@@ -42,7 +49,7 @@
                     </v-card>
                     <br><br>
                     <h1>Payment Method</h1>
-                    <p1 class="payment">Select a payment method below to continue with your order.</p1>
+                    <p class="payment">Select a payment method below to continue with your order.</p>
                     <br><br>
                     <v-card class="pa-2" width="600">
                         <v-row>
@@ -72,22 +79,22 @@
                     </center>
                     <br>
                     <v-card class="pa-10">
-                        <p1 v-for="k in entrees_array" :key="k" class="Entree">
+                        <p v-for="k in entrees_array" :key="k" class="Entree">
                             {{ k.name }}
                             <br>
-                        </p1>
-                        <p1 v-for="k in toppings_array" :key="k" class="topping">
+                        </p>
+                        <p v-for="k in toppings_array" :key="k" class="topping">
                             - {{ k.name }}
                             <br>
-                        </p1>
+                        </p>
                     </v-card>
                     <br><br>
                     <v-card class="pa-10" inlined tile>
                         <v-row>
                             <v-col>
-                                <p1 class='Entree'>
+                                <p class='Entree'>
                                     Subtotal:
-                                </p1>
+                                </p>
                             </v-col>
                             <right>
                                 <v-col>
@@ -97,9 +104,9 @@
                         </v-row>
                         <v-row>
                             <v-col>
-                                <p1 class='Entree'>
+                                <p class='Entree'>
                                     Tax:
-                                </p1>
+                                </p>
                             </v-col>
                             <right>
                                 <v-col>
@@ -109,9 +116,9 @@
                         </v-row>
                         <v-row>
                             <v-col>
-                                <p1 class='Entree'>
+                                <p class='Entree'>
                                     Order Total:
-                                </p1>
+                                </p>
                             </v-col>
                         </v-row>
                         <br>
@@ -142,6 +149,7 @@
 
 <script>
 // import HelloWorld from '../components/HelloWorld'
+import { translateAll, langs } from '../js/backend.js'
 
 export default {
     name: 'ClientCheckoutView',
@@ -151,6 +159,7 @@ export default {
     },
 
     data: () => ({
+        langs: [],
         sub_total: 0,
         tax: 0,
         toppings_array: [],
@@ -168,18 +177,23 @@ export default {
         }
     },
 
-    created() {
+    async created() {
         this.sub_total = this.$route.query.sub_total;
         this.toppings_array = this.$route.query.toppings_array;
         this.entrees_array = this.$route.query.entrees_array;
         this.calculate_tax();
     },
+    async mounted() {
+        /*await translateAll('es');*/
+        this.langs = langs;
+    },
 
     methods: {
+        async translateHandle(e) {
+            await translateAll(e);
+        },
         move() {
-            this.$router.push({
-                path: 'client',
-            })
+            this.$router.push('/client');
         },
 
         getData(data) {

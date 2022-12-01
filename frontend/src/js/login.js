@@ -15,7 +15,7 @@ export async function promptLogin(callback) {
                 document.getElementById("buttonDiv"),
                 { theme: "outline", size: "large" }  // customization attributes
           );
-          google.accounts.id.prompt();
+          // google.accounts.id.prompt();
           /*google.account.id.cancel();*/
         })
         .catch(() => {

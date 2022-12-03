@@ -8,8 +8,12 @@
       <v-row v-for="j in justify" :key="j" :justify="j">
         <v-col v-for="k in 1" :key="k">
           <!--Server button-->
-          <v-btn elevation="5" color="#4174D9">Server View</v-btn>
+          <v-btn elevation="5" color="#0052A5">
+            <div class="ps">Server View</div>
+          </v-btn>
+
           <!-- Debugging Part
+
 
           
 
@@ -17,7 +21,7 @@
           <!-- {{  subProteins_name  }} -->
           <!-- {{ entrees_array }}
           {{ toppings_array }}
-          {{ calories_total }} --> 
+          {{ calories_total }} -->
           <!-- {{ subEntrees_name }}
           {{ mainProteins_name }}
           {{ subProteins_name }}
@@ -39,10 +43,18 @@
           {{moment(new Date()).format('YYYY-DD-MM h:mm:ss')}}  -->
 
           <!--Manager button-->
-            <v-btn elevation="5" class="ma-2" outlined color="orange" @click="$router.push('/manager/'+$route.params.credential)" >Manager View</v-btn>
+          <v-btn elevation="5" class="ma-2" outlined color="#0052A5"
+            @click="$router.push('/manager/' + $route.params.credential)">
+            <div class="ps">
+              Manager View
+            </div>
+          </v-btn>
           <!--Client Button-->
-            <v-btn outlined color="orange"
-            @click="$router.push('/client')">Client View</v-btn>
+          <v-btn outlined color="#0052A5" @click="$router.push('/client/' + $route.params.credential)">
+            <div class="ps">
+              Client View
+            </div>
+          </v-btn>
         </v-col>
         <right>
             <v-col v-for="k in 1" :key="k">
@@ -54,8 +66,13 @@
             </v-col>
           <v-col v-for="k in 1" :key="k">
             <!--ColorBlind mode button-->
-
             <v-switch v-model="singleExpand" label="Colorblind Mode"></v-switch>
+            <v-btn height="45" @click="updateItems(), getData('Updated!'), deleteAllItem('clear')" elevation="5"
+              class="ma-1" color="#grey" dark>
+              <div class="ps">
+                Update Items
+              </div>
+            </v-btn>
 
             <!-- <v-btn v-if="isLightMode" @click="light_mode_button" elevation="5" class="ma-2" color="green">
               Light Mode
@@ -83,12 +100,6 @@
         <v-col v-for="k in 1" :key="k">
           <!--Clock-->
           <vue-clock />
-          <!--Update button-->
-          &nbsp;&nbsp;
-          <v-btn @click="updateItems(), getData('Updated!'), deleteAllItem('clear')" elevation="5" class="ma-1"
-            color="#42a376" dark large>Update
-          </v-btn>
-          &nbsp;&nbsp;
           <!--Order table-->
           <br>
           <v-data-table :headers="headers" :items="items" sort-by="" class="elevation-1">
@@ -100,28 +111,54 @@
             <!--Delete button-->
             <template v-slot:item.actions="{ item }">
               <v-btn depressed color="error" small @click="deleteItem(item)">
-                DELETE
+                <v-icon small dark>
+                  mdi-cancel
+                </v-icon>
               </v-btn>
             </template>
           </v-data-table>
 
           <!--Add, order, clear buttons-->
           <center>
+            <!-- #42a376 -->
             <v-card class="pa-2" inlined tile>
-              <v-btn large elevation="5" rounded color="#42a376" dark class="mb-2"
+              <br>
+              <v-btn height="45" elevation="10" color="#grey" dark class="mb-2"
                 @click="addItem(), getData('Add Your Next Item!')">
-                Add
+                <div class="ps">
+                  Add Next item
+                </div>
               </v-btn>
-              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-              <v-btn large elevation="5" rounded
-                @click="getData('Order Placed!'), deleteAllItem('order'), insertOrderTable()" class="mb-2"
-                color="#4174D9" dark>Order
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+              &nbsp;
+              <v-btn elevation="5" height="65"
+                  @click="getData('Order Placed!'), deleteAllItem('order'), insertOrderTable()" class="mb-2"
+                  color="#0052A5" dark>
+                  <div class="ps">
+                    Place Order
+                  </div>
+                </v-btn>
+              <!-- <v-btn height="45" elevation="10" color="red" dark class="mb-2" @click.native="deleteAllItem('clear')">
+                <div class="ps">
+                  Delete Item
+                </div>
+              </v-btn> -->
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+              <v-btn height="45" elevation="10" color="#grey" dark class="mb-2" @click.native="deleteAllItem('clear')">
+                <div class="ps">
+                  clear all items
+                </div>
               </v-btn>
-              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-              <v-btn large elevation="5" rounded color="#42a376" dark class="mb-2"
-                @click.native="deleteAllItem('clear')">
-                clear
-              </v-btn>
+              <!-- <br><br><br><br>
+              <center>
+                <v-btn elevation="5" height="65"
+                  @click="getData('Order Placed!'), deleteAllItem('order'), insertOrderTable()" class="mb-2"
+                  color="#0052A5" dark>
+                  <div class="ps">
+                    Place Order
+                  </div>
+                </v-btn>
+              </center> -->
             </v-card>
           </center>
 
@@ -133,20 +170,34 @@
                 <h2>
                   Tip:
                   &nbsp;
-                  <v-btn v-if="dark_mode" @click="tip_control(1)" elevation="8" class="ma-2"  color="#4174D9">5%
+                  <v-btn rounded v-if="dark_mode" @click="tip_control(1)" elevation="8" class="ma-2" color="#grey">
+                    <div class="ps">
+                      5%
+                    </div>
                   </v-btn>
                   <v-btn v-if="light_mode" @click="tip_control(1)" elevation="1" class="ma-2" depressed color="warning">
-                    5%
+                    <div class="ps">
+                      5%
+                    </div>
                   </v-btn>
-                  <v-btn v-if="dark_mode" @click="tip_control(2)" elevation="8" class="ma-2"  color="#4174D9">10%
+                  <v-btn rounded v-if="dark_mode" @click="tip_control(2)" elevation="8" class="ma-2" color="#grey">
+                    <div class="ps">
+                      10%
+                    </div>
                   </v-btn>
                   <v-btn v-if="light_mode" @click="tip_control(2)" elevation="1" class="ma-2" depressed color="warning">
                     10%</v-btn>
-                  <v-btn v-if="dark_mode" @click="tip_control(3)" elevation="8" class="ma-2"  color="#4174D9">15%
+                  <v-btn rounded v-if="dark_mode" @click="tip_control(3)" elevation="8" class="ma-2" color="#grey">
+                    <div class="ps">
+                      15%
+                    </div>
                   </v-btn>
                   <v-btn v-if="light_mode" @click="tip_control(3)" elevation="1" class="ma-2" depressed color="warning">
                     15%</v-btn>
-                  <v-btn v-if="dark_mode" @click="tip_control(4)" elevation="8" class="ma-2"  color="#4174D9">20%
+                  <v-btn rounded v-if="dark_mode" @click="tip_control(4)" elevation="8" class="ma-2" color="#grey">
+                    <div class="ps">
+                      20%
+                    </div>
                   </v-btn>
                   <v-btn v-if="light_mode" @click="tip_control(4)" elevation="1" class="ma-2" depressed color="warning">
                     20%</v-btn>
@@ -196,22 +247,24 @@
 
         <!--Right side-->
         <v-col v-for="k in 1" :key="k">
+          <br><br><br><br><br>
           <!--Entrees / Drinks-->
           <center>
-            <br><br>
             <v-row no-gutters>
               <v-col v-for="n in 1" :key="n" :cols="n === 2 ? 5 : undefined">
-                <br><br>
                 <v-card class="pa-2" inlined tile>
                   <h2 class="font-weight-bold">
                     Entrees / Drinks
                   </h2>
                   <!--mainEntrees / subEntrees buttons-->
-                  <div class="ma-2">
+                  <div class="ma-3">
                     <a v-for="k in mainEntrees_name" :key="k">
-                      <v-btn v-if="dark_mode" @click="click_entrees(k), enable_all_buttons(k), enable_entree_buttons()"
-                        :disabled="!isDisabled_entrees" elevation="10" class="ma-3" color="#4174D9" large>
-                        {{ k }}
+                      <v-btn height="50" v-if="dark_mode"
+                        @click="click_entrees(k), enable_all_buttons(k), enable_entree_buttons()"
+                        :disabled="!isDisabled_entrees" elevation="10" class="ma-3" color="#0052A5" large>
+                        <div class="ps">
+                          {{ k }}
+                        </div>
                       </v-btn>
                       <v-btn v-if="light_mode" @click="click_entrees(k), enable_all_buttons(k), enable_entree_buttons()"
                         :disabled="!isDisabled_entrees" elevation="5" class="ma-3" depressed color="blue" large>
@@ -219,9 +272,12 @@
                       </v-btn>
                     </a>
                     <a v-for="k in subEntrees_name" :key="k">
-                      <v-btn v-if="dark_mode" @click="click_entrees(k), enable_all_buttons(k), enable_entree_buttons(1)"
-                        :disabled="!isDisabled_entrees" elevation="10" class="ma-3" color="#4174D9" large>
-                        {{ k }}
+                      <v-btn height="50" v-if="dark_mode"
+                        @click="click_entrees(k), enable_all_buttons(k), enable_entree_buttons(1)"
+                        :disabled="!isDisabled_entrees" elevation="10" class="ma-3" color="#0052A5" large>
+                        <div class="ps">
+                          {{ k }}
+                        </div>
                       </v-btn>
                       <v-btn v-if="light_mode"
                         @click="click_entrees(k), enable_all_buttons(k), enable_entree_buttons(1)"
@@ -248,10 +304,12 @@
                   <!--mainProteins / subProteins buttons-->
                   <div class="ma-2">
                     <a v-for="k in mainProteins_name" :key="k">
-                      <v-btn v-if="dark_mode"
+                      <v-btn height="50" v-if="dark_mode"
                         @click="click_proteins(k), disable_mainProteins_buttons(), enable_subProteins_buttons()"
-                        :disabled="!isDisabled_mainProteins" elevation="10" class="ma-3" color="#4174D9" large>
-                        {{ k }}
+                        :disabled="!isDisabled_mainProteins" elevation="10" class="ma-3" color="#0052A5" large>
+                        <div class="ps">
+                          {{ k }}
+                        </div>
                       </v-btn>
                       <v-btn v-if="light_mode"
                         @click="click_proteins(k), disable_mainProteins_buttons(), enable_subProteins_buttons()"
@@ -260,9 +318,11 @@
                       </v-btn>
                     </a>
                     <a v-for="k in subProteins_name" :key="k">
-                      <v-btn v-if="dark_mode" @click="click_subProteins(k), disable_subProteins_buttons()"
-                        :disabled="!isDisabled_subProteins" elevation="10" class="ma-3" color="#4174D9" large>
-                        {{ k }}
+                      <v-btn height="50" v-if="dark_mode" @click="click_subProteins(k), disable_subProteins_buttons()"
+                        :disabled="!isDisabled_subProteins" elevation="10" class="ma-3" color="#0052A5" large>
+                        <div class="ps">
+                          {{ k }}
+                        </div>
                       </v-btn>
                       <v-btn v-if="light_mode" @click="click_subProteins(k), disable_subProteins_buttons()"
                         :disabled="!isDisabled_subProteins" elevation="5" class="ma-3" depressed color="warning" large>
@@ -288,9 +348,11 @@
                   <!--toppings buttons-->
                   <div class="ma-2">
                     <a v-for="k in toppings_name" :key="k">
-                      <v-btn v-if="dark_mode" @click="click_toppings(k), enable_toppings_button(e)"
-                        :disabled="!isDisabled" elevation="10" class="ma-3" color="#4174D9" large>
-                        {{ k }}
+                      <v-btn height="50" v-if="dark_mode" @click="click_toppings(k), enable_toppings_button(e)"
+                        :disabled="!isDisabled" elevation="10" class="ma-3" color="#0052A5" large>
+                        <div class="ps">
+                          {{ k }}
+                        </div>
                       </v-btn>
                       <v-btn v-if="light_mode" @click="click_toppings(k), enable_toppings_button(e)"
                         :disabled="!isDisabled" elevation="5" class="ma-3" depressed color="warning" large>
@@ -308,13 +370,13 @@
   </div>
   <div v-else>
     <v-container fluid>
-        <v-row align="center" justify="center">
-            <v-col>
-                <p class="text-h1" style="text-align: center; padding-top: 20%">
-                Not Signed In
-                </p>
-            </v-col>
-        </v-row>
+      <v-row align="center" justify="center">
+        <v-col>
+          <p class="text-h1" style="text-align: center; padding-top: 20%">
+            Not Signed In
+          </p>
+        </v-col>
+      </v-row>
     </v-container>
   </div>
 </template>
@@ -420,6 +482,7 @@ export default {
     toppings_name: [],
     toppings_all: [],
     signedIn: false,
+    spacer: false,
 
   }), // data end
 
@@ -530,12 +593,6 @@ export default {
 
   // watch
   watch: {
-    dialog(val) {
-      val || this.close()
-    },
-    dialogDelete(val) {
-      val || this.closeDelete()
-    },
   },
 
   components: { VueClock },
@@ -765,6 +822,14 @@ export default {
       this.flag_delete = false;
       this.topping_count = 0;
 
+      this.spacer = true;
+
+      this.items.push({
+        number: this.count,
+        name: '',
+        price: 0,
+      });
+
       // this.items.push({
       //   number: this.count,
       //   name: '',
@@ -916,7 +981,7 @@ export default {
         this.tip4 = false;
         this.flag_delete = false;
         this.topping_count = 0;
-        alert("Cleared!")
+        alert("All items were cleared!")
       }
       else {
         for (let i = this.items.length; i >= 0; i--) {
@@ -1086,6 +1151,18 @@ export default {
 
 <!-----------Style------------->
 <style>
+.p {
+  font-weight: bold;
+  font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif
+}
 
+.ps {
+  font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+  font-weight: bold;
+}
+
+.pa-2 {
+  margin-top: -7.3px;
+}
 </style>
 <!-----------Style------------->

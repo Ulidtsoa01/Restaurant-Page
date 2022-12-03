@@ -27,7 +27,7 @@
                   <v-col cols="12" md="6" class="white rounded-bl-xl">
                     <div style="  text-align: center; padding: 180px 0;">
                       <v-card-text class="white--text">
-                        <img height="200" src="../views/images/pom.png"> </img>
+                        <img height="200" src="../views/images/pom.png">
                       </v-card-text>
                     </div>
                   </v-col>

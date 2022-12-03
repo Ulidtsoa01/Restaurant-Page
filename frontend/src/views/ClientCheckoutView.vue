@@ -1,5 +1,6 @@
 <template>
     <div>
+        
         <v-container class="Top">
             <v-row v-for="j in justify" :key="j" :justify="j">
                 <v-col v-for="k in 1" :key="k">
@@ -66,6 +67,10 @@
                                 <v-text-field v-model="message1" label="Zip Code" clearable></v-text-field>
                             </v-col>
                         </v-row>
+                    </v-card>
+                    <br><br>
+                    <v-card class="pa-2">
+                        <AddGoogleMap/>
                     </v-card>
 
 
@@ -163,13 +168,14 @@ import { getLatestToppingUUID } from '../js/backend.js'
 import { getLatestItemUUID } from '../js/backend.js'
 import { getIdFromName } from '../js/backend.js'
 import { translateAll, langs } from '../js/backend.js'
+import AddGoogleMap from "../components/AddGoogleMap.vue";
 
 
 export default {
     name: 'ClientCheckoutView',
 
     components: {
-        //HelloWorld,
+        AddGoogleMap,
     },
 
     data: () => ({

@@ -24,7 +24,7 @@
       <v-row v-for="j in justify" :key="j" :justify="j">
         <!--Left side-->
         <v-col v-for="k in 1" :key="k">
-          <v-navigation-drawer color="#grey" permanent width="180" mini-variant-width="120" expand-on-hover app>
+          <v-navigation-drawer color="#grey" permanent width="180" mini-variant-width="140" expand-on-hover app>
             <br>
             <br>
             <p1 class="yourOrder">
@@ -47,31 +47,37 @@
               Total: $
               {{ sub_total.toFixed(2) }}
             </p1>
-            <br></br>
+            <br><br>
             <center>
-              <v-btn @click="deleteAllItem('clear')" small color="red">Clear</v-btn>
-              <br><br>
               <v-btn @click="calculate_cart_total(), addItem(), getData('Add Your Next Item!')" small color="#4174D9">
-                Add to cart</v-btn>
-              <br><br>
-              <p1>
-                Your cart: $
-                {{ cart_total.toFixed(2) }}
-              </p1>
+                <div class="ps">
+                Add Next Item
+              </div>
+            </v-btn>
+                <br><br>
+              <v-btn @click="deleteAllItem('clear')" small color="red">
+                <div class="ps">
+                Clear
+              </div>
+              </v-btn>
+                <br><br>
               <v-card class="pa-2">
-                <v-btn @click.prevent="move()" small color="#4174D9">Checkout</v-btn>
+                <v-btn @click.prevent="move()" small color="#4174D9">
+                  <div class="ps">
+                  Checkout
+                </div>
+                </v-btn>
               </v-card>
             </center>
 
           </v-navigation-drawer>
 
-          <!--tip buttons-->
           <v-card class="pa-2">
             <v-col>
               <h1>
                 STEP 1.
               </h1>
-              <p1>
+              <p1 class="greyFont">
                 Choose your entree or drink
               </p1>
               <br><br>
@@ -94,6 +100,9 @@
                     </a>
                     <a v-else-if="k.name === 'Drink'">
                       <v-img src="./images/Drink.jpeg" height="180px"></v-img>
+                    </a>
+                    <a v-else>
+                      <v-img src="./images/pom.png" height="180px"></v-img>
                     </a>
 
                     <div class="text-center">
@@ -122,18 +131,34 @@
               <h1>
                 STEP 2.
               </h1>
-              <p2>
+              <p1 class="greyFont">
                 Choose 1 protein
-              </p2>
+              </p1>
               <br><br>
 
               <v-row>
                 <!-- mainProtein -->
                 <a v-for="k in mainProteins_all2" :key="k">
-                  <v-card outlined class="ma-10" width="200"
+                  <v-card outlined class="ma-10" width="200" 
                     @click="click_proteins(k.name), disable_mainProteins_buttons(), enable_subProteins_buttons()"
                     :disabled="!isDisabled_mainProteins">
 
+                    <a v-if="k.name === 'Chicken'">
+                      <v-img src="./images/Chicken.jpeg" height="130px"></v-img>
+                    </a>
+                    <a v-else-if="k.name === 'Pork'">
+                      <v-img src="./images/Pork.jpeg" height="130px"></v-img>
+                    </a>
+                    <a v-else-if="k.name === 'Lamb'">
+                      <v-img src="./images/Lamb.jpeg" height="130px"></v-img>
+                    </a>
+                    <a v-else-if="k.name === 'Beef'">
+                      <v-img src="./images/Beef.jpeg" height="130px"></v-img>
+                    </a>
+                    <a v-else>
+                      <v-img src="./images/pom.png" height="130px"></v-img>
+                    </a>
+                    
                     <div class="text-center">
                       <h2>
                         {{ k.name }}
@@ -153,6 +178,22 @@
                   <v-card outlined class="ma-10" width="200"
                     @click="click_subProteins(k.name), disable_subProteins_buttons()"
                     :disabled="!isDisabled_subProteins">
+
+                    <a v-if="k.name === 'Extra Chicken'">
+                      <v-img src="./images/Chicken.jpeg" height="130px"></v-img>
+                    </a>
+                    <a v-else-if="k.name === 'Extra Pork'">
+                      <v-img src="./images/Pork.jpeg" height="130px"></v-img>
+                    </a>
+                    <a v-else-if="k.name === 'Extra Lamb'">
+                      <v-img src="./images/Lamb.jpeg" height="130px"></v-img>
+                    </a>
+                    <a v-else-if="k.name === 'Extra Beef'">
+                      <v-img src="./images/Beef.jpeg" height="130px"></v-img>
+                    </a>
+                    <a v-else>
+                      <v-img src="./images/pom.png" height="130px"></v-img>
+                    </a>
 
                     <div class="text-center">
                       <h2>
@@ -177,16 +218,41 @@
               <h1>
                 STEP 3.
               </h1>
-              <p2>
+              <p1 class="greyFont">
                 Choose 3 toppings & 1 sauce
-              </p2>
+              </p1>
               <br><br>
 
               <v-row>
                 <!-- topping -->
                 <a v-for="k in toppings_all" :key="k">
-                  <v-card outlined class="ma-10" width="200" @click="click_toppings(k.name), enable_toppings_button(e)"
+                  
+                  <v-card outlined class="ma-10" width="205" @click="click_toppings(k.name), enable_toppings_button(e)"
                     :disabled="!isDisabled">
+                    <a v-if="k.name === 'Olive'">
+                      <v-img src="./images/olive.jpeg" height="130px"></v-img>
+                    </a>
+                    <a v-else-if="k.name === 'Tomato'">
+                      <v-img src="./images/Tomato.jpeg" height="130px"></v-img>
+                    </a>
+                    <a v-else-if="k.name === 'Lettuce'">
+                      <v-img src="./images/Lettuce.jpeg" height="130px"></v-img>
+                    </a>
+                    <a v-else-if="k.name === 'Red Onion'">
+                      <v-img src="./images/Red Onion.jpeg" height="130px"></v-img>
+                    </a>
+                    <a v-else-if="k.name === 'Cucumber'">
+                      <v-img src="./images/Cucumber.jpeg" height="130px"></v-img>
+                    </a>
+                    <a v-else-if="k.name === 'White Sauce'">
+                      <v-img src="./images/White Sauce.jpeg" height="130px"></v-img>
+                    </a>
+                    <a v-else-if="k.name === 'Brown Sauce'">
+                      <v-img src="./images/Brown Sauce.jpeg" height="130px"></v-img>
+                    </a>
+                    <a v-else>
+                      <v-img src="./images/pom.png" height="130px"></v-img>
+                    </a>
 
                     <div class="text-center">
                       <h2>
@@ -208,7 +274,7 @@
 
           <!--Subtotal, tip, and total-->
           <center>
-            <v-card class="pa-2" inlined tile width="1200">
+            <v-card class="pa-2" inlined tile>
               <v-col>
                 <h2 class="font-weight-bold" @click="calculate_subTotal">
                   Subtotal: {{ sub_total.toFixed(2) }}
@@ -239,10 +305,7 @@
 
 <!-----------Script------------>
 <script>
-
-// import HelloWorld from '../components/HelloWorld'
 import { loadGoogle, userSignedIn } from '../js/login.js';
-
 import { getItems, getLatestOrderId } from '../js/backend.js'
 import { getLatestToppingUUID } from '../js/backend.js'
 import { getLatestItemUUID } from '../js/backend.js'
@@ -256,18 +319,12 @@ import { getToppings } from '../js/backend.js'
 
 export default {
   // for checkout
-
-
-
-
-
   data: () => ({
     signedIn: false,
     cart_total: 0,
     total: 0,
     sub_total: 0,
     show: false,
-    dialog: false,
     dialogDelete: false,
     count: -1,
     enable_toppings: false,
@@ -282,8 +339,6 @@ export default {
     tip2: false,
     tip3: false,
     tip4: false,
-    light_mode: false,
-    dark_mode: true,
     flag_delete: false,
     topping_count: 0,
 
@@ -327,12 +382,6 @@ export default {
       price: 0.0
     },
 
-    defaultItem: {
-      number: 0,
-      name: '',
-      price: 0.0
-    },
-
     all_items: [],
     mainEntrees_all: [],
     mainEntrees_name: [],
@@ -355,7 +404,6 @@ export default {
       for (let i = 0; i < this.items.length; i++) {
         sum += this.items[i].price;
       }
-      this.sub_total_track = sum;
       return this.sub_total = sum;
     },
 
@@ -402,13 +450,6 @@ export default {
 
   // methods
   methods: {
-    clickList() {
-      this.$router.push({
-        path: "ClickList",
-        query: { sub_total: sub_total }
-      })
-    },
-
     move() {
       this.$router.push({
         path: 'checkout',
@@ -416,6 +457,7 @@ export default {
           sub_total: this.sub_total,
           toppings_array: this.toppings_array,
           entrees_array: this.entrees_array,
+          calories_total: this.calories_total,
         },
       })
     },
@@ -797,28 +839,6 @@ export default {
       alert(data)
     },
 
-    light_mode_button() {
-      this.$vuetify.theme.dark = false;
-      this.dark_mode = false;
-    },
-
-    light_mode_button_outlined() {
-      this.$vuetify.theme.dark = false;
-      this.light_mode = true;
-      this.dark_mode = false;
-    },
-
-    dark_mode_button() {
-      this.$vuetify.theme.dark = true;
-      this.light_mode = false;
-    },
-
-    dark_mode_button_outlined() {
-      this.$vuetify.theme.dark = true;
-      this.light_mode = false;
-      this.dark_mode = true;
-    },
-
     async getOrderID() {
       this.latestOrderID = await getLatestOrderId();
     },
@@ -972,6 +992,22 @@ export default {
 
 .topping {
   font-size: 13px;
+}
+
+.topping_card {
+  margin: 83px;
+  margin-top: 30px;
+  margin-bottom: 35px;
+  margin-left: 90px;
+}
+
+.greyFont {
+  color: grey;
+}
+
+.ps {
+  font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+  font-weight: bold;
 }
 </style>
 <!-----------Style------------->

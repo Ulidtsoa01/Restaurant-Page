@@ -5,7 +5,8 @@ import ClientView from '../views/ClientView.vue'
 import ServerView from '../views/ServerView.vue'
 import ManagerView from '../views/ManagerView.vue'
 import LoginView from '../views/LoginView.vue'
-import ClientCheckoutView from '../views/ClientCheckoutView.vue'
+import CheckoutView from '../views/ClientCheckoutView.vue'
+import CheckoutCompleteView from '../views/ClientCheckoutComplete.vue'
 
 Vue.use(VueRouter)
 
@@ -23,7 +24,12 @@ const routes = [
   {
     path: '/checkout',
     name: 'ClientCheckoutView',
-    component: ClientCheckoutView
+    component: CheckoutView
+  },
+  {
+    path: '/checkoutComplete',
+    name: 'ClientCheckoutComplete',
+    component: CheckoutCompleteView
   },
   {
     path: '/server/:credential?',

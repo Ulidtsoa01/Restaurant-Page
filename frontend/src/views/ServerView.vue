@@ -55,39 +55,23 @@
               Client View
             </div>
           </v-btn>
+          <br><br><br><br>
+          <h1>
+          Pom & Honey
+          </h1>
         </v-col>
         <right>
-            <v-col v-for="k in 1" :key="k">
-                <v-select
-                    label="Choose language"
-                    :items="langs"
-                    @change="translateHandle"
-                ></v-select>
-            </v-col>
           <v-col v-for="k in 1" :key="k">
-            <!--ColorBlind mode button-->
+            <v-select label="Choose language" :items="langs" @change="translateHandle"></v-select>
             <v-switch v-model="singleExpand" label="Colorblind Mode"></v-switch>
-            <v-btn height="45" @click="updateItems(), getData('Updated!'), deleteAllItem('clear')" elevation="5"
-              class="ma-1" color="#grey" dark>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <v-btn width="100%" height="45" @click="updateItems(), getData('Updated!'), deleteAllItem('clear')" elevation="5"
+              class="ma-0" color="#grey" dark>
               <div class="ps">
                 Update Items
               </div>
             </v-btn>
-
-            <!-- <v-btn v-if="isLightMode" @click="light_mode_button" elevation="5" class="ma-2" color="green">
-              Light Mode
-            </v-btn>
-            <v-btn v-if="!isLightMode" @click="light_mode_button_outlined" elevation="5" class="ma-2" outlined
-              color="green">
-              Light Mode
-            </v-btn>
-            <v-btn v-if="isdarkMode" @click="dark_mode_button" elevation="5" class="ma-2" color="green">
-              Dark Mode
-            </v-btn>
-            <v-btn v-if="!isdarkMode" @click="dark_mode_button_outlined" elevation="5" class="ma-2" outlined
-              color="green">
-              Dark Mode
-            </v-btn> -->
           </v-col>
         </right>
       </v-row>
@@ -132,12 +116,12 @@
               &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
               &nbsp;
               <v-btn elevation="5" height="65"
-                  @click="getData('Order Placed!'), deleteAllItem('order'), insertOrderTable()" class="mb-2"
-                  color="#0052A5" dark>
-                  <div class="ps">
-                    Place Order
-                  </div>
-                </v-btn>
+                @click="getData('Order Placed!'), deleteAllItem('order'), insertOrderTable()" class="mb-2"
+                color="#0052A5" dark>
+                <div class="ps">
+                  Place Order
+                </div>
+              </v-btn>
               <!-- <v-btn height="45" elevation="10" color="red" dark class="mb-2" @click.native="deleteAllItem('clear')">
                 <div class="ps">
                   Delete Item
@@ -403,7 +387,7 @@ import { loadGoogle, userSignedIn } from '../js/login.js';
 
 export default {
   data: () => ({
-      langs: [],
+    langs: [],
     dialog: false,
     dialogDelete: false,
     count: -1,
@@ -600,9 +584,9 @@ export default {
   // methods
   methods: {
     // Entrees buttons
-        async translateHandle(e) {
-            await translateAll(e);
-        },
+    async translateHandle(e) {
+      await translateAll(e);
+    },
     click_entrees(e) {
       for (let i = 0; i < this.mainEntrees_all.length; i++) {
         if (e === this.mainEntrees_all[i].name) {

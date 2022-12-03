@@ -17,10 +17,7 @@
                 :items="langs"
                 @change="translateHandle"
             ></v-select>
-        </v-col>
-        <v-col v-for="k in 1" :key="k">
-          <!--ColorBlind mode button-->
-          <v-switch v-model="singleExpand" label="Colorblind Mode"></v-switch>
+            <v-switch v-model="singleExpand" label="Colorblind Mode"></v-switch>
         </v-col>
       </right>
       </v-row>
@@ -86,40 +83,44 @@
               </h1>
               <p1 class="greyFont">
                 Choose your entree or drink
-              </p>
+              </p1>
               <br><br>
 
               <v-row>
                 <a v-for="k in mainEntrees_all" :key="k">
-                  <v-card outlined class="ma-10" width="300" :disabled="!isDisabled_entrees"
+                  <v-card outlined class="ma-10" width="260" :disabled="!isDisabled_entrees"
                     @click="click_entrees(k.name), enable_all_buttons(k.name), enable_entree_buttons()">
                     <a v-if="k.name === 'Gyros'">
-                      <v-img src="./images/Gyros.jpg" height="180px"></v-img>
+                      <v-img src="./images/Gyros.jpg" height="150px"></v-img>
                     </a>
                     <a v-else-if="k.name === 'Bowls'">
-                      <v-img src="./images/Bowls.jpeg" height="180px"></v-img>
+                      <v-img src="./images/Bowls.jpeg" height="150px"></v-img>
                     </a>
                     <a v-else-if="k.name === 'Hummus & Pita'">
-                      <v-img src="./images/Hummus.jpeg" height="180px"></v-img>
+                      <v-img src="./images/Hummus.jpeg" height="150px"></v-img>
                     </a>
                     <a v-else-if="k.name === 'Two Falafels'">
-                      <v-img src="./images/Falafels.jpg" height="180px"></v-img>
+                      <v-img src="./images/Falafels.jpg" height="150px"></v-img>
                     </a>
                     <a v-else-if="k.name === 'Drink'">
-                      <v-img src="./images/Drink.jpeg" height="180px"></v-img>
+                      <v-img src="./images/Drink.jpeg" height="150px"></v-img>
                     </a>
                     <a v-else>
-                      <v-img src="./images/pom.png" height="180px"></v-img>
+                      <v-img src="./images/pom.png" height="150px"></v-img>
                     </a>
 
                     <div class="text-center">
-                      <h2>
+                      <div class="psa">
                         {{ k.name }}
-                      </h2>
+                      </div>
                       <v-card-subtitle>
+                        <div class="psaa">
                         $ {{ k.price }}
                         <br>
-                        <p>Calories: {{ k.calories }}</p>
+                        Calories: {{ k.calories }}
+                      </div>
+                        
+                        
                         <br>
                         <p v-if="k.name === 'Gyros' || k.name === 'Bowls'"
                         style="color: #4b76d2;">
@@ -168,14 +169,16 @@
                     </a>
                     
                     <div class="text-center">
-                      <h2>
+                      <div class="psa">
                         {{ k.name }}
-                      </h2>
+                      </div>
 
                       <v-card-subtitle>
+                        <div class="psaa">
                         $ {{ k.price }}
                         <br>
-                        <p>Calories: {{ k.calories }}</p>
+                        Calories: {{ k.calories }}
+                      </div>
                       </v-card-subtitle>
                     </div>
                   </v-card>
@@ -204,14 +207,16 @@
                     </a>
 
                     <div class="text-center">
-                      <h2>
+                      <div class="psas">
                         {{ k.name }}
-                      </h2>
+                      </div>
 
                       <v-card-subtitle>
+                        <div class="psaa">
                         $ {{ k.price }}
                         <br>
-                        <p>Calories: {{ k.calories }}</p>
+                        Calories: {{ k.calories }}
+                      </div>
                       </v-card-subtitle>
                     </div>
                   </v-card>
@@ -1030,6 +1035,24 @@ export default {
 .ps {
   font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
   font-weight: bold;
+}
+
+.psa {
+  font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+  font-weight: bold;
+  font-size: 25px;
+}
+
+.psas {
+  font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+  font-weight: bold;
+  font-size: 24px;
+}
+
+.psaa {
+  font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+  font-weight: bold;
+  font-size: 14px;
 }
 </style>
 <!-----------Style------------->

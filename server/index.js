@@ -632,6 +632,16 @@ app.get('/latestid', (req, res) => {
     });
 });
 
+process.env.GOOGLE_APPLICATION_CREDENTIALS = './token.json';
+const {Translate} = require('@google-cloud/translate').v2;
+app.get('/translate', async (req, res) => {
+    res.header("Access-Control-Allow-Origin", "*");
+    const projectID = 'csce315-project-3-368615';
+    const translate = new Translate({projectID});
+    let translation = await translate.translate(req.query.text, req.query.target);
+    res.send(translation);
+});
+
 // app.get(, (req, res) => {
 //     res.header("Access-Control-Allow-Origin", "*");
 //     items = []

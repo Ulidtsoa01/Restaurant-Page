@@ -57,6 +57,13 @@
           </v-btn>
         </v-col>
         <right>
+            <v-col v-for="k in 1" :key="k">
+                <v-select
+                    label="Choose language"
+                    :items="langs"
+                    @change="translateHandle"
+                ></v-select>
+            </v-col>
           <v-col v-for="k in 1" :key="k">
             <!--ColorBlind mode button-->
             <v-switch v-model="singleExpand" label="Colorblind Mode"></v-switch>
@@ -381,6 +388,7 @@
 import moment from 'moment'
 import VueClock from '@dangvanthanh/vue-clock';
 
+import { translateAll, langs } from '../js/backend.js'
 import { getItems, getLatestOrderId } from '../js/backend.js'
 import { getLatestToppingUUID } from '../js/backend.js'
 import { getLatestItemUUID } from '../js/backend.js'
@@ -395,6 +403,7 @@ import { loadGoogle, userSignedIn } from '../js/login.js';
 
 export default {
   data: () => ({
+      langs: [],
     dialog: false,
     dialogDelete: false,
     count: -1,
@@ -591,6 +600,9 @@ export default {
   // methods
   methods: {
     // Entrees buttons
+        async translateHandle(e) {
+            await translateAll(e);
+        },
     click_entrees(e) {
       for (let i = 0; i < this.mainEntrees_all.length; i++) {
         if (e === this.mainEntrees_all[i].name) {
@@ -1121,6 +1133,8 @@ export default {
     await this.updateItems();
     await this.getItemInfo();
     await this.make_all_items();
+    /*await translateAll("es");*/
+    this.langs = langs;
   },
 
   async mounted() {

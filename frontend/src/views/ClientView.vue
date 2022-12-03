@@ -12,6 +12,13 @@
         </v-col>
         <right>
         <v-col v-for="k in 1" :key="k">
+            <v-select
+                label="Choose language"
+                :items="langs"
+                @change="translateHandle"
+            ></v-select>
+        </v-col>
+        <v-col v-for="k in 1" :key="k">
           <!--ColorBlind mode button-->
           <v-switch v-model="singleExpand" label="Colorblind Mode"></v-switch>
         </v-col>
@@ -27,27 +34,27 @@
           <v-navigation-drawer color="#grey" permanent width="180" mini-variant-width="140" expand-on-hover app>
             <br>
             <br>
-            <p1 class="yourOrder">
+            <p class="yourOrder">
               Your order:
               <br>
-            </p1>
+            </p>
             <br>
             <v-card class="pa-2">
-              <p1 v-for="k in entrees_array" :key="k" class="Entree">
+              <p v-for="k in entrees_array" :key="k" class="Entree">
                 {{ k.name }}
                 <br>
-              </p1>
-              <p1 v-for="k in toppings_array" :key="k" class="topping">
+              </p>
+              <p v-for="k in toppings_array" :key="k" class="topping">
                 - {{ k.name }}
                 <br>
-              </p1>
+              </p>
             </v-card>
             <br>
-            <p1>
+            <p>
               Total: $
               {{ sub_total.toFixed(2) }}
-            </p1>
-            <br><br>
+            </p>
+            <br></br>
             <center>
               <v-btn @click="calculate_cart_total(), addItem(), getData('Add Your Next Item!')" small color="#4174D9">
                 <div class="ps">
@@ -79,7 +86,7 @@
               </h1>
               <p1 class="greyFont">
                 Choose your entree or drink
-              </p1>
+              </p>
               <br><br>
 
               <v-row>
@@ -112,11 +119,12 @@
                       <v-card-subtitle>
                         $ {{ k.price }}
                         <br>
-                        Calories: {{ k.calories }}
+                        <p>Calories: {{ k.calories }}</p>
                         <br>
-                        <a v-if="k.name === 'Gyros' || k.name === 'Bowls'">
+                        <p v-if="k.name === 'Gyros' || k.name === 'Bowls'"
+                        style="color: #4b76d2;">
                           1 protein & 4 toppings
-                        </a>
+                        </p>
                       </v-card-subtitle>
                     </div>
                   </v-card>
@@ -167,7 +175,7 @@
                       <v-card-subtitle>
                         $ {{ k.price }}
                         <br>
-                        Calories: {{ k.calories }}
+                        <p>Calories: {{ k.calories }}</p>
                       </v-card-subtitle>
                     </div>
                   </v-card>
@@ -203,7 +211,7 @@
                       <v-card-subtitle>
                         $ {{ k.price }}
                         <br>
-                        Calories: {{ k.calories }}
+                        <p>Calories: {{ k.calories }}</p>
                       </v-card-subtitle>
                     </div>
                   </v-card>
@@ -262,7 +270,7 @@
                       <v-card-subtitle>
                         $ {{ k.price }}
                         <br>
-                        Calories: {{ k.calories }}
+                        <p>Calories: {{ k.calories }}</p>
                       </v-card-subtitle>
                     </div>
                   </v-card>
@@ -305,6 +313,7 @@
 
 <!-----------Script------------>
 <script>
+import { translateAll, langs } from '../js/backend.js'
 import { loadGoogle, userSignedIn } from '../js/login.js';
 import { getItems, getLatestOrderId } from '../js/backend.js'
 import { getLatestToppingUUID } from '../js/backend.js'
@@ -320,6 +329,7 @@ import { getToppings } from '../js/backend.js'
 export default {
   // for checkout
   data: () => ({
+      langs: [],
     signedIn: false,
     cart_total: 0,
     total: 0,
@@ -335,8 +345,8 @@ export default {
     tip: 0,
 
     calories_total: 0,
-    tip1: false,
-    tip2: false,
+    tip: false,
+    tip: false,
     tip3: false,
     tip4: false,
     flag_delete: false,
@@ -450,6 +460,16 @@ export default {
 
   // methods
   methods: {
+        async translateHandle(e) {
+            await translateAll(e);
+        },
+    clickList() {
+      this.$router.push({
+        path: "ClickList",
+        query: { sub_total: sub_total }
+      })
+    },
+
     move() {
       this.$router.push({
         path: 'checkout',
@@ -820,8 +840,8 @@ export default {
         this.total = 0;
         this.sub_total = 0;
         this.calories_total = 0;
-        this.tip1 = false;
-        this.tip2 = false;
+        this.tip = false;
+        this.tip = false;
         this.tip3 = false;
         this.tip4 = false;
         this.flag_delete = false;
@@ -955,8 +975,10 @@ export default {
     await this.updateItems();
     await this.getItemInfo();
     await this.make_all_items();
-    await loadGoogle();
-    this.signedIn = await userSignedIn(this.$route.params.credential);
+    // await loadGoogle();
+    // this.signedIn = await userSignedIn(this.$route.params.credential);
+     /*await translateAll("es");*/
+    this.langs = langs;
   },
 
   async mounted() {

@@ -20,13 +20,20 @@
           <v-btn elevation="2" class="ma-2" color="warning">Manager View</v-btn>
           <!--Client Button-->
             <v-btn outlined color="orange"
-            @click="$router.push('/client/'+$route.params.credential)">Client View</v-btn>
+            @click="$router.push('/client')">Client View</v-btn>
         </v-col>
-          <!-- <v-col v-for="k in 1" :key="k">
+        <v-col v-for="k in 1" :key="k">
+            <v-select
+                label="Choose language"
+                :items="langs"
+                @change="translateHandle"
+            ></v-select>
+        </v-col>
+        <v-col v-for="k in 1" :key="k">
             <v-btn elevation="2" class="ma-2" outlined color="green"
               >Colorblind Mode</v-btn
             >
-        </v-col> -->
+        </v-col>
       </v-row>
     </v-container>
 
@@ -229,6 +236,7 @@
 </template>
 
 <script>
+import { translateAll, langs } from '../js/backend.js'
 import { getInventory} from "../js/backend.js";
 import { addItem } from "../js/backend.js";
 import { addInventory } from "../js/backend.js";
@@ -249,13 +257,16 @@ export default {
   async created() {
     await loadGoogle();
     this.signedIn = await userSignedIn(this.$route.params.credential);
+    /*await translateAll("es");*/
   },
   async mounted() {
+      this.langs = langs;
     this.inventory = await getInventory();
   },
 
   data: () => ({
     // Layout
+    langs: [],
     justify: ["space-between"],
 
     dates: [],
@@ -389,6 +400,9 @@ export default {
     },
 
   methods: {
+        async translateHandle(e) {
+            await translateAll(e);
+        },
     click_report: async function (e) {
       var from = this.dates[0];
       var to;

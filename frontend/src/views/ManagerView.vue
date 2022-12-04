@@ -14,14 +14,23 @@
           </router-link>
           <router-view :key="$route.fullPath"></router-view>
           -->
-            <v-btn outlined color="orange"
-            @click="$router.push('/server/'+$route.params.credential)">Server View</v-btn>
-          <!--Manager Button-->
-          <v-btn elevation="2" class="ma-2" color="warning">Manager View</v-btn>
+          <v-btn elevation="5" outlined color="#0052A5"
+          @click="$router.push('/server/' + $route.params.credential)">
+            <div class="font-weight-bold">Server View</div>
+          </v-btn>
+          <v-btn elevation="5" class="ma-2" color="#0052A5">
+            <div class="font-weight-bold">
+              Manager View
+            </div>
+          </v-btn>
           <!--Client Button-->
-            <v-btn outlined color="orange"
-            @click="$router.push('/client')">Client View</v-btn>
+          <v-btn outlined color="#0052A5" @click="$router.push('/client/' + $route.params.credential)">
+            <div class="font-weight-bold">
+              Client View
+            </div>
+          </v-btn>
         </v-col>
+        <right>
         <v-col v-for="k in 1" :key="k">
             <v-select
                 label="Choose language"
@@ -29,24 +38,24 @@
                 @change="translateHandle"
             ></v-select>
         </v-col>
-        <v-col v-for="k in 1" :key="k">
-            <v-btn elevation="2" class="ma-2" outlined color="green"
-              >Colorblind Mode</v-btn
-            >
-        </v-col>
+        <v-switch label="Colorblind Mode"></v-switch>
+        </right>
       </v-row>
     </v-container>
 
     <v-container class="Mid">
       <center>
-        <h1 class="font-weight-bold">Order Trends</h1>
+        <h1 class="font-weight-bold">Reports</h1>
       </center>
       <br />
       <v-row v-for="j in justify" :key="j" :justify="j">
         <!--Left side-->
         <v-row>
           <v-col cols="12" sm="4">
-            <v-date-picker v-model="dates" range></v-date-picker>
+            <v-date-picker v-model="dates" range
+            color="#4174D9"
+            header-color="dark-grey"
+            ></v-date-picker>
             <v-text-field
               v-model="dateRangeText"
               label="Date range"
@@ -57,42 +66,39 @@
             <v-card>
               <center>
                 <p class="font-weight-bold">Generate</p>
+                
                 <v-btn
                   @click="click_report('Sales')"
-                  elevation="2"
                   class="ma-2"
-                  outlined
-                  color="orange"
-                  large
+                  color="#4174D9"
+                  medium
                   >Sales Report
                 </v-btn>
+                <br>
                 <v-btn
                   @click="click_report('Excess')"
-                  elevation="2"
                   class="ma-2"
-                  outlined
-                  color="orange"
-                  large
+                  color="#4174D9"
+                  medium
                   >Excess Report
                 </v-btn>
+                <br>
                 <v-btn
                   @click="click_report('Restock')"
-                  elevation="2"
                   class="ma-2"
-                  outlined
-                  color="orange"
-                  large
+                  color="#4174D9"
+                  medium
                   >Restock Report
                 </v-btn>
+                <br>
                 <v-btn
                   @click="click_report('Pairs')"
-                  elevation="2"
                   class="ma-2"
-                  outlined
-                  color="orange"
-                  large
+                  color="#4174D9"
+                  medium
                   >Pairs Together
                 </v-btn>
+                <br>
               </center>
             </v-card>
           </v-col>
@@ -111,14 +117,14 @@
         <center>
           <h1 class="font-weight-bold">Inventory</h1>
         </center>
-        <v-data-table :headers="inventoryHeader" :items="inventory" sort-by="item_id" class="elevation-1">
+        <v-data-table :headers="inventoryHeader" :items="inventory" sort-by="item_id" :sort-desc.sync="sortDesc" class="elevation-1">
           <template v-slot:top>
             <v-divider class="mx-4" inset vertical></v-divider>
             <v-spacer></v-spacer>
             <v-dialog v-model="dialog" max-width="500px">
               <template v-slot:activator="{ on, attrs }">
                 <center>
-                  <v-btn color="primary" dark class="mb-2" v-bind="attrs" v-on="on">
+                  <v-btn color="#4174D9" dark class="font-weight-bold" v-bind="attrs" v-on="on">
                     Add New Item
                   </v-btn>
                 </center>
@@ -269,6 +275,8 @@ export default {
     langs: [],
     justify: ["space-between"],
 
+    sortDesc: false,
+
     dates: [],
     header: [],
 
@@ -356,7 +364,7 @@ export default {
   computed: {
     dateRangeText() {
       if (this.dates.length === 0) {
-        return "Select Two Dates";
+        return "None selected";
       } else if(this.dates.length == 1) {
         var date0 = new Date(this.dates[0].replace(/-/g, '\/'));
         var from = date0.toLocaleDateString();
@@ -404,28 +412,31 @@ export default {
             await translateAll(e);
         },
     click_report: async function (e) {
-      var from = this.dates[0];
-      var to;
-      if(this.dates.length === 1){
-        to = from;
+      if(this.dates.length < 2)
+      {
+        alert("Select a time frame from the calendar");
       }
       else{
-        to = this.dates[1];
-      }
-      if (e === "Sales") {
-        this.header = this.salesHeader;
-        this.items = await getSalesReport(from,to);
-      } else if (e === "Excess") {
-        this.header = this.excessHeader;
-        this.items = await getExcessReport(from,to);
-      } else if (e === "Restock") {
-        this.header = this.restockHeader;
-        this.items = await getRestockReport(from,to);
-      } else if (e === "Pairs") {
-        this.header = this.pairsHeader;
-        this.items = await getPairsTogether(from,to);
-        
-      }
+        var from = this.dates[0];
+        var to = this.dates[1];
+        if (e === "Sales") {
+          this.header = this.salesHeader;
+          this.items = await getSalesReport(from,to);
+        } else if (e === "Excess") {
+          this.header = this.excessHeader;
+          this.items = await getExcessReport(from,to);
+        } else if (e === "Restock") {
+          this.header = this.restockHeader;
+          this.items = await getRestockReport(from,to);
+        } else if (e === "Pairs") {
+          this.header = this.pairsHeader;
+          this.items = await getPairsTogether(from,to);
+        }
+        if(this.items.length < 1)
+        {
+          alert("There is no data in the selected time frame")
+        }
+      } 
     },
 
     editItem(item) {
@@ -507,6 +518,7 @@ export default {
         }
       }
       this.inventory = await getInventory();
+      this.sortDesc = true;
       this.close();
     },
 

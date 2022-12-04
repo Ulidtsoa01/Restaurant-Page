@@ -51,7 +51,7 @@
               Total: $
               {{ sub_total.toFixed(2) }}
             </p>
-            <br></br>
+            <br>
             <center>
               <v-btn @click="calculate_cart_total(), addItem(), getData('Add Your Next Item!')" small color="#4174D9">
                 <div class="ps">

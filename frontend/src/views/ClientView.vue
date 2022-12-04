@@ -88,25 +88,25 @@
 
               <v-row>
                 <a v-for="k in mainEntrees_all" :key="k">
-                  <v-card outlined class="ma-10" width="260" :disabled="!isDisabled_entrees"
+                  <v-card outlined class="ma-10" width="200" :disabled="!isDisabled_entrees"
                     @click="click_entrees(k.name), enable_all_buttons(k.name), enable_entree_buttons()">
                     <a v-if="k.name === 'Gyros'">
-                      <v-img src="./images/Gyros.jpg" height="150px"></v-img>
+                      <v-img src="./images/Gyros.jpg" height="130px"></v-img>
                     </a>
                     <a v-else-if="k.name === 'Bowls'">
-                      <v-img src="./images/Bowls.jpeg" height="150px"></v-img>
+                      <v-img src="./images/Bowls.jpeg" height="130px"></v-img>
                     </a>
                     <a v-else-if="k.name === 'Hummus & Pita'">
-                      <v-img src="./images/Hummus.jpeg" height="150px"></v-img>
+                      <v-img src="./images/Hummus.jpeg" height="130px"></v-img>
                     </a>
                     <a v-else-if="k.name === 'Two Falafels'">
-                      <v-img src="./images/Falafels.jpg" height="150px"></v-img>
+                      <v-img src="./images/Falafels.jpg" height="130px"></v-img>
                     </a>
                     <a v-else-if="k.name === 'Drink'">
-                      <v-img src="./images/Drink.jpeg" height="150px"></v-img>
+                      <v-img src="./images/Drink.jpeg" height="130px"></v-img>
                     </a>
                     <a v-else>
-                      <v-img src="./images/pom.png" height="150px"></v-img>
+                      <v-img src="./images/pom.png" height="130px"></v-img>
                     </a>
 
                     <div class="text-center">
@@ -240,7 +240,7 @@
                 <!-- topping -->
                 <a v-for="k in toppings_all" :key="k">
                   
-                  <v-card outlined class="ma-10" width="205" @click="click_toppings(k.name), enable_toppings_button(e)"
+                  <v-card outlined class="ma-10" width="200" @click="click_toppings(k.name), enable_toppings_button(e)"
                     :disabled="!isDisabled">
                     <a v-if="k.name === 'Olive'">
                       <v-img src="./images/olive.jpeg" height="130px"></v-img>
@@ -268,14 +268,16 @@
                     </a>
 
                     <div class="text-center">
-                      <h2>
+                      <div class="psas">
                         {{ k.name }}
-                      </h2>
+                      </div>
 
                       <v-card-subtitle>
+                        <div class="psaa">
                         $ {{ k.price }}
                         <br>
-                        <p>Calories: {{ k.calories }}</p>
+                        Calories: {{ k.calories }}
+                      </div>
                       </v-card-subtitle>
                     </div>
                   </v-card>
@@ -1040,19 +1042,19 @@ export default {
 .psa {
   font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
   font-weight: bold;
-  font-size: 25px;
+  font-size: 22px;
 }
 
 .psas {
   font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
   font-weight: bold;
-  font-size: 24px;
+  font-size: 22px;
 }
 
 .psaa {
   font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
   font-weight: bold;
-  font-size: 14px;
+  font-size: 13px;
 }
 </style>
 <!-----------Style------------->

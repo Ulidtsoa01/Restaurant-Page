@@ -199,6 +199,34 @@ export async function updateItemItems(name, price, itemid) {
     return;
 }
 
+// Update inventory, '/updateinventory/:name/:itemid'
+// Updates inventory table
+export async function updateItemInventory2(name, itemquantity, vendor, itemid) {
+    let result = await instance.get('/updateinventory2',{
+        params: {
+            name: name,
+            itemquantity: itemquantity,
+            vendor: vendor,
+            itemid: itemid,
+        }
+    });
+    return;
+}
+
+// Update items, '/updateitem/:name/:price/itemid'
+// Updates items table
+export async function updateItemItems2(name, price, category, itemid) {
+    let result = await instance.get('/updateitem2',{
+        params: {
+            name: name,
+            price: price,
+            category: category,
+            itemid: itemid,
+        }
+    });
+    return;
+}
+
 // Add items, '/additem/:itemid/:name/:category/:price/:calories'
 // Adds to items table
 export async function addItem(itemid, name, category, price, calories) {

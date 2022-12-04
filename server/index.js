@@ -251,6 +251,40 @@ app.get('/updateitem', (req, res) => {
     });
 });
 
+// Update inventory 2
+app.get('/updateinventory2', (req, res) => {
+    res.header("Access-Control-Allow-Origin", "*");
+    items = []
+    pool
+    .query(`UPDATE inventory SET name = '${req.query.name}', item_quantity = ${req.query.itemquantity}, vendor = '${req.query.vendor}' WHERE item_id = ${req.query.itemid}`.replace(/:/g, ""))
+    .then(query_res => {
+        for (let i = 0; i < query_res.rowCount; i++){
+            items.push(query_res.rows[i]);
+        }
+        const data = {items: items};
+        console.log(items);
+        res.send(data);
+        return;
+    });
+});
+
+// Update items 2
+app.get('/updateitem2', (req, res) => {
+    res.header("Access-Control-Allow-Origin", "*");
+    items = []
+    pool
+    .query(`UPDATE items SET name = '${req.query.name}', price = ${req.query.price}, category='${req.query.category}' WHERE id = ${req.query.itemid}`.replace(/:/g, ""))
+    .then(query_res => {
+        for (let i = 0; i < query_res.rowCount; i++){
+            items.push(query_res.rows[i]);
+        }
+        const data = {items: items};
+        console.log(items);
+        res.send(data);
+        return;
+    });
+});
+
 // Add items
 app.get('/additem', (req, res) => {
     res.header("Access-Control-Allow-Origin", "*");

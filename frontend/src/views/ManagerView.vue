@@ -24,7 +24,7 @@
             </div>
           </v-btn>
           <!--Client Button-->
-          <v-btn outlined color="#0052A5" @click="$router.push('/client/' + $route.params.credential)">
+          <v-btn outlined color="#0052A5" @click="$router.push('/client')">
             <div class="font-weight-bold">
               Client View
             </div>

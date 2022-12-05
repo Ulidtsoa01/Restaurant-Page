@@ -50,7 +50,7 @@
             </div>
           </v-btn>
           <!--Client Button-->
-          <v-btn outlined color="#0052A5" @click="$router.push('/client/' + $route.params.credential)">
+          <v-btn outlined color="#0052A5" @click="$router.push('/client')">
             <div class="ps">
               Client View
             </div>

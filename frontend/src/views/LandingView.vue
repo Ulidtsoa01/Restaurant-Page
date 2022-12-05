@@ -4,7 +4,7 @@
       <v-container fluid>
         <v-row justify="end">
             <v-col cols="auto">
-                <v-btn color="orange" @click="$router.push('login')">Log In</v-btn>
+                <v-btn outline @click="$router.push('login')">Log In</v-btn>
             </v-col>
         </v-row>
         <v-row justify="center">
@@ -20,7 +20,7 @@
         </v-row>
         <v-row justify="center" style="margin-top: 100px">
             <v-col cols="auto">
-                <v-btn color="orange" large @click="$router.push('client')">Order Now</v-btn>
+                <v-btn outline large @click="$router.push('client')">Order Now</v-btn>
             </v-col>
 
 
@@ -45,7 +45,7 @@
       computed: {
         heroImage() {
           return {
-            backgroundImage: `url${require('./images/background.jpg')}`
+            backgroundImage: `url${require('./background.jpg')}`
           };
         }
       },

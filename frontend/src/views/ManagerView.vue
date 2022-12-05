@@ -257,6 +257,8 @@ import { getSalesReport } from "../js/backend.js";
 import { loadGoogle, userSignedIn } from '../js/login.js';
 import { getLatestItemId } from "../js/backend.js";
 import { getLatestInventoryId } from "../js/backend.js";
+import { updateItemInventory2 } from "../js/backend.js";
+import { updateItemItems2 } from "../js/backend.js";
 
 
 export default {
@@ -414,7 +416,7 @@ export default {
     click_report: async function (e) {
       if(this.dates.length < 2)
       {
-        alert("Select a time frame from the calendar");
+        alert("Select two dates on the calendar to create a timeframe");
       }
       else{
         var from = this.dates[0];
@@ -434,7 +436,7 @@ export default {
         }
         if(this.items.length < 1)
         {
-          alert("There is no data in the selected time frame")
+          alert("There is no data for this report in the selected time frame")
         }
       } 
     },
@@ -499,8 +501,8 @@ export default {
         cat = "topping"
       }
       if (this.editedIndex > -1) {
-        await updateItemItems(temp.name,temp.price,this.editedIndex);
-        await updateItemInventory(temp.name,this.editedIndex)
+        await updateItemItems2(temp.name, temp.price, cat, this.editedIndex);
+        await updateItemInventory2(temp.name, temp.item_quantity, temp.vendor, this.editedIndex);
       }
       else{
         var itemId = await getLatestItemId() + 1;

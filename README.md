@@ -18,6 +18,24 @@ This project is a point of sales system and website for Pom and Honey, a local r
 
 ## Features
 
+### Login Page
+
+<img src="./demo/login.jpg" width="auto" height="auto"/>
+
+### Checkout Page
+
+<img src="./demo/checkout_top.jpg" width="auto" height="auto"/>
+
+<img src="./demo/checkout_bottom.png" width="auto" height="auto"/>
+
+### Server View
+
+<img src="./demo/server.jpg" width="auto" height="auto"/>
+
+### Manager View
+
+<img src="./demo/manager.jpg" width="auto" height="auto"/>
+
 ## Database Tables
 
 The database holds the order history and inventory. Each order can have multiple items, and each item can have multiple toppings.

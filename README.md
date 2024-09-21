@@ -14,7 +14,9 @@ This project is a point of sales system and website for Pom and Honey, a local r
 - Accessibility features: colorblind mode, change font size, translate text
 - Google Map API: show the route to the nearest Pom and Honey
 
-## Demo Video
+## Demo Video of Mobile View
+
+https://github.com/user-attachments/assets/f9874c2a-1153-45e9-83c4-f02368566e4c
 
 ## Features
 
